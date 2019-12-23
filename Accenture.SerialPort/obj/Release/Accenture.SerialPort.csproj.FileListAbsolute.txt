@@ -1,0 +1,16 @@
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\SerialPort.exe.config
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\SerialPort.exe
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\SerialPort.pdb
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\Accenture.CBox.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\Aspose.Cells.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\Nancy.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\NPoco.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\NPOI.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\bin\Release\WiYun.Core.dll
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmExport.resources
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmMain.resources
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.Properties.Resources.resources
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.exe
+C:\Users\Administrator\Desktop\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.pdb
