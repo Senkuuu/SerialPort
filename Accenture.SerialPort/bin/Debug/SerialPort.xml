@@ -226,7 +226,7 @@
             <summary>
             发送数据
             </summary>
-            <param name="data"></param>
+            <param name="str"></param>
             <returns></returns>
         </member>
         <member name="M:Accenture.SerialPort.frmMain.num(System.String)">
@@ -265,6 +265,12 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
+        </member>
+        <member name="M:Accenture.SerialPort.frmMain.Hex16StringToHex16Byte(System.String)">
+            <summary>
+            此方法用于将16进制的字符串转换成16进制的字节数组
+            </summary>
+            <param name="_hex16String">要转换的16进制的字符串。</param>
         </member>
         <member name="M:Accenture.SerialPort.frmMain.Button2_Click(System.Object,System.EventArgs)">
             <summary>

@@ -380,15 +380,74 @@ namespace Accenture.SerialPort
         /// <summary>
         /// 发送数据
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
-        public bool SendData(string data)
+        public bool SendData(string str)
         {
+
+            //string[] array = str.Split(new char[]
+            //{
+            //    ' '
+            //});
+            //StringBuilder stringBuilder = new StringBuilder();
+            //for (int i = 0; i < array.Length; i++)
+            //{
+            //    stringBuilder.Append(array[i]);
+            //}
+            //str = stringBuilder.ToString();
+            //if (str.Length % 2 != 0)
+            //{
+            //    str = str.Insert(str.Length - 5, "0");
+            //}
+            //byte[] array2 = new byte[str.Length / 2];
+            //for (int j = 0; j < str.Length / 2; j++)
+            //{
+            //    try
+            //    {
+            //        array2[j] = Convert.ToByte(str.Substring(j * 2, 2), 16);
+            //    }
+            //    catch
+            //    {
+            //        MessageBox.Show("包含非16进制字符，发送失败！", "提示");
+            //        return false;
+            //    }
+            //}
+            //if (this.serialPort.IsOpen)
+            //{
+            //    try
+            //    {
+            //        this.serialPort.Write(array2, 0, array2.Length);
+            //        return true;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        MessageBox.Show("发送数据时发生错误, 串口将被关闭！", "错误提示");
+            //        return false;
+            //    }
+            //}
+            //if (this.serialPort.IsOpen)
+            //{
+            //    try
+            //    {
+            //        this.serialPort.Write(array2, 0, array2.Length);
+            //        return true;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        MessageBox.Show("发送数据时发生错误, 串口将被关闭！", "错误提示");
+            //        return false;
+            //    }
+            //}
+            //MessageBox.Show("串口未打开，请先打开串口！", "错误提示");
+
             if (serialPort.IsOpen)
             {
                 try
                 {
-                    serialPort.Write(data);//发送数据
+                    Encoding encoding = Encoding.GetEncoding("GB2312");
+                    byte[] bytes = encoding.GetBytes(str);
+                    int num = bytes.Length;
+                    serialPort.Write(bytes, 0, num);
                     return true;
                 }
                 catch (Exception ex)
@@ -688,7 +747,10 @@ namespace Accenture.SerialPort
             string Data = getData(count);//16进制数据
             string Validation = "";//效验
             string aCodeTail = "0D0ADF";//帧尾
-            Inscode = this.ClassBox.SelectedValue.ToString();//指令码
+            //Inscode = this.ClassBox.SelectedValue.ToString();//指令码
+            if (count == 0) Inscode = "50";
+            if (count == 1) Inscode = "51";
+            if (count == 2 || count == 3) Inscode = "52";
 
             try
             {
@@ -759,7 +821,7 @@ namespace Accenture.SerialPort
                 this.txtSendData.Text = aCode;
                 //成功就+1，用于指令回执
                 this.DataCount.Text = (Convert.ToInt32(this.DataCount.Text) + 1).ToString();
-                listBox1.Items.Insert(count, txtSendData.Text);
+                listBox1.Items.Insert(listBox1.Items.Count, txtSendData.Text);
                 //SendData(txtSendData.Text);//直接下发协议给串口
                 string updatasql = string.Format("update Log set INPUTDATA = '{0}' where DOCOUNT = '{1}' and QECODE = '{2}'", txtSendData.Text, count, textBox3.Text);
                 DBHelper.MyExecuteNonQuery(updatasql);
@@ -820,7 +882,6 @@ namespace Accenture.SerialPort
             }
             else
             {
-                //btn();
                 for (int i = 0; i < 4; i++)
                 {
                     string insert = string.Format("insert into Log(QECODE,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
@@ -828,40 +889,36 @@ namespace Accenture.SerialPort
 
                     getAgreementCode(i);
 
-
-                    //byte[] sendData = null;
-
-                    //if (rbtnSendHex.Checked)
-                    //{
-                    //    sendData = strToHexByte(txtSendData.Text.Trim());
-                    //}
-                    //else if (rbtnSendASCII.Checked)
-                    //{
-                    //    sendData = Encoding.ASCII.GetBytes(txtSendData.Text.Trim());
-                    //}
-                    //else if (rbtnSendUTF8.Checked)
-                    //{
-                    //    sendData = Encoding.UTF8.GetBytes(txtSendData.Text.Trim());
-                    //}
-                    //else if (rbtnSendUnicode.Checked)
-                    //{
-                    //    sendData = Encoding.Unicode.GetBytes(txtSendData.Text.Trim());
-                    //}
-                    //else
-                    //{
-                    //    sendData = Encoding.ASCII.GetBytes(txtSendData.Text.Trim());
-                    //}
-
                     if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
                     {
-                        //lblSendCount.Invoke(new MethodInvoker(delegate
-                        //{
-                        //    lblSendCount.Text = (int.Parse(lblSendCount.Text) + txtSendData.Text.Length).ToString();
-                        //}));
+                        Thread.Sleep(200);
                     }
-                    Thread.Sleep(500);
                 }
             }
+        }
+
+
+        /// <summary>
+        /// 此方法用于将16进制的字符串转换成16进制的字节数组
+        /// </summary>
+        /// <param name="_hex16String">要转换的16进制的字符串。</param>
+        public static byte[] Hex16StringToHex16Byte(string _hex16String)
+        {
+            //去掉字符串中的空格。
+            _hex16String = _hex16String.Replace(" ", "");
+            if (_hex16String.Length / 2 == 0)
+            {
+                _hex16String += " ";
+            }
+            //声明一个字节数组，其长度等于字符串长度的一半。
+            byte[] buffer = new byte[_hex16String.Length / 2];
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                //为字节数组的元素赋值。
+                buffer[i] = Convert.ToByte((_hex16String.Substring(i * 2, 2)), 16);
+            }
+            //返回字节数组。
+            return buffer;
         }
 
         /// <summary>
@@ -1168,11 +1225,6 @@ namespace Accenture.SerialPort
         #endregion
 
         #region 成品校验区
-        public void getOutData()
-        {
-            string outData = serialPort.ReadExisting();
-        }
-
 
         /// <summary>
         /// 当接收到串口发包数据时触发的事件
@@ -1181,18 +1233,13 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(2000);//等待0.1秒 
-            //byte[] ReDatas = new byte[serialPort.BytesToRead];
-            //serialPort.Read(ReDatas, 0, serialPort.BytesToRead);
-            string ifmation = "";//System.Text.Encoding.Default.GetString(ReDatas);
+            Thread.Sleep(2000);//等待0.1秒
             #region 计算出返回协议的位置
-            string test1 = serialPort.ReadExisting();//serialPort.ReadTo("Display OVER");
+            string test1 = serialPort.ReadExisting();
             if (test1.IndexOf("USART3 Rec From ISR:") < 1)
             {
                 return;
             }
-            ifmation = test1;
-            string ifm = "";
             #endregion 
 
             #region 拼接返回值
@@ -1204,6 +1251,11 @@ namespace Accenture.SerialPort
                     for (int i = 0; i < listBox1.Items.Count; i++)
                     {
                         string outdata = "";
+                        if (test1.IndexOf(listBox1.Items[i].ToString()) < 0)
+                        {
+                            MessageBox.Show("指令发送失败！");
+                            return;
+                        }
                         int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length + "\r\nUSART3RecFromConf:\r\n".Length;
                         int i2 = test1.Substring(i1, test1.Length - i1).IndexOf("0D0AEF") + "0D0AEF".Length;
                         string test2 = test1.Substring(i1, i2);

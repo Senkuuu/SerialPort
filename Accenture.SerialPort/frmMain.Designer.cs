@@ -665,7 +665,7 @@
             this.WakeupTxt.Name = "WakeupTxt";
             this.WakeupTxt.Size = new System.Drawing.Size(60, 23);
             this.WakeupTxt.TabIndex = 18;
-            this.WakeupTxt.Text = "120";
+            this.WakeupTxt.Text = "180";
             this.WakeupTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.WakeupTxt.WordWrap = false;
             // 
