@@ -748,9 +748,9 @@ namespace Accenture.SerialPort
             string Validation = "";//效验
             string aCodeTail = "0D0ADF";//帧尾
             //Inscode = this.ClassBox.SelectedValue.ToString();//指令码
-            if (count == 0) Inscode = "50";
-            if (count == 1) Inscode = "51";
-            if (count == 2 || count == 3) Inscode = "52";
+            if (count == 0) Code = "50";
+            if (count == 1) Code = "51";
+            if (count == 2 || count == 3) Code = "52";
 
             try
             {
@@ -789,11 +789,11 @@ namespace Accenture.SerialPort
 
                 #region 得到16进制帧长
                 //根据指令码决定帧长
-                if (Inscode == "50")
+                if (Code == "50")
                     FrameLength = "17";
-                else if (Inscode == "51")
+                else if (Code == "51")
                     FrameLength = "30";
-                else if (Inscode == "52")
+                else if (Code == "52")
                     FrameLength = "19";
                 FrameLength = Convert.ToString(Convert.ToInt32(FrameLength), 16);
                 #endregion
@@ -843,6 +843,8 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
+            button3.BackColor = button4.BackColor = button6.BackColor = button5.BackColor = System.Drawing.Color.Transparent;
             textBox1.Clear();
             if (serialPort.IsOpen == false)
             {
@@ -891,7 +893,7 @@ namespace Accenture.SerialPort
 
                     if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
                     {
-                        Thread.Sleep(200);
+                        Thread.Sleep(500);
                     }
                 }
             }
@@ -1233,7 +1235,7 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(2000);//等待0.1秒
+            Thread.Sleep(3000);//等待0.1秒
             #region 计算出返回协议的位置
             string test1 = serialPort.ReadExisting();
             if (test1.IndexOf("USART3 Rec From ISR:") < 1)
@@ -1256,9 +1258,15 @@ namespace Accenture.SerialPort
                             MessageBox.Show("指令发送失败！");
                             return;
                         }
-                        int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length + "\r\nUSART3RecFromConf:\r\n".Length;
-                        int i2 = test1.Substring(i1, test1.Length - i1).IndexOf("0D0AEF") + "0D0AEF".Length;
-                        string test2 = test1.Substring(i1, i2);
+                        int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
+                        int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
+                        if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
+                        {
+                            MessageBox.Show("没有接收到第" + i + "条（" + listBox1.Items[i].ToString() + "）的返回数据！");
+                            return;
+                        }
+                        int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
+                        string test2 = test1.Substring(i3, i2);
                         test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
                         outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
                         outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
@@ -1306,6 +1314,22 @@ namespace Accenture.SerialPort
                         {
                             string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where QECODE = '{1}' and DOCOUNT = '{2}'", outdata, textBox3.Text, i);
                             DBHelper.MyExecuteNonQuery(updatesql);
+                            if (i == 0)
+                            {
+                                button3.BackColor = System.Drawing.Color.Green;
+                            }
+                            if (i == 1)
+                            {
+                                button4.BackColor = System.Drawing.Color.Green;
+                            }
+                            if (i == 2)
+                            {
+                                button5.BackColor = System.Drawing.Color.Green;
+                            }
+                            if (i == 3)
+                            {
+                                button6.BackColor = System.Drawing.Color.Green;
+                            }
                         }
                     }
                 }
@@ -1561,13 +1585,20 @@ namespace Accenture.SerialPort
         {
             string seldata = string.Format("select outputdata from log where docount = '{0}' and qecode = '{1}'", listBox1.SelectedIndex, textBox3.Text);
             object data = DBHelper.MyExecuteScalar(seldata);
-            if (data != null && (string)data != "")
+            if (data != null)
             {
-                textBox1.Text = data.ToString();
+                if (!string.IsNullOrWhiteSpace(data.ToString()))
+                {
+                    textBox1.Text = data.ToString();
+                }
+                else
+                {
+                    textBox1.Text = "返回数据错误";
+                }
             }
             else
             {
-                textBox1.Text = "返回数据错误";
+                textBox1.Text = "下发数据错误";
             }
         }
     }
