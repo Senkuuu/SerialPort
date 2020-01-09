@@ -584,13 +584,13 @@ namespace Accenture.SerialPort
         /// <returns></returns>
         private string getData(int count)
         {
-            string QECODE = this.textBox3.Text.Trim();
+            string MACID = this.textBox3.Text.Trim();
             Inscode = this.ClassBox.SelectedValue.ToString();
             string data = "";
             if (count == 0)
             {
-                //频段选择转16进制
-                data += Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16) : "0" + Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16);
+                //频段选择转16进制(2019/12/29 协议更变)
+                //data += Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16) : "0" + Convert.ToString(Convert.ToInt32(BandBox.SelectedValue), 16);
                 //指令回执转16进制
                 string dcount = Convert.ToString(Convert.ToInt32(DataCount.Text), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(DataCount.Text), 16) : "0" + Convert.ToString(Convert.ToInt32(DataCount.Text), 16);
                 if (dcount.Length < 4)
@@ -755,9 +755,9 @@ namespace Accenture.SerialPort
             try
             {
                 #region 得到16进制地址（硬件编号）
-                string QECODE = this.textBox3.Text.Trim();
+                string MACID = this.textBox3.Text.Trim();
                 //数据库查询硬件地址（硬件编号）
-                string getaddress = string.Format("select MACID from [dbo].[YiBao]  where [QECODE] = '{0}'", QECODE);
+                string getaddress = string.Format("select MACID from [dbo].[YiBao]  where [MACID] = '{0}'", MACID);
                 address = DBHelper.MyExecuteScalar(getaddress).ToString();
                 if (address.Trim().Length != 8)//验证ID是否为八位数，否则在前面用'0'补齐
                 {
@@ -790,7 +790,7 @@ namespace Accenture.SerialPort
                 #region 得到16进制帧长
                 //根据指令码决定帧长
                 if (Code == "50")
-                    FrameLength = "17";
+                    FrameLength = "16";
                 else if (Code == "51")
                     FrameLength = "30";
                 else if (Code == "52")
@@ -823,7 +823,7 @@ namespace Accenture.SerialPort
                 this.DataCount.Text = (Convert.ToInt32(this.DataCount.Text) + 1).ToString();
                 listBox1.Items.Insert(listBox1.Items.Count, txtSendData.Text);
                 //SendData(txtSendData.Text);//直接下发协议给串口
-                string updatasql = string.Format("update Log set INPUTDATA = '{0}' where DOCOUNT = '{1}' and QECODE = '{2}'", txtSendData.Text, count, textBox3.Text);
+                string updatasql = string.Format("update Log set INPUTDATA = '{0}' where DOCOUNT = '{1}' and MACID = '{2}'", txtSendData.Text, count, textBox3.Text);
                 DBHelper.MyExecuteNonQuery(updatasql);
             }
             catch (Exception ex)
@@ -851,14 +851,19 @@ namespace Accenture.SerialPort
                 MessageBox.Show("请先打开串口！");
                 return;
             }
-            if (textBox3.Text.Length != 43)
+            if (textBox3.Text.Length != 8)
             {
-                MessageBox.Show("请确认序列号是否正确！");
-                return;
+                string sel = "select count(MACID) from Log where MACID = '" + textBox3.Text + "'";
+                int count = (int)DBHelper.MyExecuteScalar(sel);
+                if (count < 1)
+                {
+                    MessageBox.Show("请确认序列号是否正确！");
+                    return;
+                }
             }
             String txt = this.textBox3.Text.Trim();
-            string sql = "select count('INPUTDATA') from Log where QECODE = '" + textBox3.Text + "' and INPUTDATA IS NOT NULL and INPUTDATA <> ''";
-            int re = (int)DBHelper.MyExecuteScalar(sql);
+            string sql = "select outputdata from Log where MACID = '" + textBox3.Text + "' and docount = '0'";
+            object re = DBHelper.MyExecuteScalar(sql);
             if (txt == "")
             {
                 SoundPlayer player = new SoundPlayer();
@@ -869,7 +874,7 @@ namespace Accenture.SerialPort
 
 
             }
-            else if (re == 4)
+            else if (re != null)
             {
                 if (!string.IsNullOrWhiteSpace(re.ToString()))
                 {
@@ -886,7 +891,7 @@ namespace Accenture.SerialPort
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    string insert = string.Format("insert into Log(QECODE,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
+                    string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
                     DBHelper.MyExecuteNonQuery(insert);
 
                     getAgreementCode(i);
@@ -1003,10 +1008,21 @@ namespace Accenture.SerialPort
         {
             if (textBox3.Text.Length == 43)
             {
-                //Open();
-                //btnSend_Click(sender, e);
-                //GetDataBtn_Click(sender, e);
-
+                string selsql = string.Format("select outputdata from log where macid='{0}' and docount='0'", textBox3.Text);
+                object re = DBHelper.MyExecuteScalar(selsql);
+                if (re != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(re.ToString()))
+                    {
+                        listBox1.Items.Clear();
+                        string sel = string.Format("select inputdata,docount from log where macid='{0}'", textBox3.Text);
+                        SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
+                        while (sdr.Read())
+                        {
+                            listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
+                        }
+                    }
+                }
             }
         }
 
@@ -1312,7 +1328,7 @@ namespace Accenture.SerialPort
                         }
                         if (!string.IsNullOrWhiteSpace(outdata))
                         {
-                            string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where QECODE = '{1}' and DOCOUNT = '{2}'", outdata, textBox3.Text, i);
+                            string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, textBox3.Text, i);
                             DBHelper.MyExecuteNonQuery(updatesql);
                             if (i == 0)
                             {
@@ -1563,7 +1579,7 @@ namespace Accenture.SerialPort
             if (!string.IsNullOrWhiteSpace(id))
             {
                 string ifm = "";
-                string sql = "select INFORMATION from Log where QECODE = '" + id + "'";
+                string sql = "select inputdata from Log where MACID = '" + id + "'";
                 object re = DBHelper.MyExecuteScalar(sql);
                 if (re == null)
                 {
@@ -1583,7 +1599,7 @@ namespace Accenture.SerialPort
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string seldata = string.Format("select outputdata from log where docount = '{0}' and qecode = '{1}'", listBox1.SelectedIndex, textBox3.Text);
+            string seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, textBox3.Text);
             object data = DBHelper.MyExecuteScalar(seldata);
             if (data != null)
             {
@@ -1600,6 +1616,13 @@ namespace Accenture.SerialPort
             {
                 textBox1.Text = "下发数据错误";
             }
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            LoraForm lf = new LoraForm();
+            lf.Show();
+            this.Close();
         }
     }
 }

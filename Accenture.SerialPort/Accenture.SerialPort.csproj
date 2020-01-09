@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Accenture.SerialPort</RootNamespace>
     <AssemblyName>SerialPort</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <PublishUrl>D:\WebSite\Publish\</PublishUrl>
@@ -64,78 +64,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accenture.CBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Accenture.CBox.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Cells, Version=17.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Aspose.Cells.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Log4Net1213">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Common.Logging.Log4Net1213.dll</HintPath>
-    </Reference>
-    <Reference Include="LoraAppLayer.Core">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\LoraAppLayer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\libs\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="NHttp.Core">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\NHttp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="NPoco">
-      <HintPath>..\libs\NPoco.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI, Version=2.0.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\NPOI.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Wima.LogService">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.LogService.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.Control">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.Control.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.Dataset">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.Dataset.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.Entity">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.Entity.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.Man">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.Man.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.Model">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="Wima.Lora.ServerBase">
-      <HintPath>..\..\..\lora\LoraSDK\bin\Debug\Wima.Lora.ServerBase.dll</HintPath>
-    </Reference>
-    <Reference Include="WiYun.Core">
-      <HintPath>..\libs\WiYun.Core.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="ClientServer.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="frmExport.cs">
       <SubType>Form</SubType>
@@ -143,30 +72,32 @@
     <Compile Include="frmExport.Designer.cs">
       <DependentUpon>frmExport.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLora.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLora.Designer.cs">
-      <DependentUpon>frmLora.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="LoraForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoraForm.Designer.cs">
+      <DependentUpon>LoraForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MoteDataEn.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicMethod.cs" />
+    <Compile Include="UdpMan.cs" />
     <EmbeddedResource Include="frmExport.resx">
       <DependentUpon>frmExport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLora.resx">
-      <DependentUpon>frmLora.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoraForm.resx">
+      <DependentUpon>LoraForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -197,7 +128,9 @@
     <None Include="Resources\red.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\icon-unsafe-url1.bmp" />
     <Content Include="Resources\QQ提示音.wav" />
+    <None Include="Resources\server.png" />
     <Content Include="Resources\找不到该盒子序列号.wav" />
     <Content Include="Resources\数据重复，请跟换其他盒子.wav" />
     <Content Include="Resources\绑定成功.wav" />
@@ -223,6 +156,190 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Accenture.CBox">
+      <HintPath>..\..\s1\SerialPort\Accenture.SerialPort\bin\Debug\Accenture.CBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Cells, Version=17.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Aspose.Cells.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\..\LoraCS\CSClient\bin\Debug\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\..\LoraCS\CSClient\bin\Debug\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net1213">
+      <HintPath>..\..\..\LoraCS\CSClient\bin\Debug\Common.Logging.Log4Net1213.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\LoraCS\CSClient\bin\Debug\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="LoraAppLayer.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\LoraAppLayer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives" />
+    <Reference Include="Nancy">
+      <HintPath>..\..\s1\SerialPort\Accenture.SerialPort\bin\Debug\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHttp.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\NHttp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NPoco, Version=5.5.0.1160, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\NPoco.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.0.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext" />
+    <Reference Include="System.Collections" />
+    <Reference Include="System.Collections.Concurrent" />
+    <Reference Include="System.Collections.NonGeneric" />
+    <Reference Include="System.Collections.Specialized" />
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.EventBasedAsync" />
+    <Reference Include="System.ComponentModel.Primitives" />
+    <Reference Include="System.ComponentModel.TypeConverter" />
+    <Reference Include="System.Console" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Common" />
+    <Reference Include="System.Diagnostics.Contracts" />
+    <Reference Include="System.Diagnostics.Debug" />
+    <Reference Include="System.Diagnostics.FileVersionInfo" />
+    <Reference Include="System.Diagnostics.Process" />
+    <Reference Include="System.Diagnostics.StackTrace" />
+    <Reference Include="System.Diagnostics.TextWriterTraceListener" />
+    <Reference Include="System.Diagnostics.Tools" />
+    <Reference Include="System.Diagnostics.TraceSource" />
+    <Reference Include="System.Diagnostics.Tracing" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Primitives" />
+    <Reference Include="System.Dynamic.Runtime" />
+    <Reference Include="System.Globalization" />
+    <Reference Include="System.Globalization.Calendars" />
+    <Reference Include="System.Globalization.Extensions" />
+    <Reference Include="System.IO" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.ZipFile" />
+    <Reference Include="System.IO.FileSystem" />
+    <Reference Include="System.IO.FileSystem.DriveInfo" />
+    <Reference Include="System.IO.FileSystem.Primitives" />
+    <Reference Include="System.IO.FileSystem.Watcher" />
+    <Reference Include="System.IO.IsolatedStorage" />
+    <Reference Include="System.IO.MemoryMappedFiles" />
+    <Reference Include="System.IO.Pipes" />
+    <Reference Include="System.IO.UnmanagedMemoryStream" />
+    <Reference Include="System.Linq" />
+    <Reference Include="System.Linq.Expressions" />
+    <Reference Include="System.Linq.Parallel" />
+    <Reference Include="System.Linq.Queryable" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.NameResolution" />
+    <Reference Include="System.Net.NetworkInformation" />
+    <Reference Include="System.Net.Ping" />
+    <Reference Include="System.Net.Primitives" />
+    <Reference Include="System.Net.Requests" />
+    <Reference Include="System.Net.Security" />
+    <Reference Include="System.Net.Sockets" />
+    <Reference Include="System.Net.WebHeaderCollection" />
+    <Reference Include="System.Net.WebSockets" />
+    <Reference Include="System.Net.WebSockets.Client" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.Reflection" />
+    <Reference Include="System.Reflection.Extensions" />
+    <Reference Include="System.Reflection.Primitives" />
+    <Reference Include="System.Resources.Reader" />
+    <Reference Include="System.Resources.ResourceManager" />
+    <Reference Include="System.Resources.Writer" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.CompilerServices.VisualC" />
+    <Reference Include="System.Runtime.Extensions" />
+    <Reference Include="System.Runtime.Handles" />
+    <Reference Include="System.Runtime.InteropServices" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Runtime.Numerics" />
+    <Reference Include="System.Runtime.Serialization.Formatters" />
+    <Reference Include="System.Runtime.Serialization.Json" />
+    <Reference Include="System.Runtime.Serialization.Primitives" />
+    <Reference Include="System.Runtime.Serialization.Xml" />
+    <Reference Include="System.Security.Claims" />
+    <Reference Include="System.Security.Cryptography.Algorithms" />
+    <Reference Include="System.Security.Cryptography.Csp" />
+    <Reference Include="System.Security.Cryptography.Encoding" />
+    <Reference Include="System.Security.Cryptography.Primitives" />
+    <Reference Include="System.Security.Cryptography.X509Certificates" />
+    <Reference Include="System.Security.Principal" />
+    <Reference Include="System.Security.SecureString" />
+    <Reference Include="System.Text.Encoding" />
+    <Reference Include="System.Text.Encoding.Extensions" />
+    <Reference Include="System.Text.RegularExpressions" />
+    <Reference Include="System.Threading" />
+    <Reference Include="System.Threading.Overlapped" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Threading.Tasks.Parallel" />
+    <Reference Include="System.Threading.Thread" />
+    <Reference Include="System.Threading.ThreadPool" />
+    <Reference Include="System.Threading.Timer" />
+    <Reference Include="System.ValueTuple" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.ReaderWriter" />
+    <Reference Include="System.Xml.XDocument" />
+    <Reference Include="System.Xml.XmlDocument" />
+    <Reference Include="System.Xml.XmlSerializer" />
+    <Reference Include="System.Xml.XPath" />
+    <Reference Include="System.Xml.XPath.XDocument" />
+    <Reference Include="Wima.LogService.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\LoraCS\CSClient\bin\Debug\Wima.LogService.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Control, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.Control.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Crypto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Dataset, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.Dataset.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Man, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.Man.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.Model">
+      <HintPath>..\..\..\反编译\Debug\Wima.Lora.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Wima.Lora.ServerBase, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Wima.Lora.ServerBase.dll</HintPath>
+    </Reference>
+    <Reference Include="WiYun.Core, Version=5.5.0.1177, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\WiYun.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

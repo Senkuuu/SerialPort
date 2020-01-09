@@ -32,7 +32,6 @@
             this.btnClearRev = new System.Windows.Forms.Button();
             this.btnClearSend = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbbParity = new System.Windows.Forms.ComboBox();
             this.cbbStopBits = new System.Windows.Forms.ComboBox();
@@ -46,6 +45,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -90,12 +93,9 @@
             this.rbtnSendASCII = new System.Windows.Forms.RadioButton();
             this.rbtnSendHex = new System.Windows.Forms.RadioButton();
             this.rbtnSendUnicode = new System.Windows.Forms.RadioButton();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -103,12 +103,14 @@
             this.panel3.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.btnClearRev);
             this.panel1.Controls.Add(this.btnClearSend);
             this.panel1.Controls.Add(this.btnOpen);
@@ -153,15 +155,6 @@
             this.btnOpen.Text = "打开串口";
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(34, 188);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
             // 
             // groupBox1
             // 
@@ -333,6 +326,50 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据接收区";
+            // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.Color.Transparent;
+            this.button6.Enabled = false;
+            this.button6.Location = new System.Drawing.Point(300, 36);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(100, 23);
+            this.button6.TabIndex = 12;
+            this.button6.Text = "校准温湿度2";
+            this.button6.UseVisualStyleBackColor = false;
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.Transparent;
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(201, 36);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(100, 23);
+            this.button5.TabIndex = 11;
+            this.button5.Text = "校准温湿度1";
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Transparent;
+            this.button4.Enabled = false;
+            this.button4.Location = new System.Drawing.Point(102, 36);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(100, 23);
+            this.button4.TabIndex = 10;
+            this.button4.Text = "时间参数配置";
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.Transparent;
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(3, 36);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(100, 23);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "通信地址配置";
+            this.button3.UseVisualStyleBackColor = false;
             // 
             // textBox1
             // 
@@ -564,6 +601,7 @@
             this.button2.TabIndex = 28;
             this.button2.Text = "锁定参数";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // label10
@@ -672,7 +710,7 @@
             this.WakeupTxt.Name = "WakeupTxt";
             this.WakeupTxt.Size = new System.Drawing.Size(60, 23);
             this.WakeupTxt.TabIndex = 18;
-            this.WakeupTxt.Text = "180";
+            this.WakeupTxt.Text = "3600";
             this.WakeupTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.WakeupTxt.WordWrap = false;
             // 
@@ -684,6 +722,7 @@
             this.BandLab.Size = new System.Drawing.Size(77, 14);
             this.BandLab.TabIndex = 17;
             this.BandLab.Text = "频段选择：";
+            this.BandLab.Visible = false;
             // 
             // BandBox
             // 
@@ -693,6 +732,7 @@
             this.BandBox.Name = "BandBox";
             this.BandBox.Size = new System.Drawing.Size(121, 21);
             this.BandBox.TabIndex = 16;
+            this.BandBox.Visible = false;
             // 
             // label7
             // 
@@ -831,49 +871,24 @@
             this.rbtnSendUnicode.UseVisualStyleBackColor = true;
             this.rbtnSendUnicode.Visible = false;
             // 
-            // button3
+            // pictureBox1
             // 
-            this.button3.BackColor = System.Drawing.Color.Transparent;
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(3, 36);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "通信地址配置";
-            this.button3.UseVisualStyleBackColor = false;
+            this.pictureBox1.Location = new System.Drawing.Point(34, 188);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 7;
+            this.pictureBox1.TabStop = false;
             // 
-            // button4
+            // button7
             // 
-            this.button4.BackColor = System.Drawing.Color.Transparent;
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(102, 36);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(100, 23);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "时间参数配置";
-            this.button4.UseVisualStyleBackColor = false;
-            // 
-            // button6
-            // 
-            this.button6.BackColor = System.Drawing.Color.Transparent;
-            this.button6.Enabled = false;
-            this.button6.Location = new System.Drawing.Point(300, 36);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(100, 23);
-            this.button6.TabIndex = 12;
-            this.button6.Text = "校准温湿度2";
-            this.button6.UseVisualStyleBackColor = false;
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.Transparent;
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(201, 36);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(100, 23);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "校准温湿度1";
-            this.button5.UseVisualStyleBackColor = false;
+            this.button7.Location = new System.Drawing.Point(11, 278);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(85, 29);
+            this.button7.TabIndex = 12;
+            this.button7.Text = "Lora通信";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // frmMain
             // 
@@ -890,7 +905,6 @@
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -905,6 +919,7 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -977,6 +992,7 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button7;
     }
 }
 
