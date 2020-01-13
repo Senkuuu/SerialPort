@@ -118,7 +118,6 @@ D:\资料\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.exe.config
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.exe.manifest
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.application
-D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.exe
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Accenture.CBox.dll
@@ -128,7 +127,6 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Common.Logging.Log4Net121
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Nancy.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Wima.Lora.Model.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\log4net.dll
-D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csprojAssemblyReference.cache
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.frmExport.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.frmMain.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.LoraForm.resources
@@ -150,3 +148,5 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Common.Logging.Log4Net121
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\log4net.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Wima.LogService.Core.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\Wima.Lora.Model.pdb
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csprojAssemblyReference.cache
