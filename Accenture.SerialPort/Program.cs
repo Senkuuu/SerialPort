@@ -13,7 +13,7 @@ namespace Accenture.SerialPort
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoraForm());
+            Application.Run(new frmMain());
         }
     }
 }

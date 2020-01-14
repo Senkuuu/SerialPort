@@ -1621,8 +1621,12 @@ namespace Accenture.SerialPort
         private void Button7_Click(object sender, EventArgs e)
         {
             LoraForm lf = new LoraForm();
-            lf.Show();
-            this.Close();
+            lf.ShowDialog(this);
+        }
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -191,7 +191,7 @@ namespace Accenture.SerialPort
                                 outdata += "空气温度：" + Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16) + "\r\n";
                                 outdata += "空气湿度：" + Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16) + "\r\n";
                                 outdata += "时间戳：" + data.SubArray(18, 4).ToHexString().ToUpper() + "\r\n";
-                                outdata += "唤醒周期：" + Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "\r\n";
+                                outdata += "唤醒周期：" + Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒\r\n";
                                 outdata += "********************End*********************" + "\r\n";
                                 outdata += "错误码：" + data.SubArray(26, 4).ToHexString().ToUpper() + "\r\n";
                                 outdata += "回执指令：" + data.SubArray(30, 2).ToHexString().ToUpper() + "\r\n";
@@ -403,9 +403,39 @@ namespace Accenture.SerialPort
                             dgvr.Cells["hexdata"].Value = data.ToHexString();
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
-                            dgv.Rows[index].Visible = false;
-                            if (!checkedListBox1.Items.Contains(package.app.moteeui.ToString()))
+
+                            string selsql = "select count(moteeui) from collectionTest where moteeui = '" + package.app.moteeui.ToString() + "'";
+                            int count = (int)DBHelper.MyExecuteScalar(selsql);
+                            //插入数据库
+                            if (count > 0)
+                            {
+                                string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}'", package.app.gwrx[0].time.ToString(),
+                                                package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                                data.ToHexString(), outdata);
+                                DBHelper.MyExecuteNonQuery(updsql);
+                            }
+                            else
+                            {
+                                string inssql = string.Format(@"insert into collectionTest(systime,moteeui,freq,rssi,datr,lsnr,hexdata,strdata) 
+                                            values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", package.app.gwrx[0].time.ToString(), package.app.moteeui.ToString(),
+                                            package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                            data.ToHexString(), outdata);
+                                DBHelper.MyExecuteNonQuery(inssql);
+                            }
+                            if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
+                            {
+                                dgv.Rows[index].Visible = true;
+                            }
+                            else
+                            {
+                                dgv.Rows[index].Visible = false;
+                            }
+                            dgv.Refresh();
+                            if (!checkedListBox2.Items.Contains(package.app.moteeui.ToString()))
+                            {
                                 checkedListBox1.Items.Add(package.app.moteeui.ToString());
+                                checkedListBox2.Items.Add(package.app.moteeui.ToString());
+                            }
                             //dataGridView1.Rows.Insert(dgv.NewRowIndex, dgvr);
                             //dgv.Rows.Add(dgvr);
                         });
@@ -430,7 +460,12 @@ namespace Accenture.SerialPort
             this.Invoke((Action)delegate
             {
                 if (!checkedListBox1.Items.Contains(deveui))
+                {
                     checkedListBox1.Items.Add(deveui);
+                    //隐藏的checkedListBox存入全部的值
+                    checkedListBox2.Items.Add(deveui);
+                }
+
             });
         }
 
@@ -494,6 +529,7 @@ namespace Accenture.SerialPort
             }
         }
 
+        #region 勾选隐藏或显示采集数据
         private void CheckedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<string> clist = new List<string>();
@@ -513,6 +549,7 @@ namespace Accenture.SerialPort
                 }
             }
         }
+        #endregion
 
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -524,6 +561,44 @@ namespace Accenture.SerialPort
             //        dataGridView1.Rows[e.RowIndex].Visible = false;
             //    }
             //}
+        }
+
+        private void TextBox3_TextChanged(object sender, EventArgs e)
+        {
+            List<string> clist = new List<string>();
+            for (int i = 0; i < checkedListBox2.Items.Count; i++)
+            {
+                clist.Add(checkedListBox2.Items[i].ToString());
+            }
+            if (string.IsNullOrWhiteSpace(textBox3.Text))
+            {
+                checkedListBox1.Items.Clear();
+                for (int i = 0; i < clist.Count; i++)
+                {
+                    checkedListBox1.Items.Add(clist[i]);
+                }
+            }
+            else
+            {
+                List<string> nlist = clist.Where(x => x.Contains(textBox3.Text)).ToList();
+                checkedListBox1.Items.Clear();
+                for (int i = 0; i < nlist.Count; i++)
+                {
+                    checkedListBox1.Items.Add(nlist[i]);
+                }
+            }
+        }
+
+        private void ToolStripButton1_Click(object sender, EventArgs e)
+        {
+            checkedListBox1.Items.Clear();
+            checkedListBox2.Items.Clear();
+        }
+
+        private void ToolStripButton2_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            textBox1.Clear();
         }
     }
 }
