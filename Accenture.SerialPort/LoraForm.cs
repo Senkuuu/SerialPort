@@ -409,6 +409,7 @@ namespace Accenture.SerialPort
                             //插入数据库
                             if (count > 0)
                             {
+                                //更新数据
                                 string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}'", package.app.gwrx[0].time.ToString(),
                                                 package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
                                                 data.ToHexString(), outdata);
@@ -416,12 +417,14 @@ namespace Accenture.SerialPort
                             }
                             else
                             {
+                                //插入数据
                                 string inssql = string.Format(@"insert into collectionTest(systime,moteeui,freq,rssi,datr,lsnr,hexdata,strdata) 
                                             values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", package.app.gwrx[0].time.ToString(), package.app.moteeui.ToString(),
                                             package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
                                             data.ToHexString(), outdata);
                                 DBHelper.MyExecuteNonQuery(inssql);
                             }
+                            //勾选显示，没勾选隐藏
                             if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
                             {
                                 dgv.Rows[index].Visible = true;
@@ -509,6 +512,7 @@ namespace Accenture.SerialPort
             ReadIp();
         }
 
+        #region 数据网格点击事件
         private void DataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 8)
@@ -523,11 +527,13 @@ namespace Accenture.SerialPort
 
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            //显示详细信息
             if (dataGridView1.CurrentRow.Cells["strdata"].Value != null)
             {
                 textBox1.Text = dataGridView1.CurrentRow.Cells["strdata"].Value.ToString();
             }
         }
+        #endregion
 
         #region 勾选隐藏或显示采集数据
         private void CheckedListBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -563,6 +569,7 @@ namespace Accenture.SerialPort
             //}
         }
 
+        #region 终端列表过滤
         private void TextBox3_TextChanged(object sender, EventArgs e)
         {
             List<string> clist = new List<string>();
@@ -572,6 +579,7 @@ namespace Accenture.SerialPort
             }
             if (string.IsNullOrWhiteSpace(textBox3.Text))
             {
+                //查询栏没有内容时还原列表信息
                 checkedListBox1.Items.Clear();
                 for (int i = 0; i < clist.Count; i++)
                 {
@@ -580,6 +588,7 @@ namespace Accenture.SerialPort
             }
             else
             {
+                //过滤查询
                 List<string> nlist = clist.Where(x => x.Contains(textBox3.Text)).ToList();
                 checkedListBox1.Items.Clear();
                 for (int i = 0; i < nlist.Count; i++)
@@ -588,17 +597,23 @@ namespace Accenture.SerialPort
                 }
             }
         }
+        #endregion
 
+        #region 终端列表清除
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             checkedListBox1.Items.Clear();
             checkedListBox2.Items.Clear();
         }
+        #endregion
 
+        #region 清除数据列表
         private void ToolStripButton2_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
             textBox1.Clear();
         }
+        #endregion
+
     }
 }
