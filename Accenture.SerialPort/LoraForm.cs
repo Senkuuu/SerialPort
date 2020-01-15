@@ -91,6 +91,7 @@ namespace Accenture.SerialPort
         }
 
 
+        #region 网关代理启动
         private void Btn_kq_Click(object sender, EventArgs e)
         {
             if (btn_kq.Text == "开启")
@@ -150,9 +151,9 @@ namespace Accenture.SerialPort
                 }
             }
         }
+        #endregion
 
-
-
+        #region 返回数据显示
         /// <summary>
         /// 接收到数据由udpserver推送
         /// </summary>
@@ -160,6 +161,7 @@ namespace Accenture.SerialPort
         private void Udpserver_ShowEvent(ASCSPackage package)
         {
             string deveui = package.app?.moteeui;
+            string errorcode = "";
             try
             {
                 string ShowJson = package.app.gwrx[0].time + "  " + package.app.moteeui + "  " + package.app.gwrx[0].chan + "  " + package.app.motetx.freq + "  " +
@@ -181,6 +183,7 @@ namespace Accenture.SerialPort
                             case "0x10":
                                 outdata += "频段选择：" + data.SubArray(11, 1).ToHexString().ToUpper() + "\r\n";
                                 outdata += "错误码：" + data.SubArray(12, 4).ToHexString().ToUpper() + "\r\n";
+                                errorcode = data.SubArray(12, 4).ToHexString();
                                 outdata += "回执指令：" + data.SubArray(16, 2).ToHexString().ToUpper() + "\r\n";
                                 break;
                             case "0x11":
@@ -194,138 +197,8 @@ namespace Accenture.SerialPort
                                 outdata += "唤醒周期：" + Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒\r\n";
                                 outdata += "********************End*********************" + "\r\n";
                                 outdata += "错误码：" + data.SubArray(26, 4).ToHexString().ToUpper() + "\r\n";
+                                errorcode = data.SubArray(26, 4).ToHexString();
                                 outdata += "回执指令：" + data.SubArray(30, 2).ToHexString().ToUpper() + "\r\n";
-                                #region 原
-                                //if (data.Length == 44)
-                                //{
-                                //    data = data.SubArray(6, 38);
-                                //    int CWCycle = ((data[1] << 8) | data[0]);
-                                //    int FBCycle = ((data[3] << 8) | data[2]);
-                                //    DateTime motetime = Utils.TimeBaseline.AddHours(8).AddSeconds((data[7] << 24) | (data[6] << 16) | (data[5] << 8) | data[4]);
-                                //    DateTime t1 = DateTime.Parse(motetime.Minute < 30 ? motetime.ToString("yyyy/MM/dd HH") + ":00:00" : motetime.ToString("yyyy/MM/dd HH") + ":30:00");
-                                //    Dictionary<DateTime, float> ddtem1 = new Dictionary<DateTime, float>();
-                                //    Dictionary<DateTime, float> ddhum1 = new Dictionary<DateTime, float>();
-                                //    Dictionary<DateTime, float> ddtem2 = new Dictionary<DateTime, float>();
-                                //    Dictionary<DateTime, float> ddhum2 = new Dictionary<DateTime, float>();
-                                //    ddtem1.Add(t1, ((data[9] << 8) | data[8]) / 100f);
-                                //    ddhum1.Add(t1, ((data[11] << 8) | data[10]) / 100f);
-                                //    ddtem1.Add(t1.AddMinutes(-30), ((data[13] << 8) | data[12]) / 100f);
-                                //    ddhum1.Add(t1.AddMinutes(-30), ((data[15] << 8) | data[14]) / 100f);
-                                //    ddtem1.Add(t1.AddMinutes(-60), ((data[17] << 8) | data[16]) / 100f);
-                                //    ddhum1.Add(t1.AddMinutes(-60), ((data[19] << 8) | data[18]) / 100f);
-                                //    DateTime BFtime = Utils.TimeBaseline.AddHours(8).AddSeconds((data[23] << 24) | (data[22] << 16) | (data[21] << 8) | data[20]);
-                                //    DateTime t2 = DateTime.Parse(BFtime.Minute < 30 ? BFtime.ToString("yyyy/MM/dd HH") + ":00:00" : BFtime.ToString("yyyy/MM/dd HH") + ":30:00");
-                                //    ddtem2.Add(t2, ((data[25] << 8) | data[24]) / 100f);
-                                //    ddhum2.Add(t2, ((data[27] << 8) | data[26]) / 100f);
-                                //    ddtem2.Add(t2.AddMinutes(30), ((data[29] << 8) | data[28]) / 100f);
-                                //    ddhum2.Add(t2.AddMinutes(30), ((data[31] << 8) | data[30]) / 100f);
-                                //    ddtem2.Add(t2.AddMinutes(60), ((data[33] << 8) | data[32]) / 100f);
-                                //    ddhum2.Add(t2.AddMinutes(60), ((data[35] << 8) | data[34]) / 100f);
-                                //    int Paset = (data[36] >> 4) & 0x0f;
-                                //    int Bt = data[36] & 0x0f;
-                                //    int OutWarn = data[37] & 0b1;
-                                //    int Version = data[37] >> 4;
-                                //    List<float> lt1 = ddtem1.Values.ToList();
-                                //    List<float> lm1 = ddhum1.Values.ToList();
-                                //    List<float> lt2 = ddtem2.Values.ToList();
-                                //    List<float> lm2 = ddhum2.Values.ToList();
-
-                                //    string ShowString = "Now=" + DateTime.Now.ToString() + ",C=" + motetime.ToString() + ",M=" + moteid + ",CR=" + CWCycle + ",SR=" + FBCycle + ",BT=" + Bt + ",T1="
-                                //    + t1.ToString() + "(TP=" + lt1[0] + "/" + lt1[1] + "/" + lt1[2] + ",HM=" + lm1[0] + "/" + lm1[1] + "/" + lm1[2] + "),T2=" + t2.ToString() + "(TP=" + lt2[0] + "/" + lt2[1] + "/" + lt2[2] + ",HM=" + lm2[0] + "/" + lm2[1] + "/" + lm2[2] + ")";
-                                //    AddMote(moteid);
-                                //    if (IsCheckMote(moteid)) AddShow(checkBox2.Checked ? ShowString : ShowJson, package);
-                                //    RealMoteState real = null;
-                                //    if (RealMoteStatic.TryGetValue(moteid, out real))
-                                //    {
-                                //        real.Time = (long)(motetime - DateTime.Now).TotalSeconds;
-                                //        real.LastTP = lt1[0];
-                                //        real.LastHm = lm1[0];
-                                //        real.BT = Bt;
-                                //        real.CR = CWCycle;
-                                //        real.SR = FBCycle;
-                                //        real.CKBJ = OutWarn;
-                                //        real.LastRcvTime = DateTime.Now;
-                                //        real.Version = Version;
-                                //    }
-                                //    else
-                                //    {
-                                //        real = new RealMoteState();
-                                //        real.DevAddr = moteid;
-                                //        real.DevEui = deveui;
-                                //        real.Time = (long)(motetime - DateTime.Now).TotalSeconds;
-                                //        real.LastTP = lt1[0];
-                                //        real.LastHm = lm2[0];
-                                //        real.BT = Bt;
-                                //        real.CR = CWCycle;
-                                //        real.SR = FBCycle;
-                                //        real.CKBJ = OutWarn;
-                                //        real.LastRcvTime = DateTime.Now;
-                                //        real.Version = Version;
-                                //        RealMoteStatic.TryAdd(moteid, real);
-                                //    }
-                                //    Task.Run(() =>
-                                //    {
-                                //        ddtem1.ToList().ForEach(i => { sql.TempInsert(new TempClass(moteid, i.Value, i.Key)); });
-                                //        ddhum1.ToList().ForEach(i => { sql.HumInsert(new HumClass(moteid, i.Value, i.Key)); });
-
-                                //        ddtem2.ToList().ForEach(i => { sql.TempInsert(new TempClass(moteid, i.Value, i.Key)); });
-                                //        ddhum2.ToList().ForEach(i => { sql.HumInsert(new HumClass(moteid, i.Value, i.Key)); });
-
-                                //        sql.RealTUpdateOrInsert(moteid, lt1[0], lm1[0], Bt, OutWarn, Version);
-                                //        sql.BaseDataInsert(new RcvBase(cmd, moteid, ShowString, DateTime.Now));
-                                //    });
-                                //    bool timejz = Math.Abs((DateTime.Now - motetime).TotalMinutes) >= 5 && real.TimeInt >= (ulong)config.TimeJzInt;
-                                //    real.TimeInt++;
-                                //    if (cmd == "0x24" && config.IsAuto && (timejz || CWCycle != config.CwCycle || FBCycle != config.SendCycle))
-                                //        Task.Run(() =>
-                                //        {
-                                //            List<byte> lb = new List<byte>();
-                                //            lb.Add(0x24); //包头
-                                //            lb = lb.Concat(Utils.Hex2Bytes(moteid)).ToList(); //moteid
-                                //            lb.Add(0x01); //命令
-                                //            lb.Add((byte)(config.CwCycle & 0xff));
-                                //            lb.Add((byte)((config.CwCycle >> 8) * 0xff));
-                                //            lb.Add((byte)(config.SendCycle & 0xff));
-                                //            lb.Add((byte)((config.SendCycle >> 8) * 0xff));
-                                //            int xz = 0, ms = 0;
-                                //            if (timejz)
-                                //            {
-                                //                if ((DateTime.Now - motetime).TotalMinutes >= 5)
-                                //                {
-                                //                    xz = 1;
-                                //                    ms = (int)(DateTime.Now - motetime).TotalSeconds;
-                                //                }
-                                //                else if ((DateTime.Now - motetime).TotalMinutes <= -5)
-                                //                {
-                                //                    xz = 2;
-                                //                    ms = (int)(motetime - DateTime.Now).TotalSeconds;
-                                //                }
-                                //                real.TimeInt = 0;
-                                //            }
-                                //            lb.Add((byte)((config.OutKU << 4) | (byte)xz));
-                                //            lb = lb.Concat(new byte[4] { (byte)(ms & 0xff), (byte)((ms >> 8) & 0xff), (byte)((ms >> 16) & 0xff), (byte)((ms >> 24) & 0xff) }).ToList();
-                                //            lb.Add(0x00);
-                                //            lb.Add(0x00);
-                                //            Send(deveui, lb.ToArray());
-                                //            log.Info("调整包发送！DevAddr=" + moteid + "条件=【ServerTime=" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ",MoteTime=" + motetime.ToString("yyyy-MM-dd HH:mm:ss")
-                                //          + ",MoteCR=" + CWCycle + ",ConfigCR=" + config.CwCycle + ",MoteSR=" + FBCycle + ",ConfigSR=" + config.SendCycle + "】");
-
-                                //        });
-                                //    else if (cmd == "0x25" && Math.Abs((DateTime.Now - motetime).TotalMinutes) >= 5)
-                                //    {
-                                //        Task.Run(() =>
-                                //        {
-                                //            List<byte> lb = new List<byte>();
-                                //            lb.Add(0x25); //包头
-                                //            long time = (long)(DateTime.Now.AddHours(-8) - Utils.TimeBaseline).TotalSeconds;
-                                //            lb = lb.Concat(new byte[4] { (byte)(time & 0xff), (byte)((time >> 8) & 0xff), (byte)((time >> 16) & 0xff), (byte)((time >> 24) & 0xff) }).ToList();
-                                //            Send(deveui, lb.ToArray());
-                                //            log.Info("出厂测试包下发！DevAddr=" + moteid);
-                                //        });
-                                //    }
-                                //}
-                                //else log.Info("数据长度错误！数据=" + data.ToHexString());
-                                #endregion
                                 break;
                             case "0x12":
                                 outdata += "标定类型：" + data.SubArray(11, 1).ToHexString().ToUpper() + "\r\n";
@@ -340,46 +213,11 @@ namespace Accenture.SerialPort
                                 outdata += "需要接收的下一个程序帧：" + data.SubArray(11, 2).ToHexString().ToUpper() + "\r\n";
                                 outdata += "程序下载总帧：" + data.SubArray(13, 2).ToHexString().ToUpper() + "\r\n";
                                 outdata += "错误码：" + data.SubArray(15, 4).ToHexString().ToUpper() + "\r\n";
+                                errorcode = data.SubArray(15, 4).ToHexString();
                                 outdata += "回执指令：" + data.SubArray(14, 2).ToHexString().ToUpper() + "\r\n";
-                                #region 原
-                                //if (data.Length == 7 || data.Length == 8)
-                                //{
-                                //    int fsk = 0; int radio = 0; int power = 0;
-                                //    if (data[5] == 0x01)
-                                //    {
-                                //        radio = data[6];
-                                //        power = data[7];
-                                //    }
-                                //    else if (data[5] == 0x02) fsk = data[6];
-                                //    Task.Run(() =>
-                                //    {
-                                //        string str = "Now=" + DateTime.Now.ToString() + ",Fsk=" + fsk + ",Radio=" + radio + ",Power=" + power;
-                                //        sql.BaseDataInsert(new RcvBase(cmd, moteid, str, DateTime.Now));
-                                //        sql.RealTUpdateOrInsert(moteid, fsk, radio, power);
-                                //    });
-                                //    if (config.IsAuto && power != 0 && (radio != config.Radio || power != config.Power))
-                                //    {
-                                //        Task.Run(() =>
-                                //        {
-                                //            List<byte> lb = new List<byte>();
-                                //            lb.Add(data[0]);
-                                //            lb = lb.Concat(Utils.Hex2Bytes(moteid)).ToList(); //moteid
-                                //            lb.Add(0x01);
-                                //            lb.Add((byte)(config.Radio * 0xff));
-                                //            lb.Add((byte)(config.Power * 0xff));
-                                //            Send(deveui, lb.ToArray());
-                                //            log.Info("Fsk调整包发送！DevAddr=" + moteid + ",条件=【MoteRadio=" + radio + ",ConfigRadio=" + config.Radio + ",MotePower=" + power + ",ConfigPower=" + config.Power + "】");
-                                //        });
-                                //    }
-                                //}
-                                //else log.Info("数据长度错误！数据=" + data.ToHexString());
-                                #endregion
                                 break;
                         }
-                        //if (dataGridView1.Rows.Count > 0)
-                        //{
-                        //    dataGridView1.Rows.Clear();
-                        //}
+
                         DataGridView dgv = dataGridView1;
                         this.Invoke((Action)delegate
                         {
@@ -403,6 +241,12 @@ namespace Accenture.SerialPort
                             dgvr.Cells["hexdata"].Value = data.ToHexString();
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
+
+                            //错误码不为00000000 整行醒目提示
+                            if (errorcode != "" && errorcode != "00000000")
+                            {
+                                dgvr.DefaultCellStyle.BackColor = Color.Red;
+                            }
 
                             string selsql = "select count(moteeui) from collectionTest where moteeui = '" + package.app.moteeui.ToString() + "'";
                             int count = (int)DBHelper.MyExecuteScalar(selsql);
@@ -434,6 +278,7 @@ namespace Accenture.SerialPort
                                 dgv.Rows[index].Visible = false;
                             }
                             dgv.Refresh();
+                            //向终端列表添加新的终端
                             if (!checkedListBox2.Items.Contains(package.app.moteeui.ToString()))
                             {
                                 checkedListBox1.Items.Add(package.app.moteeui.ToString());
@@ -453,25 +298,9 @@ namespace Accenture.SerialPort
                 log.Error(ex);
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 向终端列表添加新的终端
-        /// </summary>
-        /// <param name="deveui"></param>
-        private void AddMote(string deveui)
-        {
-            this.Invoke((Action)delegate
-            {
-                if (!checkedListBox1.Items.Contains(deveui))
-                {
-                    checkedListBox1.Items.Add(deveui);
-                    //隐藏的checkedListBox存入全部的值
-                    checkedListBox2.Items.Add(deveui);
-                }
-
-            });
-        }
-
+        #region 窗口左下角时间显示
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if (ISOpen)
@@ -506,6 +335,7 @@ namespace Accenture.SerialPort
             }
             time.Text = DateTime.Now.ToString();
         }
+        #endregion
 
         private void LoraForm_Load(object sender, EventArgs e)
         {
@@ -615,5 +445,12 @@ namespace Accenture.SerialPort
         }
         #endregion
 
+        #region 窗口关闭事件
+        private void LoraForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //关闭窗口时关闭网关通讯
+            UdpServer.Stop();
+        }
+        #endregion
     }
 }

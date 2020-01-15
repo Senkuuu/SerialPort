@@ -416,7 +416,9 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "LoraForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoraForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoraForm_FormClosing);
             this.Load += new System.EventHandler(this.LoraForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

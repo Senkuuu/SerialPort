@@ -392,12 +392,6 @@
             </summary>
             <param name="package">ASCS数据包</param>
         </member>
-        <member name="M:Accenture.SerialPort.LoraForm.AddMote(System.String)">
-            <summary>
-            向终端列表添加新的终端
-            </summary>
-            <param name="deveui"></param>
-        </member>
         <member name="F:Accenture.SerialPort.LoraForm.components">
             <summary>
             Required designer variable.
