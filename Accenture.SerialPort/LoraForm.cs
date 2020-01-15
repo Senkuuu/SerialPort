@@ -54,23 +54,12 @@ namespace Accenture.SerialPort
         {
             InitializeComponent();
         }
-
-        public CSConfig ReadConfig()
+        private void LoraForm_Load(object sender, EventArgs e)
         {
-            try
-            {
-                using (StreamReader sr = new StreamReader("CSConfig.config"))
-                {
-                    return JsonConvert.DeserializeObject<CSConfig>(sr.ReadToEnd());
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                return new CSConfig();
-            }
+            ReadIp();
         }
 
+        #region 读取已保存IP地址
         public void ReadIp()
         {
             if (File.Exists("Iplist.config"))
@@ -89,7 +78,7 @@ namespace Accenture.SerialPort
 
             }
         }
-
+        #endregion
 
         #region 网关代理启动
         private void Btn_kq_Click(object sender, EventArgs e)
@@ -337,11 +326,6 @@ namespace Accenture.SerialPort
         }
         #endregion
 
-        private void LoraForm_Load(object sender, EventArgs e)
-        {
-            ReadIp();
-        }
-
         #region 数据网格点击事件
         private void DataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -386,18 +370,6 @@ namespace Accenture.SerialPort
             }
         }
         #endregion
-
-        private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (e.RowIndex > -1)
-            //{
-            //    if (e.ColumnIndex == 8)
-            //    {
-            //        dataGridView1.Rows.Add();
-            //        dataGridView1.Rows[e.RowIndex].Visible = false;
-            //    }
-            //}
-        }
 
         #region 终端列表过滤
         private void TextBox3_TextChanged(object sender, EventArgs e)
