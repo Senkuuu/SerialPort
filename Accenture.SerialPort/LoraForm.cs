@@ -310,9 +310,9 @@ namespace Accenture.SerialPort
                             if (count > 0)
                             {
                                 //更新数据
-                                string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}'", package.app.gwrx[0].time.ToString(),
+                                string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}' where moteeui='{7}'", package.app.gwrx[0].time.ToString(),
                                                 package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
-                                                data.ToHexString(), outdata);
+                                                data.ToHexString(), outdata, package.app.moteeui.ToString());
                                 DBHelper.MyExecuteNonQuery(updsql);
                             }
                             else
