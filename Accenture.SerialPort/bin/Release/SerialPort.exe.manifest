@@ -138,6 +138,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NPoco.dll" size="584704">
+      <assemblyIdentity name="NPoco" version="5.5.0.1160" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>kMxrEhAA24MnGX1cpOwW8f742N7TbelzpQj8+16I+aA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NPOI.dll" size="1600000">
       <assemblyIdentity name="NPOI" version="2.0.6.0" publicKeyToken="0DF73EC7942B34E1" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -150,14 +162,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="109056">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="103936">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>zLtu4KdYgEjNGbeRx+FeiqGmsU71aC/+L6uPkM0O/0g=</dsig:DigestValue>
+        <dsig:DigestValue>3xNQtKlfbQd5a1iiJ+mgq+wULD2vlB9pT5cGG/L1aSA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -194,6 +206,18 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>2iioUGZKvmdudXzPshPh2XUyXG1seB+6z2Pgk726tBo=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WiYun.Core.dll" size="693248">
+      <assemblyIdentity name="WiYun.Core" version="5.5.0.1177" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>iVXtDKukHJdMNo40wjBJloxOEMITsS/5Eiua8DrDyGY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -278,13 +302,13 @@
       <dsig:DigestValue>l8DzoOkshpcYwbo8UNi+CEhHsaFHa2Ybtj7drmbGxz8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SerialPort.exe.config" size="163">
+  <file name="SerialPort.exe.config" size="532">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>aGKyVzYln3v9NE5D7qEKcDiFvjge7ip0XOsSkWsBoVg=</dsig:DigestValue>
+      <dsig:DigestValue>KDZpcUsN9NglyILdFKNmeZ9H/Nqkw5IBjCRoc7RINjE=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

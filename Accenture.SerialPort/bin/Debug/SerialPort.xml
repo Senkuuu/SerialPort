@@ -386,6 +386,11 @@
             计时当前心跳包已下发时间知道收到回复或者超时
             </summary>
         </member>
+        <member name="M:Accenture.SerialPort.LoraForm.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Accenture.SerialPort.LoraForm.Udpserver_ShowEvent(Wima.Lora.Model.ASCSPackage)">
             <summary>
             接收到数据由udpserver推送

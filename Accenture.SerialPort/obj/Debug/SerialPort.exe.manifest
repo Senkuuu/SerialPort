@@ -150,14 +150,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="107008">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="109056">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rjlYrF03JTd703/p7hLGI6v9Ct/jLFupoa3G9qXcgdI=</dsig:DigestValue>
+        <dsig:DigestValue>zLtu4KdYgEjNGbeRx+FeiqGmsU71aC/+L6uPkM0O/0g=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
