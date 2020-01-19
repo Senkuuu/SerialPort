@@ -380,23 +380,18 @@ namespace Accenture.SerialPort
                                 string Validation = "";
                                 #region 时间戳换算
                                 string st = "";
-                                string stamp = (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp).ToString();
+                                int t1 = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp : (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp) * -1;
+                                string stamp = Convert.ToString(t1, 16);
                                 stamp = stamp.Length % 2 == 0 ? stamp : "0" + stamp;
                                 if (stamp.Length < 8)
                                 {
-                                    for (int i = 0; i <= 7 - stamp.Length; i++)
+                                    for (int i = 0; i < 7 - stamp.Length; i++)
                                     {
                                         st = "0" + st;
-                                    }
-                                    if (Convert.ToInt32(stamp) > 0)
-                                    {
-                                        st = "0" + st;
-                                    }
-                                    else
-                                    {
-                                        st = "8" + st;
                                     }
                                 }
+
+                                st = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? "0" + st + stamp : "8" + st + stamp;
                                 #endregion
 
                                 #region 下发数据拼接
@@ -410,7 +405,7 @@ namespace Accenture.SerialPort
                                 }
                                 wd += WakeupData;
                                 Random rd = new Random();
-                                string re = rd.Next(1, Convert.ToInt32("FFFF", 16)).ToString();
+                                string re = Convert.ToString(rd.Next(1, Convert.ToInt32("FFFF", 16)), 16);
                                 if (re.Length < 4)
                                 {
                                     for (int i = 0; i < 4 - re.Length; i++)
@@ -420,7 +415,7 @@ namespace Accenture.SerialPort
                                 }
                                 res += re;
                                 string Data = Convert.ToString(30, 16).ToUpper() + data.SubArray(4, 4).ToHexString().ToUpper() + "51" + st +
-                                                 wd.ToUpper() + "00000000" + "0000" + Convert.ToString(Convert.ToInt32(res), 16).ToUpper();
+                                                 wd.ToUpper() + "00000000" + "0000" + res.ToUpper();
                                 for (int i = 0; i < Data.Length / 2; i++)
                                 {
                                     sumData += Convert.ToInt32(Data.Substring(i * 2, 2), 16);
@@ -431,12 +426,12 @@ namespace Accenture.SerialPort
                                 {
                                     for (int i = 0; i <= 4 - vd.Length; i++)
                                     {
-                                        Validation = "0" + Validation;
+                                        vd = "0" + Validation;
                                     }
                                 }
                                 #endregion
 
-                                Send(deveui, Utils.Hex2Bytes(@"自定义数据(ASCLL){FD0D0A" + Data + Validation.ToUpper() + "0D0ADF}已提交！"));
+                                Send(package.app.moteeui, strToHexByte("FD0D0A" + Data + vd.ToUpper() + "0D0ADF"));
                                 SendShow(@"FD0D0A" + Data + Validation.ToUpper() + "0D0ADF");
                                 #endregion
                             }
@@ -459,6 +454,22 @@ namespace Accenture.SerialPort
             {
                 log.Error(ex);
             }
+        }
+
+        /// <summary>
+        /// 字符串转换16进制字节数组
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns></returns>
+
+        private byte[] strToHexByte(string hexString)
+        {
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0) hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2).Replace(" ", ""), 16);
+            return returnBytes;
         }
 
         /// <summary>
