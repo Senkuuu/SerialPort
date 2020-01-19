@@ -397,6 +397,20 @@
             </summary>
             <param name="package">ASCS数据包</param>
         </member>
+        <member name="M:Accenture.SerialPort.LoraForm.ToTimeStamp(System.DateTime)">
+            <summary>
+            将时间转换为时间戳
+            </summary>
+            <param name="dateTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Accenture.SerialPort.LoraForm.Send(System.String,System.Byte[])">
+            <summary>
+            发送数据
+            </summary>
+            <param name="deveui">要发送的数据</param>
+            <param name="data">是否需要保存到已发送的列表中</param>
+        </member>
         <member name="F:Accenture.SerialPort.LoraForm.components">
             <summary>
             Required designer variable.

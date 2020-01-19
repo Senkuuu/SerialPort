@@ -48,6 +48,9 @@ namespace Accenture.SerialPort
         private int SendBeatTimeCount = 0;
         private LogMan log => UdpMan.log;
 
+        //唤醒周期
+        public string cycle { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -152,6 +155,7 @@ namespace Accenture.SerialPort
         {
             string deveui = package.app?.moteeui;
             string errorcode = "";
+            int timestamp = 0;
             try
             {
                 string ShowJson = package.app.gwrx[0].time + "  " + package.app.moteeui + "  " + package.app.gwrx[0].chan + "  " + package.app.motetx.freq + "  " +
@@ -163,10 +167,11 @@ namespace Accenture.SerialPort
                     // byte[] data = new byte[34] { 0x24, 0x13, 0x62, 0x57, 0xE6, 0x01, 0x1E, 0x00, 0x1E, 0x00, 0x44, 0x34, 0x0F, 0x5C, 0x0B, 0x09, 0x0B, 0x09, 0x0B, 0x09, 0x28, 0x9D, 0x0B, 0x5C, 0x34, 0x09, 0x34, 0x09, 0x34, 0x09, 0x02, 0x70, 0x0D, 0x0A };
                     if (data.Length > 6)
                     {
+                        #region 解析收到得数据
                         string moteid = data.SubArray(4, 4).ToHexString().ToUpper(); //短地址
                         string cmd = "0x" + new byte[] { data[10] }.ToHexString(); //指令
                         outdata += "地址：" + data.SubArray(4, 4).ToHexString().ToUpper() + "\r\n";
-                        outdata += "外设启用：" + Convert.ToInt32(data.SubArray(8, 2).ToHexString().ToUpper(), 16) + "\r\n";
+                        outdata += "外设启用：" + data.SubArray(8, 2).ToHexString().ToUpper() + "\r\n";
                         outdata += "指令码：" + cmd + "\r\n";
                         switch (cmd)
                         {
@@ -184,6 +189,7 @@ namespace Accenture.SerialPort
                                 outdata += "空气温度：" + Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16) + "\r\n";
                                 outdata += "空气湿度：" + Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16) + "\r\n";
                                 outdata += "时间戳：" + data.SubArray(18, 4).ToHexString().ToUpper() + "\r\n";
+                                timestamp = Convert.ToInt32(data.SubArray(18, 4).ToHexString().ToUpper(), 16);
                                 outdata += "唤醒周期：" + Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒\r\n";
                                 outdata += "********************End*********************" + "\r\n";
                                 outdata += "错误信息：" + errorCode(data.SubArray(26, 4).ToHexString()) + "\r\n";
@@ -207,100 +213,142 @@ namespace Accenture.SerialPort
                                 outdata += "回执指令：" + data.SubArray(14, 2).ToHexString().ToUpper() + "\r\n";
                                 break;
                         }
+                        #endregion
 
                         //是否存在
                         bool isexist = false;
                         DataGridView dgv = dataGridView1;
                         this.Invoke((Action)delegate
                         {
+                            #region 不采取唯一显示
+                            int index = dgv.Rows.Add();
+                            DataGridViewRow dgvr = dataGridView1.Rows[index];
+                            //序号
+                            dgvr.Cells["index"].Value = "#0";
+                            //系统时间
+                            dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            //终端ID
+                            dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            //接收频率
+                            dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            //信号强度
+                            dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            //速率
+                            dgvr.Cells["datr"].Value = package.app.motetx.datr;
+                            //信噪比
+                            dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            //16进制数据
+                            dgvr.Cells["hexdata"].Value = data.ToHexString();
+                            //字符串数据
+                            dgvr.Cells["strdata"].Value = outdata;
+
+                            //错误码不为00000000 整行醒目提示
+                            if (errorcode != "" && errorcode != "00000000")
+                            {
+                                dgvr.DefaultCellStyle.BackColor = Color.Red;
+                            }
+
+                            //勾选显示，没勾选隐藏
+                            if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
+                            {
+                                dgv.Rows[index].Visible = true;
+                            }
+                            else
+                            {
+                                dgv.Rows[index].Visible = false;
+                            }
+
+                            dgv.Refresh();
+                            #endregion
+
                             #region 判断终端信息是否存在，终端信息只显示最新的一条
-                            for (int i = 0; i < dgv.Rows.Count; i++)
-                            {
-                                if (dgv.Rows[i].Cells["moteeui"].Value.ToString() == package.app.moteeui.ToString())
-                                {
-                                    DataGridViewRow dgvr1 = dataGridView1.Rows[i];
-                                    //序号
-                                    dgvr1.Cells["index"].Value = "#0";
-                                    //系统时间
-                                    dgvr1.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
-                                    //终端ID
-                                    dgvr1.Cells["moteeui"].Value = package.app.moteeui.ToString();
-                                    //接收频率
-                                    dgvr1.Cells["freq"].Value = package.app.motetx.freq.ToString();
-                                    //信号强度
-                                    dgvr1.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
-                                    //速率
-                                    dgvr1.Cells["datr"].Value = package.app.motetx.datr;
-                                    //信噪比
-                                    dgvr1.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
-                                    //16进制数据
-                                    dgvr1.Cells["hexdata"].Value = data.ToHexString();
-                                    //字符串数据
-                                    dgvr1.Cells["strdata"].Value = outdata;
+                            //for (int i = 0; i < dgv.Rows.Count; i++)
+                            //{
+                            //    if (dgv.Rows[i].Cells["moteeui"].Value.ToString() == package.app.moteeui.ToString())
+                            //    {
+                            //        DataGridViewRow dgvr1 = dataGridView1.Rows[i];
+                            //        //序号
+                            //        dgvr1.Cells["index"].Value = "#0";
+                            //        //系统时间
+                            //        dgvr1.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            //        //终端ID
+                            //        dgvr1.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            //        //接收频率
+                            //        dgvr1.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            //        //信号强度
+                            //        dgvr1.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            //        //速率
+                            //        dgvr1.Cells["datr"].Value = package.app.motetx.datr;
+                            //        //信噪比
+                            //        dgvr1.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            //        //16进制数据
+                            //        dgvr1.Cells["hexdata"].Value = data.ToHexString();
+                            //        //字符串数据
+                            //        dgvr1.Cells["strdata"].Value = outdata;
 
-                                    //错误码不为00000000 整行醒目提示
-                                    if (errorcode != "" && errorcode != "00000000")
-                                    {
-                                        dgvr1.DefaultCellStyle.BackColor = Color.Red;
-                                    }
-                                    //勾选显示，没勾选隐藏
-                                    if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
-                                    {
-                                        dgv.Rows[i].Visible = true;
-                                    }
-                                    else
-                                    {
-                                        dgv.Rows[i].Visible = false;
-                                    }
+                            //        //错误码不为00000000 整行醒目提示
+                            //        if (errorcode != "" && errorcode != "00000000")
+                            //        {
+                            //            dgvr1.DefaultCellStyle.BackColor = Color.Red;
+                            //        }
+                            //        //勾选显示，没勾选隐藏
+                            //        if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
+                            //        {
+                            //            dgv.Rows[i].Visible = true;
+                            //        }
+                            //        else
+                            //        {
+                            //            dgv.Rows[i].Visible = false;
+                            //        }
 
-                                    isexist = true;
+                            //        isexist = true;
 
-                                    dgv.Refresh();
-                                }
-                            }
+                            //        dgv.Refresh();
+                            //    }
+                            //}
 
-                            //判断是否存在
-                            if (!isexist)
-                            {
-                                int index = dgv.Rows.Add();
-                                DataGridViewRow dgvr = dataGridView1.Rows[index];
-                                //序号
-                                dgvr.Cells["index"].Value = "#0";
-                                //系统时间
-                                dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
-                                //终端ID
-                                dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
-                                //接收频率
-                                dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
-                                //信号强度
-                                dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
-                                //速率
-                                dgvr.Cells["datr"].Value = package.app.motetx.datr;
-                                //信噪比
-                                dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
-                                //16进制数据
-                                dgvr.Cells["hexdata"].Value = data.ToHexString();
-                                //字符串数据
-                                dgvr.Cells["strdata"].Value = outdata;
+                            ////判断是否存在
+                            //if (!isexist)
+                            //{
+                            //    int index = dgv.Rows.Add();
+                            //    DataGridViewRow dgvr = dataGridView1.Rows[index];
+                            //    //序号
+                            //    dgvr.Cells["index"].Value = "#0";
+                            //    //系统时间
+                            //    dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            //    //终端ID
+                            //    dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            //    //接收频率
+                            //    dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            //    //信号强度
+                            //    dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            //    //速率
+                            //    dgvr.Cells["datr"].Value = package.app.motetx.datr;
+                            //    //信噪比
+                            //    dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            //    //16进制数据
+                            //    dgvr.Cells["hexdata"].Value = data.ToHexString();
+                            //    //字符串数据
+                            //    dgvr.Cells["strdata"].Value = outdata;
 
-                                //错误码不为00000000 整行醒目提示
-                                if (errorcode != "" && errorcode != "00000000")
-                                {
-                                    dgvr.DefaultCellStyle.BackColor = Color.Red;
-                                }
+                            //    //错误码不为00000000 整行醒目提示
+                            //    if (errorcode != "" && errorcode != "00000000")
+                            //    {
+                            //        dgvr.DefaultCellStyle.BackColor = Color.Red;
+                            //    }
 
-                                //勾选显示，没勾选隐藏
-                                if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
-                                {
-                                    dgv.Rows[index].Visible = true;
-                                }
-                                else
-                                {
-                                    dgv.Rows[index].Visible = false;
-                                }
+                            //    //勾选显示，没勾选隐藏
+                            //    if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
+                            //    {
+                            //        dgv.Rows[index].Visible = true;
+                            //    }
+                            //    else
+                            //    {
+                            //        dgv.Rows[index].Visible = false;
+                            //    }
 
-                                dgv.Refresh();
-                            }
+                            //    dgv.Refresh();
+                            //}
                             #endregion
 
                             #region 数据库操作
@@ -323,6 +371,74 @@ namespace Accenture.SerialPort
                                             package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
                                             data.ToHexString(), outdata);
                                 DBHelper.MyExecuteNonQuery(inssql);
+
+                                #region 发送数据
+                                string wd = "";
+                                string res = "";
+
+                                int sumData = 0;
+                                string Validation = "";
+                                #region 时间戳换算
+                                string st = "";
+                                string stamp = (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp).ToString();
+                                stamp = stamp.Length % 2 == 0 ? stamp : "0" + stamp;
+                                if (stamp.Length < 8)
+                                {
+                                    for (int i = 0; i <= 7 - stamp.Length; i++)
+                                    {
+                                        st = "0" + st;
+                                    }
+                                    if (Convert.ToInt32(stamp) > 0)
+                                    {
+                                        st = "0" + st;
+                                    }
+                                    else
+                                    {
+                                        st = "8" + st;
+                                    }
+                                }
+                                #endregion
+
+                                #region 下发数据拼接
+                                string WakeupData = Convert.ToString(Convert.ToInt32(cycle), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(cycle), 16) : "0" + Convert.ToString(Convert.ToInt32(cycle), 16);
+                                if (WakeupData.Length < 8)
+                                {
+                                    for (int i = 0; i < 8 - WakeupData.Length; i++)
+                                    {
+                                        wd += "0";
+                                    }
+                                }
+                                wd += WakeupData;
+                                Random rd = new Random();
+                                string re = rd.Next(1, Convert.ToInt32("FFFF", 16)).ToString();
+                                if (re.Length < 4)
+                                {
+                                    for (int i = 0; i < 4 - re.Length; i++)
+                                    {
+                                        res += "0";
+                                    }
+                                }
+                                res += re;
+                                string Data = Convert.ToString(30, 16).ToUpper() + data.SubArray(4, 4).ToHexString().ToUpper() + "51" + st +
+                                                 wd.ToUpper() + "00000000" + "0000" + Convert.ToString(Convert.ToInt32(res), 16).ToUpper();
+                                for (int i = 0; i < Data.Length / 2; i++)
+                                {
+                                    sumData += Convert.ToInt32(Data.Substring(i * 2, 2), 16);
+                                }
+                                Validation = Convert.ToString(sumData, 16);
+                                string vd = Validation.Length % 2 == 0 ? Validation : "0" + Validation;
+                                if (vd.Length < 4)
+                                {
+                                    for (int i = 0; i <= 4 - vd.Length; i++)
+                                    {
+                                        Validation = "0" + Validation;
+                                    }
+                                }
+                                #endregion
+
+                                Send(deveui, Utils.Hex2Bytes(@"自定义数据(ASCLL){FD0D0A" + Data + Validation.ToUpper() + "0D0ADF}已提交！"));
+                                SendShow(@"FD0D0A" + Data + Validation.ToUpper() + "0D0ADF");
+                                #endregion
                             }
                             #endregion
 
@@ -343,6 +459,43 @@ namespace Accenture.SerialPort
             {
                 log.Error(ex);
             }
+        }
+
+        /// <summary>
+        /// 将时间转换为时间戳
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public long ToTimeStamp(DateTime dateTime)
+        {
+            var TimeStamps = (dateTime.Ticks - 621355968000000000) / 10000000;
+            return TimeStamps;
+        }
+
+        private void SendShow(string str)
+        {
+            listBox1.Items.Insert(0, "[" + DateTime.Now.ToString() + "]提交数据:" + str);
+            listBox1.BeginUpdate();
+            if (listBox1.Items.Count >= 100)
+                listBox1.Items.RemoveAt(listBox1.Items.Count - 1);
+            listBox1.EndUpdate();
+        }
+        #endregion
+
+        #region 发送数据
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="deveui">要发送的数据</param>
+        /// <param name="data">是否需要保存到已发送的列表中</param>
+        private void Send(string deveui, byte[] data)
+        {
+            try
+            {
+                if (UdpServer != null)
+                    UdpServer.SendPacket(deveui, data);
+            }
+            catch (Exception ex) { log.Error(ex); }
         }
         #endregion
 
@@ -541,5 +694,10 @@ namespace Accenture.SerialPort
             if (UdpServer?.UdpServer != null) UdpServer.Stop();
         }
         #endregion
+
+        private void ListBox1_DoubleClick(object sender, EventArgs e)
+        {
+            MessageBox.Show(listBox1.SelectedItem.ToString());
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace Accenture.SerialPort
 
 
 
+
         #region 自动打开串口
         public frmMain()
         {
@@ -757,8 +758,8 @@ namespace Accenture.SerialPort
                 #region 得到16进制地址（硬件编号）
                 string MACID = this.textBox3.Text.Trim();
                 //数据库查询硬件地址（硬件编号）
-                string getaddress = string.Format("select MACID from [dbo].[YiBao]  where [MACID] = '{0}'", MACID);
-                address = DBHelper.MyExecuteScalar(getaddress).ToString();
+                //string getaddress = string.Format("select MACID from [dbo].[YiBao]  where [MACID] = '{0}'", MACID);
+                //address = DBHelper.MyExecuteScalar(getaddress).ToString();
                 if (address.Trim().Length != 8)//验证ID是否为八位数，否则在前面用'0'补齐
                 {
                     while (true)
@@ -771,18 +772,17 @@ namespace Accenture.SerialPort
                     }
                 }
                 //转16进制
-                byte[] address1 = num1(address);
-                string adr = "";
-                for (int i = 0; i < address1.Length; i++)
-                {
-                    adr += address1[i];
-                }
+                //byte[] address1 = num1(address);
+                //string adr = "";
+                //for (int i = 0; i < address1.Length; i++)
+                //{
+                //    adr += address1[i];
+                //}
                 int sum = 0;
-                address = adr;
-                address = adr = "22222322";//测试用地址
-                for (int i = 0; i < adr.Length / 2; i++)
+                address = MACID;
+                for (int i = 0; i < address.Length / 2; i++)
                 {
-                    sum += Convert.ToInt32(adr.Substring(i * 2, 2), 16);
+                    sum += Convert.ToInt32(address.Substring(i * 2, 2), 16);
                 }
 
                 #endregion
@@ -851,7 +851,7 @@ namespace Accenture.SerialPort
                 MessageBox.Show("请先打开串口！");
                 return;
             }
-            if (textBox3.Text.Length != 8)
+            if (textBox3.Text.Length != 8 && (Convert.ToInt32(textBox3.Text, 16) >= 0 && Convert.ToInt32(textBox3.Text, 16) <= 650))
             {
                 string sel = "select count(MACID) from Log where MACID = '" + textBox3.Text + "'";
                 int count = (int)DBHelper.MyExecuteScalar(sel);
@@ -1006,7 +1006,7 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            if (textBox3.Text.Length == 43)
+            if (textBox3.Text.Length == 8)
             {
                 string selsql = string.Format("select outputdata from log where macid='{0}' and docount='0'", textBox3.Text);
                 object re = DBHelper.MyExecuteScalar(selsql);
@@ -1228,13 +1228,6 @@ namespace Accenture.SerialPort
                     AddContent(new UTF8Encoding().GetString(data));
                 }
 
-                else
-                { }
-
-                lblRevCount.Invoke(new MethodInvoker(delegate
-                {
-                    lblRevCount.Text = (int.Parse(lblRevCount.Text) + data.Length).ToString();
-                }));
 
             }));
             th.Start();
@@ -1251,7 +1244,7 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(3000);//等待0.1秒
+            Thread.Sleep(4000);//等待0.1秒
             #region 计算出返回协议的位置
             string test1 = serialPort.ReadExisting();
             if (test1.IndexOf("USART3 Rec From ISR:") < 1)
@@ -1286,19 +1279,27 @@ namespace Accenture.SerialPort
                         test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
                         outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
                         outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
-                        outdata += "外设启用：" + Convert.ToInt32(test2.Substring(10, 4), 16) + "\r\n";
+                        outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
                         outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
+                        //仅显示一次
+                        if (!textBox2.Text.Contains("地址"))
+                        {
+                            textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
+                            "外设启用：" + test2.Substring(10, 4) + "\r\n";
+                        }
+
                         if (test2.Substring(14, 2) == "10")
                         {
                             outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
                             outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
                             outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
+                            textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
                         }
                         else if (test2.Substring(14, 2) == "11")
                         {
                             outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
                             outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
-                            outdata += "回执指令：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
+                            outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
                             outdata += "********************Playload****************\r\n";
                             outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
                             outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
@@ -1307,17 +1308,27 @@ namespace Accenture.SerialPort
                             outdata += "********************End*********************\r\n";
                             outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
                             outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
+                            textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                            "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
+                            "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
+                            "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
+                            "错误码：" + test2.Substring(46, 8) + "\r\n";
                         }
                         else if (test2.Substring(14, 2) == "12")
                         {
                             outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
-                            outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(28, 4), 16) + "\r\n";
+                            outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
                             outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
                             outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
                             outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
                             //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
                             outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
                             outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
+                            textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
+                            "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                            "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
+                            "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
+                            "错误码：" + test2.Substring(30, 8) + "\r\n";
                         }
                         else if (test2.Substring(14, 2) == "13")
                         {
@@ -1349,23 +1360,6 @@ namespace Accenture.SerialPort
                         }
                     }
                 }
-
-                //if (test1.IndexOf("Collect Data") > 0)
-                //{
-                //    string errorcode = "错误码：" + getInformation(ifmation, "ErrorCode=", 8) + "\r\n";
-                //    string UNIXTIME = "时间戳：" + getInformation(ifmation, "UNIXTIME=", 8) + "\r\n";
-                //    string WakeUpTime = "唤醒周期：" + Convert.ToInt32(getInformation(ifmation, "WakeUpTime=", 8), 16) + "秒" + "\r\n";
-                //    string Power = "电量：" + getInformation(ifmation, "Power=", 1) + "\r\n";
-                //    string AirTemp = "温度：" + getInformation(ifmation, "AirTemp=", 5) + "\r\n";
-                //    string AirHum = "湿度：" + getInformation(ifmation, "AirHum=", 5) + "\r\n";
-                //    string S_Version = "版本号：" + getInformation(ifmation, "S_Version=", 2) + "\r\n";
-                //    string LORA_Channel = "LORA_Channel：" + getInformation(ifmation, "LORA_Channel=", 1) + "\r\n";
-                //    string WakeUpMethods = "唤醒方式：" + getInformation(ifmation, "WakeUpMethods=", 1) == "1" ? "自动唤醒" : "手动唤醒" + "\r\n";
-
-                //    ifm = errorcode + UNIXTIME + WakeUpTime + Power + AirTemp + AirHum + S_Version + LORA_Channel + WakeUpMethods;
-                //}
-
-
             }
             catch (Exception ex)
             {
@@ -1599,6 +1593,7 @@ namespace Accenture.SerialPort
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            txtSendData.Text = listBox1.SelectedItem.ToString();
             string seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, textBox3.Text);
             object data = DBHelper.MyExecuteScalar(seldata);
             if (data != null)
@@ -1621,6 +1616,7 @@ namespace Accenture.SerialPort
         private void Button7_Click(object sender, EventArgs e)
         {
             LoraForm lf = new LoraForm();
+            lf.cycle = WakeupTxt.Text;
             lf.ShowDialog(this);
         }
 

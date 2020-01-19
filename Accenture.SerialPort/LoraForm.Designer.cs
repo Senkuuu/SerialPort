@@ -51,6 +51,7 @@
             this.lab_img = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -246,6 +247,7 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.White;
+            this.groupBox2.Controls.Add(this.listBox1);
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox2.Location = new System.Drawing.Point(256, 320);
@@ -254,6 +256,17 @@
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据详情";
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(669, 17);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(302, 257);
+            this.listBox1.TabIndex = 14;
+            this.listBox1.DoubleClick += new System.EventHandler(this.ListBox1_DoubleClick);
             // 
             // textBox1
             // 
@@ -266,7 +279,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(968, 257);
+            this.textBox1.Size = new System.Drawing.Size(668, 257);
             this.textBox1.TabIndex = 13;
             // 
             // dataGridView1
@@ -417,7 +430,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Name = "LoraForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LoraForm";
+            this.Text = "温湿度检测仪(网关)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoraForm_FormClosing);
             this.Load += new System.EventHandler(this.LoraForm_Load);
             this.toolStrip1.ResumeLayout(false);
@@ -475,5 +488,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.CheckedListBox checkedListBox2;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
