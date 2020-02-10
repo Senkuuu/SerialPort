@@ -879,7 +879,7 @@ namespace Accenture.SerialPort
             {
                 if (!string.IsNullOrWhiteSpace(re.ToString()))
                 {
-                    textBox2.Text = "每个设备只能操作一次";
+                    MessageBox.Show("每个设备只能操作一次");
                     return;
                 }
             }
@@ -1272,7 +1272,7 @@ namespace Accenture.SerialPort
                         int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
                         if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
                         {
-                            MessageBox.Show("没有接收到第" + i + "条（" + listBox1.Items[i].ToString() + "）的返回数据！");
+                            textBox2.Text = "没有接收到第" + i + "条（" + listBox1.Items[i].ToString() + "）的返回数据！";
                             return;
                         }
                         int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
