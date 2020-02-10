@@ -846,6 +846,7 @@ namespace Accenture.SerialPort
             listBox1.Items.Clear();
             button3.BackColor = button4.BackColor = button6.BackColor = button5.BackColor = System.Drawing.Color.Transparent;
             textBox1.Clear();
+            textBox2.Clear();
             if (serialPort.IsOpen == false)
             {
                 MessageBox.Show("请先打开串口！");
@@ -878,7 +879,7 @@ namespace Accenture.SerialPort
             {
                 if (!string.IsNullOrWhiteSpace(re.ToString()))
                 {
-                    MessageBox.Show("每个设备只能操作一次");
+                    textBox2.Text = "每个设备只能操作一次";
                     return;
                 }
             }
