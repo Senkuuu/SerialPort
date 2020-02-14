@@ -17,6 +17,7 @@ using Wima.Log;
 using System.Configuration;
 using Newtonsoft.Json;
 using System.Threading;
+using NSClient.Plugins;
 
 namespace Accenture.SerialPort
 {
@@ -241,6 +242,11 @@ namespace Accenture.SerialPort
                             dgvr.Cells["hexdata"].Value = data.ToHexString();
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
+
+                            #region 采集程序数据传输
+                            ApiCall ac = new ApiCall();
+                            ac.Running();
+                            #endregion
 
                             //错误码不为00000000 整行醒目提示
                             if (errorcode != "" && errorcode != "00000000")

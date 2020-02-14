@@ -64,6 +64,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AsEquipData.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="frmExport.cs">
@@ -205,6 +206,10 @@
     <Reference Include="NPOI, Version=2.0.6.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NSClient.Base, Version=5.3.0.1038, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\NSClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext" />
