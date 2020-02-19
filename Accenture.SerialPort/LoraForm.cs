@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using Wima.Lora.Model;
 using Wima.Lora;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
 using Wima.Log;
-using System.Configuration;
-using Newtonsoft.Json;
-using System.Threading;
 using NSClient.Plugins;
+using NPoco;
+using WiYun.Data;
 
 namespace Accenture.SerialPort
 {
@@ -226,26 +221,43 @@ namespace Accenture.SerialPort
                             DataGridViewRow dgvr = dataGridView1.Rows[index];
                             //序号
                             dgvr.Cells["index"].Value = "#0";
+                            //唤醒方式
+                            dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
                             //系统时间
                             dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
                             //终端ID
                             dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
                             //接收频率
                             dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            //电量
+                            dgvr.Cells["power"].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
                             //信号强度
                             dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
                             //速率
                             dgvr.Cells["datr"].Value = package.app.motetx.datr;
                             //信噪比
                             dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            //唤醒周期
+                            dgvr.Cells["wakeup"].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
+                            //温度
+                            dgvr.Cells["temp"].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                            //湿度
+                            dgvr.Cells["hum"].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+                            //错误码
+                            dgvr.Cells["ercode"].Value = errorCode(data.SubArray(26, 4).ToHexString());
                             //16进制数据
                             dgvr.Cells["hexdata"].Value = data.ToHexString();
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
 
+                            AsEquipData request = new AsEquipData();
+
                             #region 采集程序数据传输
-                            ApiCall ac = new ApiCall();
-                            ac.Running();
+                            //using (var db = new NDatabase())
+                            //{
+                            //    ApiCall ac = new ApiCall();
+                            //    ac.SaveDataMethod(db, request);
+                            //}
                             #endregion
 
                             //错误码不为00000000 整行醒目提示
@@ -360,86 +372,89 @@ namespace Accenture.SerialPort
                             #region 数据库操作
                             string selsql = "select count(moteeui) from collectionTest where moteeui = '" + package.app.moteeui.ToString() + "'";
                             int count = (int)DBHelper.MyExecuteScalar(selsql);
-                            //插入数据库
-                            if (count > 0)
+                            //插入数据库     ————————————     2020/2/18 新增手动唤醒不需要存数据库
+                            if (data.SubArray(12, 1).ToHexString().ToUpper() == "01")
                             {
-                                //更新数据
-                                string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}' where moteeui='{7}'", package.app.gwrx[0].time.ToString(),
-                                                package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
-                                                data.ToHexString(), outdata, package.app.moteeui.ToString());
-                                DBHelper.MyExecuteNonQuery(updsql);
-                            }
-                            else
-                            {
-                                //插入数据
-                                string inssql = string.Format(@"insert into collectionTest(systime,moteeui,freq,rssi,datr,lsnr,hexdata,strdata) 
+                                if (count > 0)
+                                {
+                                    //更新数据
+                                    string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}' where moteeui='{7}'", package.app.gwrx[0].time.ToString(),
+                                                    package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                                    data.ToHexString(), outdata, package.app.moteeui.ToString());
+                                    DBHelper.MyExecuteNonQuery(updsql);
+                                }
+                                else
+                                {
+                                    //插入数据
+                                    string inssql = string.Format(@"insert into collectionTest(systime,moteeui,freq,rssi,datr,lsnr,hexdata,strdata) 
                                             values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", package.app.gwrx[0].time.ToString(), package.app.moteeui.ToString(),
-                                            package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
-                                            data.ToHexString(), outdata);
-                                DBHelper.MyExecuteNonQuery(inssql);
+                                                package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                                data.ToHexString(), outdata);
+                                    DBHelper.MyExecuteNonQuery(inssql);
 
-                                #region 发送数据
-                                string wd = "";
-                                string res = "";
+                                    #region 下发时间效准数据协议
+                                    string wd = "";
+                                    string res = "";
 
-                                int sumData = 0;
-                                string Validation = "";
-                                #region 时间戳换算
-                                string st = "";
-                                int t1 = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp : (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp) * -1;
-                                string stamp = Convert.ToString(t1, 16);
-                                stamp = stamp.Length % 2 == 0 ? stamp : "0" + stamp;
-                                if (stamp.Length < 8)
-                                {
-                                    for (int i = 0; i < 7 - stamp.Length; i++)
+                                    int sumData = 0;
+                                    string Validation = "";
+                                    #region 时间戳换算
+                                    string st = "";
+                                    int t1 = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp : (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp) * -1;
+                                    string stamp = Convert.ToString(t1, 16);
+                                    stamp = stamp.Length % 2 == 0 ? stamp : "0" + stamp;
+                                    if (stamp.Length < 8)
                                     {
-                                        st = "0" + st;
+                                        for (int i = 0; i < 7 - stamp.Length; i++)
+                                        {
+                                            st = "0" + st;
+                                        }
                                     }
-                                }
 
-                                st = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? "0" + st + stamp : "8" + st + stamp;
-                                #endregion
+                                    st = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? "0" + st + stamp : "8" + st + stamp;
+                                    #endregion
 
-                                #region 下发数据拼接
-                                string WakeupData = Convert.ToString(Convert.ToInt32(cycle), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(cycle), 16) : "0" + Convert.ToString(Convert.ToInt32(cycle), 16);
-                                if (WakeupData.Length < 8)
-                                {
-                                    for (int i = 0; i < 8 - WakeupData.Length; i++)
+                                    #region 下发数据拼接
+                                    string WakeupData = Convert.ToString(Convert.ToInt32(cycle), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(cycle), 16) : "0" + Convert.ToString(Convert.ToInt32(cycle), 16);
+                                    if (WakeupData.Length < 8)
                                     {
-                                        wd += "0";
+                                        for (int i = 0; i < 8 - WakeupData.Length; i++)
+                                        {
+                                            wd += "0";
+                                        }
                                     }
-                                }
-                                wd += WakeupData;
-                                Random rd = new Random();
-                                string re = Convert.ToString(rd.Next(1, Convert.ToInt32("FFFF", 16)), 16);
-                                if (re.Length < 4)
-                                {
-                                    for (int i = 0; i < 4 - re.Length; i++)
+                                    wd += WakeupData;
+                                    Random rd = new Random();
+                                    string re = Convert.ToString(rd.Next(1, Convert.ToInt32("FFFF", 16)), 16);
+                                    if (re.Length < 4)
                                     {
-                                        res += "0";
+                                        for (int i = 0; i < 4 - re.Length; i++)
+                                        {
+                                            res += "0";
+                                        }
                                     }
-                                }
-                                res += re;
-                                string Data = Convert.ToString(30, 16).ToUpper() + data.SubArray(4, 4).ToHexString().ToUpper() + "51" + st +
-                                                 wd.ToUpper() + "00000000" + "0000" + res.ToUpper();
-                                for (int i = 0; i < Data.Length / 2; i++)
-                                {
-                                    sumData += Convert.ToInt32(Data.Substring(i * 2, 2), 16);
-                                }
-                                Validation = Convert.ToString(sumData, 16);
-                                string vd = Validation.Length % 2 == 0 ? Validation : "0" + Validation;
-                                if (vd.Length < 4)
-                                {
-                                    for (int i = 0; i <= 4 - vd.Length; i++)
+                                    res += re;
+                                    string Data = Convert.ToString(30, 16).ToUpper() + data.SubArray(4, 4).ToHexString().ToUpper() + "51" + st +
+                                                     wd.ToUpper() + "00000000" + "0000" + res.ToUpper();
+                                    for (int i = 0; i < Data.Length / 2; i++)
                                     {
-                                        vd = "0" + Validation;
+                                        sumData += Convert.ToInt32(Data.Substring(i * 2, 2), 16);
                                     }
-                                }
-                                #endregion
+                                    Validation = Convert.ToString(sumData, 16);
+                                    string vd = Validation.Length % 2 == 0 ? Validation : "0" + Validation;
+                                    if (vd.Length < 4)
+                                    {
+                                        for (int i = 0; i <= 4 - vd.Length; i++)
+                                        {
+                                            vd = "0" + Validation;
+                                        }
+                                    }
+                                    #endregion
 
-                                Send(package.app.moteeui, strToHexByte("FD0D0A" + Data + vd.ToUpper() + "0D0ADF"));
-                                SendShow(@"FD0D0A" + Data + Validation.ToUpper() + "0D0ADF");
-                                #endregion
+                                    Send(package.app.moteeui, strToHexByte("FD0D0A" + Data + vd.ToUpper() + "0D0ADF"));
+                                    SendShow(@"FD0D0A" + Data + Validation.ToUpper() + "0D0ADF");
+                                    #endregion
+                                }
                             }
                             #endregion
 
@@ -679,10 +694,11 @@ namespace Accenture.SerialPort
             {
                 //过滤查询
                 List<string> nlist = clist.Where(x => x.Contains(textBox3.Text)).ToList();
+                List<string> alist = new List<string>();
                 checkedListBox1.Items.Clear();
-                for (int i = 0; i < nlist.Count; i++)
+                for (int i = 0; i < alist.Count; i++)
                 {
-                    checkedListBox1.Items.Add(nlist[i]);
+                    checkedListBox1.Items.Add(alist[i]);
                 }
             }
         }
@@ -716,5 +732,68 @@ namespace Accenture.SerialPort
         {
             MessageBox.Show(listBox1.SelectedItem.ToString());
         }
+
+        #region 唤醒方式的显示隐藏
+        private void Cbox_manual_CheckedChanged(object sender, EventArgs e)
+        {
+            cbox_CheckedChanged();
+        }
+
+        private void Cbox_auto_CheckedChanged(object sender, EventArgs e)
+        {
+            cbox_CheckedChanged();
+        }
+
+        private void cbox_CheckedChanged()
+        {
+            if ((cbox_manual.Checked && cbox_auto.Checked) || (!cbox_manual.Checked && !cbox_auto.Checked))
+            {
+                List<string> clist = new List<string>();
+                for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+                {
+                    clist.Add(checkedListBox1.CheckedItems[i].ToString());
+                }
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    if (clist.Contains(dataGridView1.Rows[i].Cells["moteeui"].Value.ToString()))
+                    {
+                        dataGridView1.Rows[i].Visible = true;
+                    }
+                    else
+                    {
+                        dataGridView1.Rows[i].Visible = false;
+                    }
+                }
+            }
+            else if (cbox_auto.Checked)
+            {
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells["wakeuptype"].Value.ToString() == "自动唤醒")
+                    {
+                        dataGridView1.Rows[i].Visible = true;
+                    }
+                    else
+                    {
+                        dataGridView1.Rows[i].Visible = false;
+                    }
+                }
+            }
+            else if (cbox_manual.Checked)
+            {
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells["wakeuptype"].Value.ToString() == "手动唤醒")
+                    {
+                        dataGridView1.Rows[i].Visible = true;
+                    }
+                    else
+                    {
+                        dataGridView1.Rows[i].Visible = false;
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

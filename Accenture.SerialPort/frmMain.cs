@@ -1009,20 +1009,27 @@ namespace Accenture.SerialPort
         {
             if (textBox3.Text.Length == 8)
             {
-                string selsql = string.Format("select outputdata from log where macid='{0}' and docount='0'", textBox3.Text);
-                object re = DBHelper.MyExecuteScalar(selsql);
-                if (re != null)
+                try
                 {
-                    if (!string.IsNullOrWhiteSpace(re.ToString()))
+                    string selsql = string.Format("select outputdata from log where macid='{0}' and docount='0'", textBox3.Text);
+                    object re = DBHelper.MyExecuteScalar(selsql);
+                    if (re != null)
                     {
-                        listBox1.Items.Clear();
-                        string sel = string.Format("select inputdata,docount from log where macid='{0}'", textBox3.Text);
-                        SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
-                        while (sdr.Read())
+                        if (!string.IsNullOrWhiteSpace(re.ToString()))
                         {
-                            listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
+                            listBox1.Items.Clear();
+                            string sel = string.Format("select inputdata,docount from log where macid='{0}'", textBox3.Text);
+                            SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
+                            while (sdr.Read())
+                            {
+                                listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }

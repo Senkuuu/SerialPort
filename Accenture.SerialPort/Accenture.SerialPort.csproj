@@ -207,6 +207,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\NPOI.dll</HintPath>
     </Reference>
+    <Reference Include="NSClient.ApiCall, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\NSClient.ApiCall.dll</HintPath>
+    </Reference>
     <Reference Include="NSClient.Base, Version=5.3.0.1038, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\NSClient.Base.dll</HintPath>

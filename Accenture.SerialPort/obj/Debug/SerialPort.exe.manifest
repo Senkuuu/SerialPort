@@ -138,6 +138,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NPoco.dll" size="584704">
+      <assemblyIdentity name="NPoco" version="5.5.0.1160" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>kMxrEhAA24MnGX1cpOwW8f742N7TbelzpQj8+16I+aA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NPOI.dll" size="1600000">
       <assemblyIdentity name="NPOI" version="2.0.6.0" publicKeyToken="0DF73EC7942B34E1" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -150,26 +162,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.Base.dll" size="119296">
-      <assemblyIdentity name="NSClient.Base" version="5.3.0.1038" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.ApiCall.dll" size="246272">
+      <assemblyIdentity name="NSClient.ApiCall" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PsQ11uN856iHC97Uz7+WCXNROLNTelodaf5j/aEnQd8=</dsig:DigestValue>
+        <dsig:DigestValue>zvu/ukVmy/vFXYecK2nOe60li0Te+uQTPeMvy/COam4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="112640">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="115200">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4kNXvrIMQqrZh2MJih4iI8nqgIBUuIyy2B3tr2g1m5E=</dsig:DigestValue>
+        <dsig:DigestValue>CL+TDd113J99IlZqJiSWEUHHhl3KofI1Eaq+M61/ims=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -206,6 +218,18 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>2iioUGZKvmdudXzPshPh2XUyXG1seB+6z2Pgk726tBo=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WiYun.Core.dll" size="693248">
+      <assemblyIdentity name="WiYun.Core" version="5.5.0.1177" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>iVXtDKukHJdMNo40wjBJloxOEMITsS/5Eiua8DrDyGY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

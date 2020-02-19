@@ -55,25 +55,35 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.wakeuptype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.moteeui = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.freq = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.datr = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rssi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lsnr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.power = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.wakeup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.temp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.hum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hexdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.strdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ercode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.cbox_manual = new System.Windows.Forms.CheckBox();
+            this.cbox_auto = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -293,14 +303,20 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.index,
+            this.wakeuptype,
             this.systime,
             this.moteeui,
             this.freq,
             this.datr,
             this.rssi,
             this.lsnr,
+            this.power,
+            this.wakeup,
+            this.temp,
+            this.hum,
             this.hexdata,
-            this.strdata});
+            this.strdata,
+            this.ercode});
             this.dataGridView1.Location = new System.Drawing.Point(256, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
@@ -315,6 +331,12 @@
             this.index.HeaderText = "序号";
             this.index.Name = "index";
             this.index.ReadOnly = true;
+            this.index.Visible = false;
+            // 
+            // wakeuptype
+            // 
+            this.wakeuptype.HeaderText = "唤醒方式";
+            this.wakeuptype.Name = "wakeuptype";
             // 
             // systime
             // 
@@ -339,6 +361,7 @@
             this.datr.HeaderText = "速率";
             this.datr.Name = "datr";
             this.datr.ReadOnly = true;
+            this.datr.Visible = false;
             this.datr.Width = 70;
             // 
             // rssi
@@ -354,11 +377,32 @@
             this.lsnr.ReadOnly = true;
             this.lsnr.Width = 70;
             // 
+            // power
+            // 
+            this.power.HeaderText = "电量";
+            this.power.Name = "power";
+            // 
+            // wakeup
+            // 
+            this.wakeup.HeaderText = "唤醒周期";
+            this.wakeup.Name = "wakeup";
+            // 
+            // temp
+            // 
+            this.temp.HeaderText = "温度";
+            this.temp.Name = "temp";
+            // 
+            // hum
+            // 
+            this.hum.HeaderText = "湿度";
+            this.hum.Name = "hum";
+            // 
             // hexdata
             // 
             this.hexdata.HeaderText = "16进制数据";
             this.hexdata.Name = "hexdata";
             this.hexdata.ReadOnly = true;
+            this.hexdata.Visible = false;
             // 
             // strdata
             // 
@@ -366,14 +410,20 @@
             this.strdata.Name = "strdata";
             this.strdata.ReadOnly = true;
             this.strdata.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.strdata.Visible = false;
             this.strdata.Width = 200;
+            // 
+            // ercode
+            // 
+            this.ercode.HeaderText = "错误码";
+            this.ercode.Name = "ercode";
             // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.White;
+            this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Controls.Add(this.checkedListBox2);
             this.groupBox1.Controls.Add(this.checkedListBox1);
-            this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -392,33 +442,65 @@
             this.checkedListBox2.TabIndex = 13;
             this.checkedListBox2.Visible = false;
             // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.CheckOnClick = true;
-            this.checkedListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(3, 40);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(250, 554);
-            this.checkedListBox1.TabIndex = 12;
-            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
-            // 
-            // textBox3
-            // 
-            this.textBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox3.Font = new System.Drawing.Font("宋体", 10F);
-            this.textBox3.Location = new System.Drawing.Point(3, 17);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(250, 23);
-            this.textBox3.TabIndex = 11;
-            this.textBox3.WordWrap = false;
-            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(3, 72);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(250, 516);
+            this.checkedListBox1.TabIndex = 12;
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.cbox_auto);
+            this.panel2.Controls.Add(this.cbox_manual);
+            this.panel2.Controls.Add(this.textBox3);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 17);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(250, 50);
+            this.panel2.TabIndex = 8;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBox3.Font = new System.Drawing.Font("宋体", 10F);
+            this.textBox3.Location = new System.Drawing.Point(0, 27);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(250, 23);
+            this.textBox3.TabIndex = 12;
+            this.textBox3.WordWrap = false;
+            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
+            // 
+            // cbox_manual
+            // 
+            this.cbox_manual.AutoSize = true;
+            this.cbox_manual.Location = new System.Drawing.Point(29, 5);
+            this.cbox_manual.Name = "cbox_manual";
+            this.cbox_manual.Size = new System.Drawing.Size(72, 16);
+            this.cbox_manual.TabIndex = 13;
+            this.cbox_manual.Text = "手动唤醒";
+            this.cbox_manual.UseVisualStyleBackColor = true;
+            this.cbox_manual.CheckedChanged += new System.EventHandler(this.Cbox_manual_CheckedChanged);
+            // 
+            // cbox_auto
+            // 
+            this.cbox_auto.AutoSize = true;
+            this.cbox_auto.Location = new System.Drawing.Point(130, 5);
+            this.cbox_auto.Name = "cbox_auto";
+            this.cbox_auto.Size = new System.Drawing.Size(72, 16);
+            this.cbox_auto.TabIndex = 14;
+            this.cbox_auto.Text = "自动唤醒";
+            this.cbox_auto.UseVisualStyleBackColor = true;
+            this.cbox_auto.CheckedChanged += new System.EventHandler(this.Cbox_auto_CheckedChanged);
             // 
             // LoraForm
             // 
@@ -442,7 +524,8 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -474,20 +557,29 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBox2;
+        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.DataGridViewTextBoxColumn index;
+        private System.Windows.Forms.DataGridViewTextBoxColumn wakeuptype;
         private System.Windows.Forms.DataGridViewTextBoxColumn systime;
         private System.Windows.Forms.DataGridViewTextBoxColumn moteeui;
         private System.Windows.Forms.DataGridViewTextBoxColumn freq;
         private System.Windows.Forms.DataGridViewTextBoxColumn datr;
         private System.Windows.Forms.DataGridViewTextBoxColumn rssi;
         private System.Windows.Forms.DataGridViewTextBoxColumn lsnr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn power;
+        private System.Windows.Forms.DataGridViewTextBoxColumn wakeup;
+        private System.Windows.Forms.DataGridViewTextBoxColumn temp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn hum;
         private System.Windows.Forms.DataGridViewTextBoxColumn hexdata;
         private System.Windows.Forms.DataGridViewTextBoxColumn strdata;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ercode;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.CheckBox cbox_auto;
+        private System.Windows.Forms.CheckBox cbox_manual;
         private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.CheckedListBox checkedListBox2;
-        private System.Windows.Forms.ListBox listBox1;
     }
 }

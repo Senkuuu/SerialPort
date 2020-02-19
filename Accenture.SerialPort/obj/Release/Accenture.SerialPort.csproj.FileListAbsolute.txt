@@ -90,3 +90,6 @@ D:\LoraCS\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.application
 D:\LoraCS\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csproj.CopyComplete
 D:\LoraCS\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.exe
 D:\LoraCS\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.pdb
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\NPoco.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\NSClient.ApiCall.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\WiYun.Core.dll
