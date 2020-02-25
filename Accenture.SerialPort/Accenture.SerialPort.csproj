@@ -64,7 +64,6 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AsEquipData.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="frmExport.cs">

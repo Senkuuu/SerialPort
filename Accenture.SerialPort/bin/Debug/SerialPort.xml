@@ -4,60 +4,108 @@
         <name>SerialPort</name>
     </assembly>
     <members>
-        <member name="P:Accenture.SerialPort.AsEquipData.isRpm">
+        <member name="F:串口测试.WaitRec.strSend">
             <summary>
-            是否补发
+            发送的内容
             </summary>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.testType">
+        <member name="F:串口测试.WaitRec.second">
             <summary>
-            检测类型
+            发送一次等待的秒数
             </summary>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.macid">
+        <member name="F:串口测试.WaitRec.time_To_Timeout">
             <summary>
-            设备ID
+            超时时间
             </summary>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.WPCode">
+        <member name="M:串口测试.WaitRec.#ctor(System.String,System.Int32,System.Int32)">
             <summary>
-            仓位编码
+            声明
             </summary>
+            <param name="strSend">发送的数据</param>
+            <param name="second">发送之后进行判断的时间间隔</param>
+            <param name="time_To_Timeout">发送数据之后的超时时间</param>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.AirTemp">
+        <member name="M:串口测试.SerialPortHelper.#ctor(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Action{System.String},System.Action{System.String})">
             <summary>
-            温度值
+            初始化信息
             </summary>
+            <param name="com">端口号，COM1</param>
+            <param name="btl">波特率，9600</param>
+            <param name="sjw">数据位，8</param>
+            <param name="tzw">停止位，StopBits.One</param>
+            <param name="xyw">校验位，Parity.None</param>
+            <param name="func">处理接收数据的方法</param>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.AirHum">
+        <member name="M:串口测试.SerialPortHelper.StringToBytes(System.String)">
             <summary>
-            湿度值
+            将string转换到Byte[]
             </summary>
+            <param name="Str_Datasource"></param>
+            <returns></returns>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.power">
+        <member name="M:串口测试.SerialPortHelper.SendData(System.String)">
             <summary>
-            设备电量
+            下发数据
             </summary>
+            <param name="Str_Source"></param>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.freq">
+        <member name="M:串口测试.SerialPortHelper.SendData(System.String,System.Int32,System.Int32)">
             <summary>
-            采集评率
+            下发数据
             </summary>
+            <param name="str">需要下发的数据</param>
+            <param name="second">系统每隔单位时间去判断的时间间隔</param>
+            <param name="time_To_Timeout">每次接收数据设置的超时时间</param>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.collectionTime">
+        <member name="M:串口测试.SerialPortHelper.FunctionGetSum(System.String)">
             <summary>
-            采集时间
+            字符串的取和计算
             </summary>
+            <param name="Str_Source"></param>
+            <returns></returns>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.dataType">
+        <member name="M:串口测试.SerialPortHelper.FunctionGetCmdCorrect(System.String)">
             <summary>
-            数据类型
+            判断格式是否正确
             </summary>
+            <param name="Str_Source"></param>
+            <returns></returns>
         </member>
-        <member name="P:Accenture.SerialPort.AsEquipData.deviceType">
+        <member name="M:串口测试.SerialPortHelper.WaitRec(System.Object)">
             <summary>
-            设备类型
+            是一个循环，如果没有接受到需要的数据继续等待直到等到超时时间为止
             </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:串口测试.SerialPortHelper.ByteToString(System.Byte[])">
+             <summary>  
+            字符数组转字符串16进制  
+             </summary>  
+             <param name="InBytes"> 二进制字节 </param>  
+             <returns>类似"01 02 0F" </returns>  
+        </member>
+        <member name="M:串口测试.SerialPortHelper.StringToByte(System.String)">
+             <summary>  
+            strhex 转字节数组  
+             </summary>  
+             <param name="InString">类似"01 02 0F" 用空格分开的  </param>  
+             <returns> </returns>  
+        </member>
+        <member name="M:串口测试.SerialPortHelper.StringToByte_2(System.String)">
+             <summary>  
+             strhex转字节数组  
+             </summary>  
+             <param name="InString">类似"01 02 0F" 中间无空格 </param>  
+             <returns> </returns>  
+        </member>
+        <member name="M:串口测试.SerialPortHelper.Str_To_0X(System.String)">
+             <summary>  
+            字符串 转16进制字符串  
+             </summary>  
+             <param name="InString">unico </param>  
+             <returns>类似“01 0f” </returns>  
         </member>
         <member name="M:Accenture.SerialPort.DBHelper.MyExecuteNonQuery(System.String)">
             <summary>
@@ -451,109 +499,6 @@
             <summary>
               查找 System.Drawing.Bitmap 类型的本地化资源。
             </summary>
-        </member>
-        <member name="F:串口测试.WaitRec.strSend">
-            <summary>
-            发送的内容
-            </summary>
-        </member>
-        <member name="F:串口测试.WaitRec.second">
-            <summary>
-            发送一次等待的秒数
-            </summary>
-        </member>
-        <member name="F:串口测试.WaitRec.time_To_Timeout">
-            <summary>
-            超时时间
-            </summary>
-        </member>
-        <member name="M:串口测试.WaitRec.#ctor(System.String,System.Int32,System.Int32)">
-            <summary>
-            声明
-            </summary>
-            <param name="strSend">发送的数据</param>
-            <param name="second">发送之后进行判断的时间间隔</param>
-            <param name="time_To_Timeout">发送数据之后的超时时间</param>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.#ctor(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Action{System.String},System.Action{System.String})">
-            <summary>
-            初始化信息
-            </summary>
-            <param name="com">端口号，COM1</param>
-            <param name="btl">波特率，9600</param>
-            <param name="sjw">数据位，8</param>
-            <param name="tzw">停止位，StopBits.One</param>
-            <param name="xyw">校验位，Parity.None</param>
-            <param name="func">处理接收数据的方法</param>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.StringToBytes(System.String)">
-            <summary>
-            将string转换到Byte[]
-            </summary>
-            <param name="Str_Datasource"></param>
-            <returns></returns>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.SendData(System.String)">
-            <summary>
-            下发数据
-            </summary>
-            <param name="Str_Source"></param>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.SendData(System.String,System.Int32,System.Int32)">
-            <summary>
-            下发数据
-            </summary>
-            <param name="str">需要下发的数据</param>
-            <param name="second">系统每隔单位时间去判断的时间间隔</param>
-            <param name="time_To_Timeout">每次接收数据设置的超时时间</param>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.FunctionGetSum(System.String)">
-            <summary>
-            字符串的取和计算
-            </summary>
-            <param name="Str_Source"></param>
-            <returns></returns>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.FunctionGetCmdCorrect(System.String)">
-            <summary>
-            判断格式是否正确
-            </summary>
-            <param name="Str_Source"></param>
-            <returns></returns>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.WaitRec(System.Object)">
-            <summary>
-            是一个循环，如果没有接受到需要的数据继续等待直到等到超时时间为止
-            </summary>
-            <param name="obj"></param>
-        </member>
-        <member name="M:串口测试.SerialPortHelper.ByteToString(System.Byte[])">
-             <summary>  
-            字符数组转字符串16进制  
-             </summary>  
-             <param name="InBytes"> 二进制字节 </param>  
-             <returns>类似"01 02 0F" </returns>  
-        </member>
-        <member name="M:串口测试.SerialPortHelper.StringToByte(System.String)">
-             <summary>  
-            strhex 转字节数组  
-             </summary>  
-             <param name="InString">类似"01 02 0F" 用空格分开的  </param>  
-             <returns> </returns>  
-        </member>
-        <member name="M:串口测试.SerialPortHelper.StringToByte_2(System.String)">
-             <summary>  
-             strhex转字节数组  
-             </summary>  
-             <param name="InString">类似"01 02 0F" 中间无空格 </param>  
-             <returns> </returns>  
-        </member>
-        <member name="M:串口测试.SerialPortHelper.Str_To_0X(System.String)">
-             <summary>  
-            字符串 转16进制字符串  
-             </summary>  
-             <param name="InString">unico </param>  
-             <returns>类似“01 0f” </returns>  
         </member>
         <member name="M:BXHSerialPort.PublicMethod.OutToExcelFromDataTable(System.String,System.Data.DataTable,System.Boolean)">
             <summary>
