@@ -1019,14 +1019,14 @@ namespace Accenture.SerialPort
                     object re = DBHelper.MyExecuteScalar(selsql);
                     if (re != null)
                     {
-                        if (re.ToString() != "")
+                        if (!string.IsNullOrWhiteSpace(re.ToString()))
                         {
-                            MessageBox.Show("该数据非首次发送！");
-                            txt_box3.Text = textBox3.Text;
-                            textBox3.Clear();
-                            if (!string.IsNullOrWhiteSpace(re.ToString()))
+                            if (MessageBox.Show("该数据非首次发送！点击确认显示发送数据", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK)
                             {
+                                txt_box3.Text = textBox3.Text;
+                                textBox3.Clear();
                                 listBox1.Items.Clear();
+                                //显示之前发送过的数据
                                 string sel = string.Format("select inputdata,docount from log where macid='{0}'", txt_box3.Text);
                                 SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
                                 while (sdr.Read())
@@ -1034,8 +1034,17 @@ namespace Accenture.SerialPort
                                     listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
                                 }
                             }
-                            return;
+                            else
+                            {
+                                //清除数据
+                                txt_box3.Text = textBox3.Text;
+                                textBox3.Clear();
+                                textBox4.Clear();
+                                txtSendData.Clear();
+                                listBox1.Items.Clear();
+                            }
                         }
+
                     }
                     else
                     {

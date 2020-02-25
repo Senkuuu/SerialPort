@@ -250,14 +250,23 @@ namespace Accenture.SerialPort
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
 
-                            AsEquipData request = new AsEquipData();
 
                             #region 采集程序数据传输
-                            //using (var db = new NDatabase())
-                            //{
-                            //    ApiCall ac = new ApiCall();
-                            //    ac.SaveDataMethod(db, request);
-                            //}
+                            newAsEquipData request = new newAsEquipData();
+
+                            request.id = Guid.NewGuid().ToString();
+
+                            request.moteid = package.app.moteeui.ToString();
+
+                            request.power = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+
+                            request.freq = Convert.ToInt32(package.app.motetx.freq.ToString());
+
+                            using (var db = new NDatabase())
+                            {
+                                ApiCall ac = new ApiCall();
+                                ac.SaveDataMethod(db, request);
+                            }
                             #endregion
 
                             //错误码不为00000000 整行醒目提示
