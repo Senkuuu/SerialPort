@@ -91,7 +91,7 @@ namespace Accenture.SerialPort
                     #region Redis缓存设备、报警规则
                     RedisHelper redis = new RedisHelper();
                     String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
-                    string rulesql = "SELECT  a.* ,c.NO \n" +
+                    string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
                                     "FROM    WMS_BT_AlarmRule a \n" +
                                             "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
                                             "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
@@ -100,12 +100,12 @@ namespace Accenture.SerialPort
                                             "AND ISNULL(a.IsValid,0)= 1 \n" +
                                             "AND ISNULL(c.IsDeleted,0)=0 \n" +
                                             "AND ISNULL(c.IsValid,0)= 1 \n" +
-                                    "ORDER BY a.WMS_BT_AlarmRuleId ";
+                                    "ORDER BY c.NO desc ";
                     DataTable eqlist = DBHelper.GetDataTable(eqsql);
                     DataTable rulelist = DBHelper.GetDataTable(rulesql);
-                    if (!redis.DtToJson(eqlist, "WMS_PB_Equipment"))
+                    if (!redis.DtToRedis(eqlist, "WMS_PB_Equipment"))
                         return;
-                    if (!redis.DtToJson(rulelist, "WMS_BT_AlarmRule"))
+                    if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
                         return;
                     #endregion
                     string strip = txt_ip.Text.Trim();

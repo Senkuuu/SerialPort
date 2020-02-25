@@ -27,14 +27,12 @@ namespace Accenture.SerialPort
         PooledRedisClientManager prcm = new PooledRedisClientManager();
 
         /// <summary>
-        /// DataTable转换json
+        /// Redis缓存
         /// </summary>
         /// <param name="dtb"></param>
         /// <returns></returns>
-        public bool DtToJson(DataTable dtb, string type)
+        public bool DtToRedis(DataTable dtb, string type)
         {
-            JavaScriptSerializer jss = new JavaScriptSerializer();
-            //System.Collections.ArrayList dic = new System.Collections.ArrayList();
             string key = "";
             if (type.Equals("WMS_PB_Equipment"))
                 key = "SN";
@@ -47,18 +45,17 @@ namespace Accenture.SerialPort
                 {
                     drow.Add(dc.ColumnName, dr[dc.ColumnName]);
                 }
-                //dic.Add(drow);
-                var str = jss.Serialize(drow);//序列化
+                //WMS_PB_Equipment value = null;
                 try
                 {
-                    Redis.Set(dr[""+key+""].ToString(), str);
+                    Redis.Set(dr[""+key+""].ToString(), drow);
+                    //value = Redis.Get<WMS_PB_Equipment>("key");//读取Redis
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
                     return false;
                 }
-                //WMS_PB_Equipment  data= jss.Deserialize<WMS_PB_Equipment>(str);//反序列化
             }
 
             return true;
