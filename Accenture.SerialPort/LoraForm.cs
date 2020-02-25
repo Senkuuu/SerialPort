@@ -13,6 +13,7 @@ using Wima.Log;
 using NSClient.Plugins;
 using NPoco;
 using WiYun.Data;
+using System.Data;
 
 namespace Accenture.SerialPort
 {
@@ -87,6 +88,26 @@ namespace Accenture.SerialPort
             {
                 try
                 {
+                    #region Redis缓存设备、报警规则
+                    RedisHelper redis = new RedisHelper();
+                    String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
+                    string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
+                                    "FROM    WMS_BT_AlarmRule a \n" +
+                                            "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
+                                            "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
+                                    "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
+                                            "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
+                                            "AND ISNULL(a.IsValid,0)= 1 \n" +
+                                            "AND ISNULL(c.IsDeleted,0)=0 \n" +
+                                            "AND ISNULL(c.IsValid,0)= 1 \n" +
+                                    "ORDER BY c.NO desc ";
+                    DataTable eqlist = DBHelper.GetDataTable(eqsql);
+                    DataTable rulelist = DBHelper.GetDataTable(rulesql);
+                    if (!redis.DtToRedis(eqlist, "WMS_PB_Equipment"))
+                        return;
+                    if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
+                        return;
+                    #endregion
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
                     if (!string.IsNullOrEmpty(strip) && int.TryParse(txt_port.Text.Trim(), out int port) && !string.IsNullOrEmpty(appeui) && appeui.Length == 16 && Utils.IsLegalHexStr(appeui))
