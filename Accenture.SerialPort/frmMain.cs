@@ -216,7 +216,7 @@ namespace Accenture.SerialPort
         {
             if (cbbComList.Items.Count <= 0)
             {
-                textBox1.Enabled = false;
+                textBox4.Enabled = false;
                 MessageBox.Show("没有发现串口,请检查线路！");
                 return;
 
@@ -258,7 +258,7 @@ namespace Accenture.SerialPort
         {
             if (cbbComList.Items.Count <= 0)
             {
-                textBox1.Enabled = false;
+                textBox4.Enabled = false;
                 MessageBox.Show("没有发现串口,请检查线路！");
                 return;
 
@@ -295,7 +295,7 @@ namespace Accenture.SerialPort
         {
             if (cbbComList.Items.Count <= 0)
             {
-                textBox1.Enabled = false;
+                textBox4.Enabled = false;
                 MessageBox.Show("没有发现串口,请检查线路！");
 
                 return;
@@ -843,10 +843,17 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
+            btn_Running();
+        }
+
+        #region 开始下发数据
+        private void btn_Running()
+        {
             listBox1.Items.Clear();
             button3.BackColor = button4.BackColor = button6.BackColor = button5.BackColor = System.Drawing.Color.Transparent;
-            textBox1.Clear();
+            textBox4.Clear();
             textBox2.Clear();
+            txt_box3.Text = textBox3.Text;
             if (serialPort.IsOpen == false)
             {
                 MessageBox.Show("请先打开串口！");
@@ -888,23 +895,20 @@ namespace Accenture.SerialPort
                 MessageBox.Show("请先锁定参数后再操作！");
                 return;
             }
-            else
+            for (int i = 0; i < 4; i++)
             {
-                for (int i = 0; i < 4; i++)
+                string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
+                DBHelper.MyExecuteNonQuery(insert);
+
+                getAgreementCode(i);
+
+                if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
                 {
-                    string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
-                    DBHelper.MyExecuteNonQuery(insert);
-
-                    getAgreementCode(i);
-
-                    if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
-                    {
-                        Thread.Sleep(500);
-                    }
+                    Thread.Sleep(500);
                 }
             }
         }
-
+        #endregion
 
         /// <summary>
         /// 此方法用于将16进制的字符串转换成16进制的字节数组
@@ -1015,16 +1019,27 @@ namespace Accenture.SerialPort
                     object re = DBHelper.MyExecuteScalar(selsql);
                     if (re != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(re.ToString()))
+                        if (re.ToString() != "")
                         {
-                            listBox1.Items.Clear();
-                            string sel = string.Format("select inputdata,docount from log where macid='{0}'", textBox3.Text);
-                            SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
-                            while (sdr.Read())
+                            MessageBox.Show("该数据非首次发送！");
+                            txt_box3.Text = textBox3.Text;
+                            textBox3.Clear();
+                            if (!string.IsNullOrWhiteSpace(re.ToString()))
                             {
-                                listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
+                                listBox1.Items.Clear();
+                                string sel = string.Format("select inputdata,docount from log where macid='{0}'", txt_box3.Text);
+                                SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
+                                while (sdr.Read())
+                                {
+                                    listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
+                                }
                             }
+                            return;
                         }
+                    }
+                    else
+                    {
+                        btn_Running();
                     }
                 }
                 catch (Exception ex)
@@ -1039,126 +1054,7 @@ namespace Accenture.SerialPort
 
         #region 数据接收区
 
-        /// <summary>
-        /// 接收数据 
-        /// </summary>
-        /// <param name="content"></param>
-        private void AddContent(string content)
-        {
-            lock (locker)
-            {
-                bie = 0;
-                this.BeginInvoke(new MethodInvoker(delegate
-                {
-                    if (chkAutoLine.Checked && txtShowData.Text.Length > 0)
-                    {
-                    }
 
-                    txtShowData.Text = "";
-                    txtShowData.Text = content;
-                    string str = txtShowData.Text.Replace(" ", "").Trim();//取消字符之间的空格
-                    if (Regex.IsMatch(str, @"FE[0-9]{4}[0-9A-F]{8}[0-9A-F]{8}[0-9]{16}[0-9]{8}[0-9A-F]{2}EF"))
-                    {
-
-                        //string[] strArray = str.Split(new string[] { "FE", "EF" }, StringSplitOptions.RemoveEmptyEntries);
-                        int feIndex = str.IndexOf("FE");
-                        string temp = str.Substring(feIndex, 50);
-                        string Checksum = temp.Substring(temp.Length - 12, 8);//截取接收设备运行状态的数据 
-                        string SUN = temp.Substring(4, 42);//截取接收的数据然后做累加
-                        string SumCheck = temp.Substring(46, 2);//截取的校验值
-                        byte[] BIE1 = Bie(SUN);
-
-                        int a = bie;
-                        String strAq = Convert.ToString(a, 16).Substring(1, 2).ToUpper();
-                        if (SumCheck == strAq)//对比和校验是否一致
-                        {
-                            if (Checksum == "00000000")
-                            {
-                                // MessageBox.Show("接收的数据正确");
-                                string BackCID = temp.Substring(6, 8);
-                                // MessageBox.Show(BackCID);
-                                string BackUID = temp.Substring(14, 24);
-                                // MessageBox.Show(BackUID);
-                                string Sql_Update = string.Format(@"UPDATE [dbo].[YiBao] set[MCUID] ='{0}',[CREATEDON]= getdate() WHERE [MACID]='{1}'", BackUID, BackCID);//查询出刚刚接收返回的ID是否存在于数据库中
-                                int Update = DBHelper.MyExecuteNonQuery(Sql_Update);
-                                if (Update == 1)
-                                {
-                                    //MessageBox.Show("绑定成功");
-                                    Off();
-                                    PlaySound1();
-                                    string Sql_select = string.Format(@"select count(*) from [dbo].[YiBao] where [MCUID] ='{0}'", BackUID);
-                                    int Select_MCUID = Convert.ToInt32(DBHelper.MyExecuteScalar(Sql_select));
-                                    if (Select_MCUID == 1)
-                                    {
-                                        Off();
-                                        ClearSelf();
-                                        textBox3.Text = "";
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("数据重复，请更换其他盒子！");
-
-                                        ClearSelf();
-                                        textBox3.Text = "";
-                                        Off();
-                                    }
-                                }
-                            }
-
-                            else if (Checksum == "00000001")
-                            {
-                                MessageBox.Show("收到数据校验错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else if (Checksum == "00000002")
-                            {
-                                MessageBox.Show("写ID   EEPPROM错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else if (Checksum == "00000004")
-                            {
-                                MessageBox.Show("读ID   EEPPROM校验错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else if (Checksum == "00000008")
-                            {
-                                MessageBox.Show("写1024个密码EEPROM错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else if (Checksum == "00000010")
-                            {
-                                MessageBox.Show("读1024个密码校验错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else if (Checksum == "00000020")
-                            {
-                                MessageBox.Show("读写密钥链表校验错误");
-                                ClearSelf();
-                                Off();
-                            }
-                            else
-                            {
-                                MessageBox.Show("返回数据不符合通信协议！！！");
-                                ClearSelf();
-                                Off();
-                            }
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("和校验失败");
-                            ClearSelf();
-                            Off();
-                        }
-                    }
-                }));
-            }
-        }
 
         /// <summary>
         /// 接收的数据进行累加
@@ -1194,7 +1090,7 @@ namespace Accenture.SerialPort
         {
 
             txtShowData.Clear();
-            textBox1.Clear();
+            textBox4.Clear();
         }
 
         /// <summary>
@@ -1206,39 +1102,6 @@ namespace Accenture.SerialPort
         {
             Control.CheckForIllegalCrossThreadCalls = false;
 
-        }
-        /// <summary>
-        /// 接收数据格式
-        /// </summary>
-        /// <param name="data">字节数组</param>
-        public void AddData(byte[] data)
-        {
-            rbtnUTF8.Checked = true;
-            Thread th = new Thread(new ThreadStart(() =>
-            {
-
-                if (rbtnHex.Checked)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        sb.AppendFormat("{0:x2}" + " ", data[i]);
-                    }
-                    AddContent(sb.ToString().ToUpper());
-
-                }
-                else if (rbtnASCII.Checked)
-                {
-                    AddContent(new ASCIIEncoding().GetString(data));
-                }
-                else if (rbtnUTF8.Checked)
-                {
-                    AddContent(new UTF8Encoding().GetString(data));
-                }
-
-
-            }));
-            th.Start();
         }
 
         #endregion
@@ -1252,7 +1115,7 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(5000);//等待5秒
+            Thread.Sleep(6500);//等待5秒
             #region 计算出返回协议的位置
             string test1 = serialPort.ReadExisting();
             if (test1.IndexOf("USART3 Rec From ISR:") < 1)
@@ -1272,7 +1135,7 @@ namespace Accenture.SerialPort
                         string outdata = "";
                         if (test1.IndexOf(listBox1.Items[i].ToString()) < 0)
                         {
-                            MessageBox.Show("指令发送失败！");
+                            MessageBox.Show("发送指令出现异常！");
                             return;
                         }
                         int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
@@ -1369,6 +1232,10 @@ namespace Accenture.SerialPort
                                 button6.BackColor = System.Drawing.Color.Green;
                             }
                         }
+                        if (i == listBox1.Items.Count - 1)
+                        {
+                            textBox3.Clear();
+                        }
                     }
                 }
             }
@@ -1413,35 +1280,7 @@ namespace Accenture.SerialPort
             this.txtShowData.Invoke(new Action<TextBox, string, string>((txt, mac, mcu) =>
             {
                 temp += string.Format("mac={0},mcu={1}\r\n", mac, mcu);
-                textbox1(temp);
             }), this.txtShowData, macId, mcuId);//接收显示解析的macid和mcuid的值
-        }
-        /// <summary>
-        /// 把接收解析的值显示到textbox1中然后查询出对应的序列号。
-        /// </summary>
-        /// <param name="txttemp"></param>
-        private void textbox1(string txttemp)
-        {
-            string MACID = txttemp.Substring(4, 8);
-            string MCUID = txttemp.Substring(17, 24);
-            string Select_AppendText = string.Format(@"select * from [dbo].[YiBao] where [MACID]='{0}'and [MCUID]='{1}' ", MACID, MCUID);
-            SqlDataReader dr = DBHelper.MyExecuteReader(Select_AppendText);
-            if (dr.Read())
-            {
-                var BATCHNO = dr["BATCHNO"].ToString();
-                string Update_EndTime = string.Format(@"update dbo.YiBao set EndDate=getdate() where BATCHNO='{0}'", BATCHNO);//插入最后下数据的时间来判断是否大于八个小时
-                int endtime = DBHelper.MyExecuteNonQuery(Update_EndTime);
-
-                textBox1.Text += DateTime.Now + " 序列号为：" + BATCHNO + "\r\n";
-                PlaySound();//语音提示
-            }
-            else
-            {
-                MessageBox.Show("找不到该盒子序列号！！！");
-
-                ClearSelf();
-
-            }
         }
         private IisHost host;
 
@@ -1477,17 +1316,6 @@ namespace Accenture.SerialPort
         }
 
 
-        /// <summary>
-        /// 不停的向TextBox1文本框中追加数据时，使光标的焦点始终显示在最后
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            this.textBox1.Focus();//让文本框获取焦点
-            this.textBox1.Select(this.textBox1.TextLength, 0);//设置光标的位置到文本尾部
-            this.textBox1.ScrollToCaret();//滚动到控件光标处
-        }
 
         #endregion
 
@@ -1605,22 +1433,27 @@ namespace Accenture.SerialPort
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtSendData.Text = listBox1.SelectedItem.ToString();
-            string seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, textBox3.Text);
+            string seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, txt_box3.Text);
+            if (!string.IsNullOrWhiteSpace(textBox3.Text))
+            {
+                seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, textBox3.Text);
+            }
+
             object data = DBHelper.MyExecuteScalar(seldata);
             if (data != null)
             {
                 if (!string.IsNullOrWhiteSpace(data.ToString()))
                 {
-                    textBox1.Text = data.ToString();
+                    textBox4.Text = data.ToString();
                 }
                 else
                 {
-                    textBox1.Text = "返回数据错误";
+                    textBox4.Text = "返回数据错误";
                 }
             }
             else
             {
-                textBox1.Text = "下发数据错误";
+                textBox4.Text = "下发数据错误";
             }
         }
 
@@ -1628,7 +1461,7 @@ namespace Accenture.SerialPort
         {
             LoraForm lf = new LoraForm();
             lf.cycle = WakeupTxt.Text;
-            lf.ShowDialog(this);
+            lf.Show();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

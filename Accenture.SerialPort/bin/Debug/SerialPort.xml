@@ -219,12 +219,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.AddContent(System.String)">
-            <summary>
-            接收数据 
-            </summary>
-            <param name="content"></param>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.Bie(System.String)">
             <summary>
             接收的数据进行累加
@@ -246,12 +240,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.AddData(System.Byte[])">
-            <summary>
-            接收数据格式
-            </summary>
-            <param name="data">字节数组</param>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.Com_DataReceived(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
             <summary>
             当接收到串口发包数据时触发的事件
@@ -264,22 +252,9 @@
             当接收到艺宝盒子发包数据时触发的事件
             </summary>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.textbox1(System.String)">
-            <summary>
-            把接收解析的值显示到textbox1中然后查询出对应的序列号。
-            </summary>
-            <param name="txttemp"></param>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.btnCheck_Click(System.Object,System.EventArgs)">
             <summary>
             成品校验
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:Accenture.SerialPort.frmMain.textBox1_TextChanged(System.Object,System.EventArgs)">
-            <summary>
-            不停的向TextBox1文本框中追加数据时，使光标的焦点始终显示在最后
             </summary>
             <param name="sender"></param>
             <param name="e"></param>

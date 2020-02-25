@@ -47,25 +47,18 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.selID = new System.Windows.Forms.TextBox();
             this.txtShowData = new System.Windows.Forms.TextBox();
-            this.rbtnUnicode = new System.Windows.Forms.RadioButton();
-            this.rbtnUTF8 = new System.Windows.Forms.RadioButton();
-            this.rbtnASCII = new System.Windows.Forms.RadioButton();
-            this.rbtnHex = new System.Windows.Forms.RadioButton();
-            this.chkAutoLine = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txt_box3 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -93,18 +86,23 @@
             this.rbtnSendASCII = new System.Windows.Forms.RadioButton();
             this.rbtnSendHex = new System.Windows.Forms.RadioButton();
             this.rbtnSendUnicode = new System.Windows.Forms.RadioButton();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.panel3.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.groupBox6.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -121,7 +119,7 @@
             this.panel1.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(228, 454);
+            this.panel1.Size = new System.Drawing.Size(228, 462);
             this.panel1.TabIndex = 0;
             // 
             // button7
@@ -314,106 +312,69 @@
             // 
             // panel2
             // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.groupBox2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(228, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(953, 278);
+            this.panel2.Size = new System.Drawing.Size(936, 287);
             this.panel2.TabIndex = 1;
             // 
             // groupBox2
             // 
             this.groupBox2.AutoSize = true;
+            this.groupBox2.Controls.Add(this.panel4);
             this.groupBox2.Controls.Add(this.groupBox6);
-            this.groupBox2.Controls.Add(this.button6);
-            this.groupBox2.Controls.Add(this.button5);
-            this.groupBox2.Controls.Add(this.button4);
-            this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.groupBox5);
-            this.groupBox2.Controls.Add(this.rbtnUnicode);
-            this.groupBox2.Controls.Add(this.rbtnUTF8);
-            this.groupBox2.Controls.Add(this.rbtnASCII);
-            this.groupBox2.Controls.Add(this.rbtnHex);
-            this.groupBox2.Controls.Add(this.chkAutoLine);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Font = new System.Drawing.Font("宋体", 10F);
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(951, 294);
-            this.groupBox2.TabIndex = 0;
+            this.groupBox2.Size = new System.Drawing.Size(934, 285);
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据接收区";
             // 
-            // button6
+            // groupBox6
             // 
-            this.button6.BackColor = System.Drawing.Color.Transparent;
-            this.button6.Enabled = false;
-            this.button6.Location = new System.Drawing.Point(300, 36);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(100, 23);
-            this.button6.TabIndex = 12;
-            this.button6.Text = "校准温湿度2";
-            this.button6.UseVisualStyleBackColor = false;
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Controls.Add(this.textBox2);
+            this.groupBox6.Location = new System.Drawing.Point(404, 18);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(267, 262);
+            this.groupBox6.TabIndex = 13;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "数据概要";
             // 
-            // button5
+            // textBox2
             // 
-            this.button5.BackColor = System.Drawing.Color.Transparent;
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(201, 36);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(100, 23);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "校准温湿度1";
-            this.button5.UseVisualStyleBackColor = false;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.Transparent;
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(102, 36);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(100, 23);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "时间参数配置";
-            this.button4.UseVisualStyleBackColor = false;
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.Transparent;
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(3, 36);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "通信地址配置";
-            this.button3.UseVisualStyleBackColor = false;
-            // 
-            // textBox1
-            // 
-            this.textBox1.CausesValidation = false;
-            this.textBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.textBox1.Font = new System.Drawing.Font("仿宋", 16F, System.Drawing.FontStyle.Bold);
-            this.textBox1.Location = new System.Drawing.Point(3, 56);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(397, 212);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox2.Location = new System.Drawing.Point(3, 19);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox2.Size = new System.Drawing.Size(261, 240);
+            this.textBox2.TabIndex = 29;
+            this.textBox2.WordWrap = false;
             // 
             // groupBox5
             // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.listBox1);
             this.groupBox5.Controls.Add(this.button1);
             this.groupBox5.Controls.Add(this.label8);
             this.groupBox5.Controls.Add(this.selID);
             this.groupBox5.Controls.Add(this.txtShowData);
-            this.groupBox5.Location = new System.Drawing.Point(690, 11);
+            this.groupBox5.Location = new System.Drawing.Point(671, 16);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(238, 261);
+            this.groupBox5.Size = new System.Drawing.Size(257, 263);
             this.groupBox5.TabIndex = 8;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "选择查看返回数据";
@@ -424,7 +385,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(3, 19);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(232, 239);
+            this.listBox1.Size = new System.Drawing.Size(251, 241);
             this.listBox1.TabIndex = 29;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
@@ -437,7 +398,6 @@
             this.button1.Text = "查询";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // label8
             // 
@@ -472,77 +432,14 @@
             this.txtShowData.TabIndex = 1;
             this.txtShowData.Visible = false;
             // 
-            // rbtnUnicode
-            // 
-            this.rbtnUnicode.AutoSize = true;
-            this.rbtnUnicode.Enabled = false;
-            this.rbtnUnicode.Location = new System.Drawing.Point(288, 16);
-            this.rbtnUnicode.Name = "rbtnUnicode";
-            this.rbtnUnicode.Size = new System.Drawing.Size(74, 18);
-            this.rbtnUnicode.TabIndex = 5;
-            this.rbtnUnicode.Text = "Unicode";
-            this.rbtnUnicode.UseVisualStyleBackColor = true;
-            this.rbtnUnicode.Visible = false;
-            // 
-            // rbtnUTF8
-            // 
-            this.rbtnUTF8.AutoSize = true;
-            this.rbtnUTF8.Enabled = false;
-            this.rbtnUTF8.Location = new System.Drawing.Point(222, 16);
-            this.rbtnUTF8.Name = "rbtnUTF8";
-            this.rbtnUTF8.Size = new System.Drawing.Size(60, 18);
-            this.rbtnUTF8.TabIndex = 4;
-            this.rbtnUTF8.Text = "UTF-8";
-            this.rbtnUTF8.UseVisualStyleBackColor = true;
-            this.rbtnUTF8.Visible = false;
-            // 
-            // rbtnASCII
-            // 
-            this.rbtnASCII.AutoSize = true;
-            this.rbtnASCII.Enabled = false;
-            this.rbtnASCII.Location = new System.Drawing.Point(156, 17);
-            this.rbtnASCII.Name = "rbtnASCII";
-            this.rbtnASCII.Size = new System.Drawing.Size(60, 18);
-            this.rbtnASCII.TabIndex = 3;
-            this.rbtnASCII.Text = "ASCII";
-            this.rbtnASCII.UseVisualStyleBackColor = true;
-            this.rbtnASCII.Visible = false;
-            // 
-            // rbtnHex
-            // 
-            this.rbtnHex.AutoSize = true;
-            this.rbtnHex.Checked = true;
-            this.rbtnHex.Location = new System.Drawing.Point(104, 16);
-            this.rbtnHex.Name = "rbtnHex";
-            this.rbtnHex.Size = new System.Drawing.Size(46, 18);
-            this.rbtnHex.TabIndex = 2;
-            this.rbtnHex.TabStop = true;
-            this.rbtnHex.Text = "Hex";
-            this.rbtnHex.UseVisualStyleBackColor = true;
-            this.rbtnHex.Visible = false;
-            // 
-            // chkAutoLine
-            // 
-            this.chkAutoLine.AutoSize = true;
-            this.chkAutoLine.Checked = true;
-            this.chkAutoLine.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutoLine.Enabled = false;
-            this.chkAutoLine.Location = new System.Drawing.Point(6, 16);
-            this.chkAutoLine.Name = "chkAutoLine";
-            this.chkAutoLine.Size = new System.Drawing.Size(82, 18);
-            this.chkAutoLine.TabIndex = 1;
-            this.chkAutoLine.Text = "自动换行";
-            this.chkAutoLine.UseVisualStyleBackColor = true;
-            this.chkAutoLine.Visible = false;
-            // 
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.groupBox3);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(228, 278);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel3.Location = new System.Drawing.Point(228, 286);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(953, 176);
+            this.panel3.Size = new System.Drawing.Size(936, 176);
             this.panel3.TabIndex = 2;
             // 
             // groupBox3
@@ -557,13 +454,14 @@
             this.groupBox3.Font = new System.Drawing.Font("宋体", 10F);
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(951, 174);
+            this.groupBox3.Size = new System.Drawing.Size(934, 174);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "数据发送区";
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.txt_box3);
             this.groupBox4.Controls.Add(this.button2);
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.label9);
@@ -587,16 +485,26 @@
             this.groupBox4.Controls.Add(this.lblSendCount);
             this.groupBox4.Controls.Add(this.btnSend);
             this.groupBox4.Controls.Add(this.lblSend);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox4.Location = new System.Drawing.Point(3, 19);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(945, 152);
+            this.groupBox4.Size = new System.Drawing.Size(928, 152);
             this.groupBox4.TabIndex = 10;
             this.groupBox4.TabStop = false;
             // 
+            // txt_box3
+            // 
+            this.txt_box3.Font = new System.Drawing.Font("宋体", 10F);
+            this.txt_box3.Location = new System.Drawing.Point(687, 82);
+            this.txt_box3.Name = "txt_box3";
+            this.txt_box3.Size = new System.Drawing.Size(69, 23);
+            this.txt_box3.TabIndex = 29;
+            this.txt_box3.Visible = false;
+            this.txt_box3.WordWrap = false;
+            // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(458, 42);
+            this.button2.Location = new System.Drawing.Point(436, 42);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 28;
@@ -607,7 +515,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(179, 47);
+            this.label10.Location = new System.Drawing.Point(157, 47);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(21, 14);
             this.label10.TabIndex = 27;
@@ -616,7 +524,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(31, 16);
+            this.label9.Location = new System.Drawing.Point(9, 16);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(77, 14);
             this.label9.TabIndex = 26;
@@ -624,9 +532,8 @@
             // 
             // txtSendData
             // 
-            this.txtSendData.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtSendData.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtSendData.Location = new System.Drawing.Point(114, 13);
+            this.txtSendData.Location = new System.Drawing.Point(95, 13);
             this.txtSendData.Name = "txtSendData";
             this.txtSendData.ReadOnly = true;
             this.txtSendData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -656,7 +563,7 @@
             // markLab
             // 
             this.markLab.AutoSize = true;
-            this.markLab.Location = new System.Drawing.Point(272, 133);
+            this.markLab.Location = new System.Drawing.Point(272, 168);
             this.markLab.Name = "markLab";
             this.markLab.Size = new System.Drawing.Size(105, 14);
             this.markLab.TabIndex = 23;
@@ -667,7 +574,7 @@
             // 
             this.markBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.markBox.FormattingEnabled = true;
-            this.markBox.Location = new System.Drawing.Point(383, 130);
+            this.markBox.Location = new System.Drawing.Point(383, 165);
             this.markBox.Name = "markBox";
             this.markBox.Size = new System.Drawing.Size(265, 21);
             this.markBox.TabIndex = 22;
@@ -676,7 +583,7 @@
             // TimeStampLab
             // 
             this.TimeStampLab.AutoSize = true;
-            this.TimeStampLab.Location = new System.Drawing.Point(665, 133);
+            this.TimeStampLab.Location = new System.Drawing.Point(665, 168);
             this.TimeStampLab.Name = "TimeStampLab";
             this.TimeStampLab.Size = new System.Drawing.Size(91, 14);
             this.TimeStampLab.TabIndex = 21;
@@ -686,7 +593,7 @@
             // TimeStampTxt
             // 
             this.TimeStampTxt.Font = new System.Drawing.Font("宋体", 9F);
-            this.TimeStampTxt.Location = new System.Drawing.Point(762, 131);
+            this.TimeStampTxt.Location = new System.Drawing.Point(762, 166);
             this.TimeStampTxt.Name = "TimeStampTxt";
             this.TimeStampTxt.ReadOnly = true;
             this.TimeStampTxt.Size = new System.Drawing.Size(141, 21);
@@ -697,7 +604,7 @@
             // WakeupLab
             // 
             this.WakeupLab.AutoSize = true;
-            this.WakeupLab.Location = new System.Drawing.Point(31, 45);
+            this.WakeupLab.Location = new System.Drawing.Point(9, 45);
             this.WakeupLab.Name = "WakeupLab";
             this.WakeupLab.Size = new System.Drawing.Size(77, 14);
             this.WakeupLab.TabIndex = 19;
@@ -706,7 +613,7 @@
             // WakeupTxt
             // 
             this.WakeupTxt.Font = new System.Drawing.Font("宋体", 10F);
-            this.WakeupTxt.Location = new System.Drawing.Point(113, 42);
+            this.WakeupTxt.Location = new System.Drawing.Point(91, 42);
             this.WakeupTxt.Name = "WakeupTxt";
             this.WakeupTxt.Size = new System.Drawing.Size(60, 23);
             this.WakeupTxt.TabIndex = 18;
@@ -717,7 +624,7 @@
             // BandLab
             // 
             this.BandLab.AutoSize = true;
-            this.BandLab.Location = new System.Drawing.Point(225, 47);
+            this.BandLab.Location = new System.Drawing.Point(203, 47);
             this.BandLab.Name = "BandLab";
             this.BandLab.Size = new System.Drawing.Size(77, 14);
             this.BandLab.TabIndex = 17;
@@ -728,7 +635,7 @@
             // 
             this.BandBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BandBox.FormattingEnabled = true;
-            this.BandBox.Location = new System.Drawing.Point(315, 44);
+            this.BandBox.Location = new System.Drawing.Point(293, 44);
             this.BandBox.Name = "BandBox";
             this.BandBox.Size = new System.Drawing.Size(121, 21);
             this.BandBox.TabIndex = 16;
@@ -737,7 +644,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 133);
+            this.label7.Location = new System.Drawing.Point(3, 168);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(105, 14);
             this.label7.TabIndex = 15;
@@ -748,7 +655,7 @@
             // 
             this.ClassBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ClassBox.FormattingEnabled = true;
-            this.ClassBox.Location = new System.Drawing.Point(101, 130);
+            this.ClassBox.Location = new System.Drawing.Point(101, 165);
             this.ClassBox.Name = "ClassBox";
             this.ClassBox.Size = new System.Drawing.Size(165, 21);
             this.ClassBox.TabIndex = 14;
@@ -871,38 +778,88 @@
             this.rbtnSendUnicode.UseVisualStyleBackColor = true;
             this.rbtnSendUnicode.Visible = false;
             // 
-            // groupBox6
+            // panel4
             // 
-            this.groupBox6.Controls.Add(this.textBox2);
-            this.groupBox6.Location = new System.Drawing.Point(406, 11);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(285, 260);
-            this.groupBox6.TabIndex = 13;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "数据概要";
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel4.Controls.Add(this.textBox4);
+            this.panel4.Controls.Add(this.button6);
+            this.panel4.Controls.Add(this.button5);
+            this.panel4.Controls.Add(this.button4);
+            this.panel4.Controls.Add(this.button3);
+            this.panel4.Location = new System.Drawing.Point(-1, 16);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(400, 263);
+            this.panel4.TabIndex = 14;
             // 
-            // textBox2
+            // button6
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(3, 19);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(279, 238);
-            this.textBox2.TabIndex = 29;
-            this.textBox2.WordWrap = false;
+            this.button6.BackColor = System.Drawing.Color.Transparent;
+            this.button6.Enabled = false;
+            this.button6.Location = new System.Drawing.Point(297, 2);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(100, 23);
+            this.button6.TabIndex = 21;
+            this.button6.Text = "校准温湿度2";
+            this.button6.UseVisualStyleBackColor = false;
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.Transparent;
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(198, 2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(100, 23);
+            this.button5.TabIndex = 20;
+            this.button5.Text = "校准温湿度1";
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Transparent;
+            this.button4.Enabled = false;
+            this.button4.Location = new System.Drawing.Point(99, 2);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(100, 23);
+            this.button4.TabIndex = 19;
+            this.button4.Text = "时间参数配置";
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.Transparent;
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(0, 2);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(100, 23);
+            this.button3.TabIndex = 18;
+            this.button3.Text = "通信地址配置";
+            this.button3.UseVisualStyleBackColor = false;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox4.Font = new System.Drawing.Font("楷体", 15F);
+            this.textBox4.Location = new System.Drawing.Point(3, 25);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
+            this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox4.Size = new System.Drawing.Size(396, 235);
+            this.textBox4.TabIndex = 30;
+            this.textBox4.WordWrap = false;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1181, 454);
+            this.ClientSize = new System.Drawing.Size(1164, 462);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MinimumSize = new System.Drawing.Size(1180, 501);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "温湿度检测仪";
@@ -915,7 +872,8 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -924,8 +882,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -948,12 +906,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox chkAutoLine;
-        private System.Windows.Forms.RadioButton rbtnUnicode;
-        private System.Windows.Forms.RadioButton rbtnUTF8;
-        private System.Windows.Forms.RadioButton rbtnASCII;
-        private System.Windows.Forms.RadioButton rbtnHex;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton rbtnSendUnicode;
         private System.Windows.Forms.RadioButton rbtnSendUTF8;
@@ -962,12 +914,6 @@
         private System.Windows.Forms.Button btnClearSend;
         private System.Windows.Forms.Button btnClearRev;
         private System.Windows.Forms.TextBox txtSendData;
-        internal System.Windows.Forms.TextBox txtShowData;
-        internal System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox selID;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label DataCount;
         private System.Windows.Forms.Button getDataBtn;
@@ -991,14 +937,23 @@
         private System.Windows.Forms.TextBox TimeStampTxt;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox ClassBox;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.TextBox txt_box3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox selID;
+        internal System.Windows.Forms.TextBox txtShowData;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 
