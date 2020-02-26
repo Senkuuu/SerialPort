@@ -169,7 +169,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>lAbX9guvJUpnMYHnyvxLK3HwFSHC9f2IrqzyKBxGiNA=</dsig:DigestValue>
+        <dsig:DigestValue>O7iFys20srvJjFWtmnDDa7DclFM0/LTTNsa0gODYDb0=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.Base.dll" size="119296">
+      <assemblyIdentity name="NSClient.Base" version="5.3.0.1038" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>PsQ11uN856iHC97Uz7+WCXNROLNTelodaf5j/aEnQd8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -186,14 +198,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="111616">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="112128">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>9EJaCq8k5u+kTyiGDSSHTQ9QuzUcQcG5LUVZ2BijGk8=</dsig:DigestValue>
+        <dsig:DigestValue>4VYK4WaxmYX3YRcKCbI3fkFzxV3cnRPn/ImAiT5PiMI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -422,13 +434,13 @@
       <dsig:DigestValue>l8DzoOkshpcYwbo8UNi+CEhHsaFHa2Ybtj7drmbGxz8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SerialPort.exe.config" size="1306">
+  <file name="SerialPort.exe.config" size="1628">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>CkMT9Lg5t8+bcu90EJEzVA628EO9UgPaNqVeQAKhfAo=</dsig:DigestValue>
+      <dsig:DigestValue>cYNMDrwfdFA9jqsJgAvMa6DULHmcB/j7bu2yWHWHx4M=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

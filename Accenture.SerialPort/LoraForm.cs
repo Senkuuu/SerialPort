@@ -289,11 +289,17 @@ namespace Accenture.SerialPort
 
                                 request.version = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
 
-                                request.Details[0].Temperature = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                                request.Details = new List<NSClient.AsEquipDataDT>();
 
-                                request.Details[0].Humidity = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+                                NSClient.AsEquipDataDT dt = new NSClient.AsEquipDataDT(request.id, request.moteid, new NSClient.NsDataDT());
 
-                                request.Details[0].DataTime = DateTime.Now;
+                                dt.Temperature = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+
+                                dt.Humidity = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+
+                                dt.DataTime = DateTime.Now;
+
+                                request.Details.Add(dt);
 
                                 using (var db = new NDatabase())
                                 {

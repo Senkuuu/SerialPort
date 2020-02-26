@@ -164,5 +164,5 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\System.Buffers.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\System.Memory.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\System.Numerics.Vectors.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csprojAssemblyReference.cache
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.exe.config
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.xml
