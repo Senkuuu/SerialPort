@@ -1011,8 +1011,14 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
+            if (textBox3.Text.Length != 0)
+            {
+                senderror.Text = "";
+                listBox1.Items.Clear();
+            }
             if (textBox3.Text.Length == 8)
             {
+
                 try
                 {
                     string selsql = string.Format("select outputdata from log where macid='{0}' and docount='0'", textBox3.Text);
@@ -1021,35 +1027,24 @@ namespace Accenture.SerialPort
                     {
                         if (!string.IsNullOrWhiteSpace(re.ToString()))
                         {
-                            if (MessageBox.Show("该数据非首次发送！点击确认显示发送数据", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                            //if (MessageBox.Show("该数据非首次发送！点击确认显示发送数据", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                            //{
+                            senderror.Text = "该数据非首次发送！";
+                            txt_box3.Text = textBox3.Text;
+                            listBox1.Items.Clear();
+                            //显示之前发送过的数据
+                            string sel = string.Format("select inputdata,docount from log where macid='{0}'", txt_box3.Text);
+                            SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
+                            while (sdr.Read())
                             {
-                                txt_box3.Text = textBox3.Text;
-                                textBox3.Clear();
-                                listBox1.Items.Clear();
-                                //显示之前发送过的数据
-                                string sel = string.Format("select inputdata,docount from log where macid='{0}'", txt_box3.Text);
-                                SqlDataReader sdr = DBHelper.MyExecuteReader(sel);
-                                while (sdr.Read())
-                                {
-                                    listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
-                                }
+                                listBox1.Items.Insert(Convert.ToInt32(sdr[1]), sdr[0]);
                             }
-                            else
-                            {
-                                //清除数据
-                                txt_box3.Text = textBox3.Text;
-                                textBox3.Clear();
-                                textBox4.Clear();
-                                txtSendData.Clear();
-                                listBox1.Items.Clear();
-                            }
+                            textBox3.Clear();
+                            return;
+                            //}
                         }
-
                     }
-                    else
-                    {
-                        btn_Running();
-                    }
+                    btn_Running();
                 }
                 catch (Exception ex)
                 {

@@ -89,24 +89,24 @@ namespace Accenture.SerialPort
                 try
                 {
                     #region Redis缓存设备、报警规则
-                    RedisHelper redis = new RedisHelper();
-                    String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
-                    string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
-                                    "FROM    WMS_BT_AlarmRule a \n" +
-                                            "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
-                                            "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
-                                    "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
-                                            "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
-                                            "AND ISNULL(a.IsValid,0)= 1 \n" +
-                                            "AND ISNULL(c.IsDeleted,0)=0 \n" +
-                                            "AND ISNULL(c.IsValid,0)= 1 \n" +
-                                    "ORDER BY c.NO desc ";
-                    DataTable eqlist = DBHelper.GetDataTable(eqsql);
-                    DataTable rulelist = DBHelper.GetDataTable(rulesql);
-                    if (!redis.DtToRedis(eqlist, "WMS_PB_Equipment"))
-                        return;
-                    if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
-                        return;
+                    //RedisHelper redis = new RedisHelper();
+                    //String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
+                    //string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
+                    //                "FROM    WMS_BT_AlarmRule a \n" +
+                    //                        "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
+                    //                        "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
+                    //                "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
+                    //                        "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
+                    //                        "AND ISNULL(a.IsValid,0)= 1 \n" +
+                    //                        "AND ISNULL(c.IsDeleted,0)=0 \n" +
+                    //                        "AND ISNULL(c.IsValid,0)= 1 \n" +S
+                    //                "ORDER BY c.NO desc ";
+                    //DataTable eqlist = DBHelper.GetDataTable(eqsql);
+                    //DataTable rulelist = DBHelper.GetDataTable(rulesql);
+                    //if (!redis.DtToRedis(eqlist, "WMS_PB_Equipment"))
+                    //    return;
+                    //if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
+                    //    return;
                     #endregion
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
@@ -273,20 +273,38 @@ namespace Accenture.SerialPort
 
 
                             #region 采集程序数据传输
-                            newAsEquipData request = new newAsEquipData();
-
-                            request.id = Guid.NewGuid().ToString();
-
-                            request.moteid = package.app.moteeui.ToString();
-
-                            request.power = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
-
-                            request.freq = Convert.ToInt32(package.app.motetx.freq.ToString());
-
-                            using (var db = new NDatabase())
+                            try
                             {
-                                ApiCall ac = new ApiCall();
-                                ac.SaveDataMethod(db, request);
+                                newAsEquipData request = new newAsEquipData();
+
+                                request.id = Guid.NewGuid().ToString();
+
+                                request.moteid = package.app.moteeui.ToString();
+
+                                request.power = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+
+                                request.wakeupmode = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) / 60;
+
+                                request.testType = Convert.ToInt32(data.SubArray(12, 1).ToHexString());
+
+                                request.version = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+
+                                request.Details[0].Temperature = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+
+                                request.Details[0].Humidity = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+
+                                request.Details[0].DataTime = DateTime.Now;
+
+                                using (var db = new NDatabase())
+                                {
+                                    ApiCall ac = new ApiCall();
+                                    ac.SaveDataMethod(db, request);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                throw;
                             }
                             #endregion
 
@@ -294,6 +312,14 @@ namespace Accenture.SerialPort
                             if (errorcode != "" && errorcode != "00000000")
                             {
                                 dgvr.DefaultCellStyle.BackColor = Color.Red;
+                            }
+
+                            //向终端列表添加新的终端
+                            if (!checkedListBox2.Items.Contains(package.app.moteeui.ToString()))
+                            {
+                                checkedListBox1.Items.Add(package.app.moteeui.ToString());
+                                checkedListBox1.SetItemChecked(checkedListBox1.Items.Count - 1, true);
+                                checkedListBox2.Items.Add(package.app.moteeui.ToString());
                             }
 
                             //勾选显示，没勾选隐藏
@@ -488,12 +514,7 @@ namespace Accenture.SerialPort
                             }
                             #endregion
 
-                            //向终端列表添加新的终端
-                            if (!checkedListBox2.Items.Contains(package.app.moteeui.ToString()))
-                            {
-                                checkedListBox1.Items.Add(package.app.moteeui.ToString());
-                                checkedListBox2.Items.Add(package.app.moteeui.ToString());
-                            }
+
                             //dataGridView1.Rows.Insert(dgv.NewRowIndex, dgvr);
                             //dgv.Rows.Add(dgvr);
                         });
@@ -724,11 +745,10 @@ namespace Accenture.SerialPort
             {
                 //过滤查询
                 List<string> nlist = clist.Where(x => x.Contains(textBox3.Text)).ToList();
-                List<string> alist = new List<string>();
                 checkedListBox1.Items.Clear();
-                for (int i = 0; i < alist.Count; i++)
+                for (int i = 0; i < nlist.Count; i++)
                 {
-                    checkedListBox1.Items.Add(alist[i]);
+                    checkedListBox1.Items.Add(nlist[i]);
                 }
             }
         }
@@ -776,7 +796,7 @@ namespace Accenture.SerialPort
 
         private void cbox_CheckedChanged()
         {
-            if ((cbox_manual.Checked && cbox_auto.Checked) || (!cbox_manual.Checked && !cbox_auto.Checked))
+            if ((cbox_manual.Checked && cbox_auto.Checked) || (!cbox_manual.Checked && !cbox_auto.Checked))//同时选择或者都不选——显示全部
             {
                 List<string> clist = new List<string>();
                 for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
@@ -795,7 +815,7 @@ namespace Accenture.SerialPort
                     }
                 }
             }
-            else if (cbox_auto.Checked)
+            else if (cbox_auto.Checked)//只选择自动唤醒——只显示自动唤醒的数据
             {
                 for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
@@ -809,7 +829,7 @@ namespace Accenture.SerialPort
                     }
                 }
             }
-            else if (cbox_manual.Checked)
+            else if (cbox_manual.Checked)//只选择手动唤醒——只显示手动唤醒的数据
             {
                 for (int i = 0; i < dataGridView1.RowCount; i++)
                 {

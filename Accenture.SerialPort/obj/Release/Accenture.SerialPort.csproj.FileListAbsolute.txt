@@ -41,7 +41,6 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\log4net.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.LogService.Core.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.Lora.Model.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojAssemblyReference.cache
-D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.exe.config
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmExport.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmMain.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.LoraForm.resources
@@ -93,3 +92,19 @@ D:\LoraCS\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\NPoco.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\NSClient.ApiCall.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\WiYun.Core.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Common.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Interfaces.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Redis.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Text.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Buffers.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Memory.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Numerics.Vectors.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Common.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Interfaces.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Redis.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Text.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Buffers.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Memory.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Numerics.Vectors.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Runtime.CompilerServices.Unsafe.xml

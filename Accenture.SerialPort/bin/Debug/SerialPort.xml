@@ -107,6 +107,13 @@
              <param name="InString">unico </param>  
              <returns>类似“01 0f” </returns>  
         </member>
+        <member name="M:Accenture.SerialPort.RedisHelper.DtToRedis(System.Data.DataTable,System.String)">
+            <summary>
+            Redis缓存
+            </summary>
+            <param name="dtb"></param>
+            <returns></returns>
+        </member>
         <member name="M:Accenture.SerialPort.DBHelper.MyExecuteNonQuery(System.String)">
             <summary>
             增删改 返回int类型
