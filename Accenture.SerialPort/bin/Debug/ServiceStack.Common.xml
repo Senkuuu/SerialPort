@@ -4,20 +4,29 @@
         <name>ServiceStack.Common</name>
     </assembly>
     <members>
-        <!-- Badly formed XML comment ignored for member "M:ServiceStack.AssertUtils.AreNotNull(System.Collections.Generic.IDictionary{System.String,System.Object})" -->
-        <member name="M:ServiceStack.CommandsUtils.ExecuteAsyncCommandExec(System.Collections.Generic.IEnumerable{ServiceStack.Commands.ICommandExec})">
+        <member name="T:ServiceStack.Common.CryptUtils">
             <summary>
-            Provide the an option for the callee to block until all commands are executed
+            Useful .NET Encryption Utils from:
+            http://andrewlocatelliwoodcock.com/2011/08/01/implementing-rsa-asymmetric-public-private-key-encryption-in-c-encrypting-under-the-public-key/
             </summary>
-            <param name="commands"></param>
+        </member>
+        <member name="M:ServiceStack.Common.CryptUtils.Encrypt(System.String,System.String,ServiceStack.Common.RsaKeyLengths)">
+            <summary>
+            Encrypt an arbitrary string of data under the supplied public key
+            </summary>
+            <param name="publicKey">The public key to encrypt under</param>
+            <param name="data">The data to encrypt</param>
+            <param name="length">The bit length or strength of the public key: 1024, 2048 or 4096 bits. This must match the 
+            value actually used to create the publicKey</param>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.EnumerableExtensions.Safe``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:ServiceStack.Common.CryptUtils.CreatePublicAndPrivateKeyPair">
             <summary>
-            Return T[0] when enumerable is null, safe to use in enumerations like foreach
-            </summary>
+            Create Public and Private Key Pair based on settings already in static class.
+            </summary>        
+            <returns>RsaKeyPair</returns>
         </member>
-        <member name="M:ServiceStack.EnumExtensions.ToDescription(System.Enum)">
+        <member name="M:ServiceStack.Common.EnumExtensions.ToDescription(System.Enum)">
             <summary>
             Gets the textual description of the enum if it has one. e.g.
             
@@ -33,1240 +42,745 @@
             <param name="enum"></param>
             <returns></returns>
         </member>
-        <member name="P:ServiceStack.ExecUtils.BaseDelayMs">
+        <member name="T:ServiceStack.Common.Extensions.EnumerableExtensions">
             <summary>
-            Default base sleep time (milliseconds).
+            These extensions have a potential to conflict with the LINQ extensions methods so
+            leaving the implmentation in the 'Extensions' sub-namespace to force explicit opt-in
             </summary>
         </member>
-        <member name="P:ServiceStack.ExecUtils.MaxBackOffMs">
+        <member name="M:ServiceStack.Common.HostContext.TrackDisposable(System.IDisposable)">
             <summary>
-            Default maximum back-off time before retrying a request
+            Track any IDisposable's to dispose of at the end of the request in IAppHost.OnEndRequest()
             </summary>
+            <param name="instance"></param>
         </member>
-        <member name="P:ServiceStack.ExecUtils.MaxRetries">
+        <member name="P:ServiceStack.Common.HostContext.Items">
             <summary>
-            Maximum retry limit. Avoids integer overflow issues.
+            Gets a list of items for this request. 
             </summary>
+            <remarks>This list will be cleared on every request and is specific to the original thread that is handling the request.
+            If a handler uses additional threads, this data will not be available on those threads.
+            </remarks>
         </member>
-        <member name="M:ServiceStack.ExecUtils.SleepBackOffMultiplier(System.Int32)">
-            <summary>
-            How long to sleep before next retry using Exponential BackOff delay with Full Jitter.
-            </summary>
-            <param name="retriesAttempted"></param>
-        </member>
-        <member name="M:ServiceStack.ExecUtils.CalculateFullJitterBackOffDelay(System.Int32)">
-            <summary>
-            Exponential BackOff Delay with Full Jitter
-            </summary>
-            <param name="retriesAttempted"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServiceStack.ExecUtils.CalculateFullJitterBackOffDelay(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Exponential BackOff Delay with Full Jitter from:
-            https://github.com/aws/aws-sdk-java/blob/master/aws-java-sdk-core/src/main/java/com/amazonaws/retry/PredefinedBackoffStrategies.java
-            </summary>
-            <param name="retriesAttempted"></param>
-            <param name="baseDelay"></param>
-            <param name="maxBackOffMs"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServiceStack.ExecUtils.CalculateExponentialDelay(System.Int32)">
-            <summary>
-            Calculate exponential retry back-off.
-            </summary>
-            <param name="retriesAttempted"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServiceStack.ExecUtils.CalculateExponentialDelay(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Calculate exponential retry back-off.
-            </summary>
-            <param name="retriesAttempted"></param>
-            <param name="baseDelay"></param>
-            <param name="maxBackOffMs"></param>
-            <returns></returns>
-        </member>
-        <member name="T:ServiceStack.Extensions.UtilExtensions">
-            <summary>
-            Move conflicting extension methods to ServiceStack.Extensions namespace 
-            </summary>
-        </member>
-        <member name="M:ServiceStack.FuncUtils.TryExec(System.Action)">
-            <summary>
-            Invokes the action provided and returns true if no excpetion was thrown.
-            Otherwise logs the exception and returns false if an exception was thrown.
-            </summary>
-            <param name="action">The action.</param>
-            <returns></returns>
-        </member>
-        <member name="P:ServiceStack.GitHubGateway.AccessToken">
-            <summary>
-            AccessTokenSecret
-            </summary>
-        </member>
-        <member name="P:ServiceStack.GitHubGateway.GetJsonFilter">
-            <summary>
-            Intercept and override GitHub JSON API requests
-            </summary>
-        </member>
-        <member name="M:ServiceStack.GitHubGateway.WriteGistFiles(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Create or Write Gist Text Files. Requires AccessToken
-            </summary>
-        </member>
-        <member name="M:ServiceStack.GitHubGateway.CreateGistFile(System.String,System.String,System.String)">
-            <summary>
-            Create new Gist File. Requires AccessToken
-            </summary>
-        </member>
-        <member name="M:ServiceStack.GitHubGateway.WriteGistFile(System.String,System.String,System.String)">
-            <summary>
-            Create or Write Gist File. Requires AccessToken
-            </summary>
-        </member>
-        <member name="M:ServiceStack.IO.VirtualDirectoryExtensions.GetFiles(ServiceStack.IO.IVirtualDirectory)">
-            <summary>
-            Get only files in this directory
-            </summary>
-            <param name="dir"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServiceStack.IO.VirtualDirectoryExtensions.GetDirectories(ServiceStack.IO.IVirtualDirectory)">
-            <summary>
-            Get only sub directories in this directory
-            </summary>
-            <param name="dir"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServiceStack.IO.VirtualDirectoryExtensions.GetAllFiles(ServiceStack.IO.IVirtualDirectory)">
-            <summary>
-            Get All Files in current and all sub directories
-            </summary>
-            <param name="dir"></param>
-            <returns></returns>
-        </member>
-        <member name="T:ServiceStack.IPAddressExtensions">
+        <member name="T:ServiceStack.Common.Extensions.IPAddressExtensions">
             <summary>
             Useful IPAddressExtensions from: 
             http://blogs.msdn.com/knom/archive/2008/12/31/ip-address-calculations-with-c-subnetmasks-networks.aspx
             
             </summary>
         </member>
-        <member name="M:ServiceStack.IPAddressExtensions.GetAllNetworkInterfaceIpv4Addresses">
+        <member name="M:ServiceStack.Common.Extensions.IPAddressExtensions.GetAllNetworkInterfaceIpv4Addresses">
             <summary>
             Gets the ipv4 addresses from all Network Interfaces that have Subnet masks.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.IPAddressExtensions.GetAllNetworkInterfaceIpv6Addresses">
+        <member name="M:ServiceStack.Common.Extensions.IPAddressExtensions.GetAllNetworkInterfaceIpv6Addresses">
             <summary>
             Gets the ipv6 addresses from all Network Interfaces.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.JS.Configure">
+        <member name="T:ServiceStack.Messaging.IMessageHandler">
             <summary>
-            Configure ServiceStack.Text JSON Serializer to use Templates JS parsing
+            Single threaded message handler that can process all messages
+            of a particular message type.
             </summary>
         </member>
-        <member name="T:ServiceStack.Logging.ConsoleLogFactory">
+        <member name="M:ServiceStack.Messaging.IMessageHandler.Process(ServiceStack.Messaging.IMessageQueueClient)">
             <summary>
-            Creates a Console Logger, that logs all messages to: System.Console
-            
-            Made public so its testable
+            Process all messages pending
             </summary>
+            <param name="mqClient"></param>
         </member>
-        <member name="T:ServiceStack.Logging.ConsoleLogger">
+        <member name="M:ServiceStack.Messaging.IMessageHandler.ProcessQueue(ServiceStack.Messaging.IMessageQueueClient,System.String,System.Func{System.Boolean})">
             <summary>
-            Default logger is to Console.WriteLine
-            
-            Made public so its testable
+            Process messages from a single queue.
             </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.ConsoleLogger.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:ServiceStack.Logging.DebugLogger"/> class.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.ConsoleLogger.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:ServiceStack.Logging.DebugLogger"/> class.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.ConsoleLogger.Log(System.Object,System.Exception)">
-            <summary>
-            Logs the specified message.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.ConsoleLogger.LogFormat(System.Object,System.Object[])">
-            <summary>
-            Logs the format.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.ConsoleLogger.Log(System.Object)">
-            <summary>
-            Logs the specified message.
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Logging.DebugLogFactory">
-            <summary>
-            Creates a Debug Logger, that logs all messages to: System.Diagnostics.Debug
-            
-            Made public so its testable
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Logging.DebugLogger">
-            <summary>
-            Default logger is to System.Diagnostics.Debug.WriteLine
-            
-            Made public so its testable
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.DebugLogger.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:ServiceStack.Logging.DebugLogger"/> class.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.DebugLogger.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:ServiceStack.Logging.DebugLogger"/> class.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.DebugLogger.Log(System.Object,System.Exception)">
-            <summary>
-            Logs the specified message.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.DebugLogger.LogFormat(System.Object,System.Object[])">
-            <summary>
-            Logs the format.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Logging.DebugLogger.Log(System.Object)">
-            <summary>
-            Logs the specified message.
-            </summary>
-        </member>
-        <member name="T:ServiceStack.MiniProfiler.Data.ExecuteType">
-            <summary>
-            Categories of sql statements.
-            </summary>
-        </member>
-        <member name="F:ServiceStack.MiniProfiler.Data.ExecuteType.None">
-            <summary>
-            Unknown
-            </summary>
-        </member>
-        <member name="F:ServiceStack.MiniProfiler.Data.ExecuteType.NonQuery">
-            <summary>
-            DML statements that alter database state, e.g. INSERT, UPDATE
-            </summary>
-        </member>
-        <member name="F:ServiceStack.MiniProfiler.Data.ExecuteType.Scalar">
-            <summary>
-            Statements that return a single record
-            </summary>
-        </member>
-        <member name="F:ServiceStack.MiniProfiler.Data.ExecuteType.Reader">
-            <summary>
-            Statements that iterate over a result set
-            </summary>
-        </member>
-        <member name="T:ServiceStack.MiniProfiler.Data.IDbProfiler">
-            <summary>
-            A callback for ProfiledDbConnection and family
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.IDbProfiler.ExecuteStart(System.Data.Common.DbCommand,ServiceStack.MiniProfiler.Data.ExecuteType)">
-            <summary>
-            Called when a command starts executing
-            </summary>
-            <param name="profiledDbCommand"></param>
-            <param name="executeType"></param>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.IDbProfiler.ExecuteFinish(System.Data.Common.DbCommand,ServiceStack.MiniProfiler.Data.ExecuteType,System.Data.Common.DbDataReader)">
-            <summary>
-            Called when a reader finishes executing
-            </summary>
-            <param name="profiledDbCommand"></param>
-            <param name="executeType"></param>
-            <param name="reader"></param>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.IDbProfiler.ReaderFinish(System.Data.Common.DbDataReader)">
-            <summary>
-            Called when a reader is done iterating through the data 
-            </summary>
-            <param name="reader"></param>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.IDbProfiler.OnError(System.Data.Common.DbCommand,ServiceStack.MiniProfiler.Data.ExecuteType,System.Exception)">
-            <summary>
-            Called when an error happens during execution of a command 
-            </summary>
-            <param name="profiledDbCommand"></param>
-            <param name="executeType"></param>
-            <param name="exception"></param>
-        </member>
-        <member name="P:ServiceStack.MiniProfiler.Data.IDbProfiler.IsActive">
-            <summary>
-            True if the profiler instance is active
-            </summary>
-        </member>
-        <member name="T:ServiceStack.MiniProfiler.Data.ProfiledConnection">
-            <summary>
-            Wraps a database connection, allowing sql execution timings to be collected when a <see cref="T:ServiceStack.MiniProfiler.Data.IDbProfiler"/> session is started.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledConnection.#ctor(System.Data.Common.DbConnection,ServiceStack.MiniProfiler.Data.IDbProfiler,System.Boolean)">
-            <summary>
-            Returns a new <see cref="T:ServiceStack.MiniProfiler.Data.ProfiledConnection"/> that wraps <paramref name="connection"/>, 
-            providing query execution profiling.  If profiler is null, no profiling will occur.
-            </summary>
-            <param name="connection">Your provider-specific flavor of connection, e.g. SqlConnection, OracleConnection</param>
-            <param name="profiler">The currently started <see cref="T:ServiceStack.MiniProfiler.Data.IDbProfiler"/> or null.</param>
-            <param name="autoDisposeConnection">Determines whether the ProfiledDbConnection will dispose the underlying connection.</param>
-        </member>
-        <member name="P:ServiceStack.MiniProfiler.Data.ProfiledConnection.InnerConnection">
-            <summary>
-            The underlying, real database connection to your db provider.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.MiniProfiler.Data.ProfiledConnection.Profiler">
-            <summary>
-            The current profiler instance; could be null.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.MiniProfiler.Data.ProfiledConnection.WrappedConnection">
-            <summary>
-            The raw connection this is wrapping
-            </summary>
-        </member>
-        <member name="T:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory">
-            <summary>
-            Wrapper for a db provider factory to enable profiling
-            </summary>
-        </member>
-        <member name="F:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.Instance">
-            <summary>
-            Every provider factory must have an Instance public field
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.InitProfiledDbProviderFactory(ServiceStack.MiniProfiler.Data.IDbProfiler,System.Data.Common.DbProviderFactory)">
-            <summary>
-            Allow to re-init the provider factory.
-            </summary>
-            <param name="profiler"></param>
-            <param name="wrappedFactory"></param>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.#ctor(ServiceStack.MiniProfiler.Data.IDbProfiler,System.Data.Common.DbProviderFactory)">
-            <summary>
-            proxy
-            </summary>
-            <param name="profiler"></param>
-            <param name="wrappedFactory"></param>
-        </member>
-        <member name="P:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CanCreateDataSourceEnumerator">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateDataSourceEnumerator">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateCommand">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateConnection">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateParameter">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateConnectionStringBuilder">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateCommandBuilder">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreateDataAdapter">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.MiniProfiler.Data.ProfiledProviderFactory.CreatePermission(System.Security.Permissions.PermissionState)">
-            <summary>
-            proxy
-            </summary>
-        </member>
-        <member name="M:ServiceStack.PerfUtils.MeasureFor(System.Action,System.Int32)">
-            <summary>
-            Runs an action for a minimum of runForMs
-            </summary>
-            <param name="fn">What to run</param>
-            <param name="runForMs">Minimum ms to run for</param>
-            <returns>time elapsed in micro seconds</returns>
-        </member>
-        <member name="M:ServiceStack.PerfUtils.Measure(System.Action,System.Int32,System.Int32,System.Action,System.Action,System.Action)">
-            <summary>
-            Returns average microseconds an action takes when run for the specified runForMs
-            </summary>
-            <param name="fn">What to run</param>
-            <param name="times">How many times to run for each iteration</param>
-            <param name="runForMs">Minimum ms to run for</param>
-            <param name="setup"></param>
-            <param name="warmup"></param>
-            <param name="teardown"></param>
+            <param name="mqClient"></param>
+            <param name="queueName">The queue to process</param>
+            <param name="doNext">A predicate on whether to continue processing the next message if any</param>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.RequestExtensions.GetRequestParams(ServiceStack.Web.IRequest)">
+        <member name="M:ServiceStack.Messaging.IMessageHandler.GetStats">
             <summary>
-            Duplicate Params are given a unique key by appending a #1 suffix
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.CaptureScriptBlock">
-             <summary>
-             Captures the output and assigns it to the specified variable.
-             Accepts an optional Object Dictionary as scope arguments when evaluating body.
-            
-             Usages: {{#capture output}} {{#each args}} - [{{it}}](/path?arg={{it}}) {{/each}} {{/capture}}
-                     {{#capture output {nums:[1,2,3]} }} {{#each nums}} {{it}} {{/each}} {{/capture}}
-                     {{#capture appendTo output {nums:[1,2,3]} }} {{#each nums}} {{it}} {{/each}} {{/capture}}
-             </summary>
-        </member>
-        <member name="T:ServiceStack.Script.CsvScriptBlock">
-            <summary>
-            Parse csv contents into a string dictionary List and assign to identifier
-            Usage: {{#csv list}}
-                     Item,Qty
-                     Apples,2
-                     Oranges,3
-                   {{/csv}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.EachScriptBlock">
-            <summary>
-            Handlebars.js like each block
-            Usages: {{#each customers}} {{Name}} {{/each}}
-                    {{#each customers}} {{it.Name}} {{/each}}
-                    {{#each num in numbers}} {{num}} {{/each}}
-                    {{#each num in [1,2,3]}} {{num}} {{/each}}
-                    {{#each numbers}} {{it}} {{else}} no numbers {{/each}}
-                    {{#each numbers}} {{it}} {{else if letters != null}} has letters {{else}} no numbers {{/each}}
-                    {{#each n in numbers where n > 5}} {{it}} {{else}} no numbers > 5 {{/each}}
-                    {{#each n in numbers where n > 5 orderby n skip 1 take 2}} {{it}} {{else}} no numbers > 5 {{/each}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.EvalScriptBlock">
-             <summary>
-             Special block which evaluates the rendered body as a ServiceStack Template
-            
-             Usages: {{#eval}}emit {{evaluateBodyOfArg}} at {{now}} {{/eval}}
-             
-                     {{#eval {scopeArg:1} }}
-                         emit {{evaluateBodyOfArg}} at {{now}} with {{scopeArg}}
-                     {{/eval}}
-             
-                     {{#eval {htmlDecode:true} }}
-                         emit htmldecoded {{evaluateBodyOfArg}} at {{now}}
-                     {{/eval}}
-             
-                     {{#eval {use:{methods:'ServiceStackScripts',plugins:['MarkdownScriptPlugin']} }}
-                          emit {{evaluateBodyOfArg}} at {{now}} in new context
-                     {{/eval}}
-             
-                     {{#eval { use:{context:true} } }}
-                          emit {{evaluateBodyOfArg}} in host context
-                     {{/eval}} 
-             </summary>
-        </member>
-        <member name="T:ServiceStack.Script.FunctionScriptBlock">
-            <summary>
-            Define a reusable function
-            Usage: {{#function calc(a, b) }}
-                      a * b | to => c
-                      a + b + c | return
-                   {{/function}}
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.HtmlScriptBlocks.Register(ServiceStack.Script.ScriptContext)">
-            <summary>
-            Usages: {{#ul {each:items, class:'nav'} }} <li>{{it}}</li> {{/ul}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.IfScriptBlock">
-            <summary>
-            Handlebars.js like if block
-            Usages: {{#if a > b}} max {{a}} {{/if}}
-                    {{#if a > b}} max {{a}} {{else}} max {{b}} {{/if}}
-                    {{#if a > b}} max {{a}} {{else if b > c}} max {{b}} {{else}} max {{c}} {{/if}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.KeyValuesScriptBlock">
-            <summary>
-            Parse text contents into a list of string Key/Value pairs and assign to specified identifier
-            Usage: {{#keyvalues list}}
-                     Apples  2
-                     Oranges 3
-                   {{/keyvalues}}
-                   {{#keyvalues list ':'}}
-                     Grape Fruit:  2
-                     Rock Melon:   3
-                   {{/keyvalues}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.NoopScriptBlock">
-            <summary>
-            Handlebars.js like noop block
-            Usage: Remove {{#noop}} contents in here {{/noop}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.PartialScriptBlock">
-            <summary>
-            Partial Block doesn't emit anything it only creates and saves a partial in the PageResult
-            
-            Usages: {{#partial mypartial}} contents {{/partial}}
-                    {{#partial mypartial {format:'html'} }} contents {{/partial}}
-                    {{#partial mypartial {format:'html', pageArg:1} }} contents {{/partial}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.RawScriptBlock">
-             <summary>
-             Special block which captures the raw body as a string fragment
-            
-             Usages: {{#raw}}emit {{ verbatim }} body{{/raw}}
-                     {{#raw varname}}assigned to varname{{/raw}}
-                     {{#raw appendTo varname}}appended to varname{{/raw}}
-             </summary>
-        </member>
-        <member name="T:ServiceStack.Script.WhileScriptBlock">
-            <summary>
-            while block
-            Usages: {{#while times > 0}} {{times}}. {{times - 1 | to => times}} {{/while}}
-                    {{#while b}} {{ false | to => b }} {{else}} {{b}} was false {{/while}}
-            
-            Max Iterations = Context.Args[ScriptConstants.MaxQuota]
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.WithScriptBlock">
-            <summary>
-            Handlebars.js like with block
-            Usages: {{#with person}} Hi {{name}}, I'm {{age}} years old{{/with}}
-                    {{#with person}} Hi {{name}}, I'm {{age}} years old {{else}} no person {{/with}}
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.JsTokenUtils.EvaluateToBoolAsync(ServiceStack.Script.JsToken,ServiceStack.Script.ScriptScopeContext)">
-            <summary>
-            Evaluate if result can be async, if so converts async result to Task&lt;object&gt; otherwise wraps result in a Task
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.JsTokenUtils.EvaluateToBool(ServiceStack.Script.JsToken,ServiceStack.Script.ScriptScopeContext,System.Nullable{System.Boolean}@,System.Threading.Tasks.Task{System.Boolean}@)">
-            <summary>
-            Evaluate if result can be async, if so converts async result to Task&lt;object&gt; otherwise wraps result in a Task
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.JsTokenUtils.EvaluateAsync(ServiceStack.Script.JsToken,ServiceStack.Script.ScriptScopeContext)">
-            <summary>
-            Evaluate if result can be async, if so converts async result to Task&lt;object&gt; otherwise wraps result in a Task
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.JsTokenUtils.Evaluate(ServiceStack.Script.JsToken,ServiceStack.Script.ScriptScopeContext,System.Object@,System.Threading.Tasks.Task{System.Object}@)">
-            <summary>
-            Evaluate then set asyncResult if Result was async, otherwise set result.
-            </summary>
-            <param name="scope"></param>
-            <param name="result"></param>
-            <param name="asyncResult"></param>
-            <returns>true if result was synchronous otherwise false</returns>
-        </member>
-        <member name="M:ServiceStack.Script.DefaultScripts.putItem(System.Collections.IDictionary,System.Object,System.Object)">
-            <summary>
-            Puts value in dictionary at key  
-            </summary>
-            <returns>value</returns>
-        </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.typeof(System.String)">
-            <summary>
-            Returns Type from type name syntax of .NET's typeof() 
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.Constructor(System.String)">
-            <summary>
-            Qualified Constructor Name Examples:
-             - Type()
-             - Type(string)
-             - GenericType&lt;string&lt;(System.Int32)
-             - Namespace.Type()
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.C(System.String)">
-            <summary>
-            Shorter Alias for Constructor
+            Get Current Stats for this Message Handler
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.F(System.String)">
+        <member name="P:ServiceStack.Messaging.IMessageHandler.MessageType">
             <summary>
-            Shorter Alias for Function
+            The type of the message this handler processes
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Messaging.IMessageHandlerFactory">
+            <summary>
+            Encapsulates creating a new message handler
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Messaging.MessageHandler`1">
+            <summary>
+            Processes all messages in a Normal and Priority Queue.
+            Expects to be called in 1 thread. i.e. Non Thread-Safe.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ServiceStack.Messaging.MessageQueueClientFactory.GetMessageAsync(System.String)">
+            <summary>
+            Returns the next message from queueName or null if no message
+            </summary>
+            <param name="queueName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.Client">
+            <summary>
+            Base rcon class.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.Messaging.Rcon.Client._sock">
+            <summary>
+            Rcon connection socket. Always set to null when not connected.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.Messaging.Rcon.Client._sequenceID">
+            <summary>
+            Unique ID for each message.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.Messaging.Rcon.Client._registeredCallbacks">
+            <summary>
+            Registered callbacks.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Client.#ctor(System.Net.IPEndPoint)">
+            <summary>
+            Create a new instance of rcon.
+            </summary>
+            <param name="rconEndpoint">Endpoint to connect to, usually the game server with query port.</param>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Client.Connect">
+            <summary>
+            Attempts to connect to the game server for rcon operations.
+            </summary>
+            <returns>True if connection established, false otherwise.</returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Client.ProcessPacket(System.Byte[],ServiceStack.Messaging.Rcon.ClientSocketState)">
+            <summary>
+            Processes a received packet.
+            </summary>
+            <param name="packet">The packet.</param>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Client.Disconnect">
+            <summary>
+            Disconnects from rcon.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Client.InternalSend(System.Byte[][])">
+            <summary>
+            Sends message to the server.
+            </summary>
+            <param name="words">Words to send.</param>
+        </member>
+        <member name="E:ServiceStack.Messaging.Rcon.Client.OnDisconnected">
+            <summary>
+            Disconnected event.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Client.Endpoint">
+            <summary>
+            Game server endpoint.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Client.LastException">
+            <summary>
+            Last exception that occured during operation.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Client.Connected">
+            <summary>
+            Connected?
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Client.SequenceID">
+            <summary>
+            Gets the next unique ID to be used for transmisson. Read this before sending to pair responses to sent messages.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.Client.OnDisconnectedHandler">
+            <summary>
+            Event delegate when disconnected from the server.
+            </summary>
+            <param name="rcon"></param>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.Client.AsyncCallback">
+            <summary>
+            Delegate for async callbacks.
+            </summary>
+            <param name="rcon"></param>
+            <param name="packet"></param>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.NotConnectedException">
+            <summary>
+            Exception thrown when attempting to send on a non-connected service client.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Packet.FromServer">
+            <summary>
+            True if the packet originated on the server.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Packet.IsResponse">
+            <summary>
+            True if the packet is a response from a sent packet.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Packet.Sequence">
+            <summary>
+            Sequence identifier. Unique to the connection.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Packet.Words">
+            <summary>
+            Words.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.PacketCodec">
+            <summary>
+            Contains methods required for encoding and decoding rcon packets.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.DecodePacket(System.Byte[])">
+            <summary>
+            Decodes a packet.
+            </summary>
+            <param name="packet">The packet.</param>
+            <returns>A packet object.</returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.DecodeHeader(System.Byte[])">
+            <summary>
+            Decodes the packet header.
+            </summary>
+            <param name="packet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.DecodeWords(System.Byte[])">
+            <summary>
+            Decodes words in a packet.
+            </summary>
+            <param name="packet"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.EncodePacket(System.Boolean,System.Boolean,System.UInt32,System.Byte[][])">
+            <summary>
+            Encodes a packet for transmission to the server.
+            </summary>
+            <param name="fromServer"></param>
+            <param name="isResponse"></param>
+            <param name="id"></param>
+            <param name="words"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.EncodeHeader(System.Boolean,System.Boolean,System.UInt32)">
+            <summary>
+            Encodes a packet header.
+            </summary>
+            <param name="fromServer"></param>
+            <param name="isResponse"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.PacketCodec.EncodeWords(System.Byte[][])">
+            <summary>
+            Encodes words.
+            </summary>
+            <param name="words"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.ProcessingClient">
+            <summary>
+            Processing client used to interface with ServiceStack and allow a message to be processed.
+            Not an actual client.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.ProcessingClient.Publish(System.String,System.Byte[])">
+            <summary>
+            Publish the specified message into the durable queue @queueName
+            </summary>
+            <param name="queueName"></param>
+            <param name="messageBytes"></param>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.ProcessingClient.Notify(System.String,System.Byte[])">
+            <summary>
+            Publish the specified message into the transient queue @queueName
+            </summary>
+            <param name="queueName"></param>
+            <param name="messageBytes"></param>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.ProcessingClient.Get(System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            Synchronous blocking get.
+            </summary>
+            <param name="queueName"></param>
+            <param name="timeOut"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.ProcessingClient.GetAsync(System.String)">
+            <summary>
+            Non blocking get message
+            </summary>
+            <param name="queueName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.ProcessingClient.WaitForNotifyOnAny(System.String[])">
+            <summary>
+            Blocking wait for notifications on any of the supplied channels
+            </summary>
+            <param name="channelNames"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ServiceStack.Messaging.Rcon.Server">
+            <summary>
+            Hosting services via a binary-safe TCP-based protocol.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Server.RegisterHandler``1(System.Func{ServiceStack.Messaging.IMessage{``0},System.Object})">
+            <summary>
+            Register DTOs and hanlders the MQ Host will process
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="processMessageFn"></param>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Server.GetStatus">
+            <summary>
+            Get Total Current Stats for all Message Handlers
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.F(System.String,System.Collections.Generic.List{System.Object})">
+        <member name="M:ServiceStack.Messaging.Rcon.Server.GetStatsDescription">
             <summary>
-            Shorter Alias for Function(name,args)
+            Get a Stats dump
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.Function(System.String)">
+        <member name="M:ServiceStack.Messaging.Rcon.Server.Start">
             <summary>
-            Qualified Method Name Examples:
-             - Console.WriteLine(string)
-             - Type.StaticMethod
-             - Type.InstanceMethod
-             - GenericType&lt;string&lt;.Method
-             - GenericType&lt;string&lt;.GenericMethod&lt;System.Int32&lt;
-             - Namespace.Type.Method
+            Start the MQ Host. Stops the server and restarts if already started.
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.ProtectedScripts.Function(System.String,System.Collections.Generic.List{System.Object})">
+        <member name="M:ServiceStack.Messaging.Rcon.Server.Stop">
             <summary>
-            Resolve Function from qualified type name, when args Type list are unspecified fallback to use args to resolve ambiguous methods
+            Stop the MQ Host if not already stopped. 
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Messaging.Rcon.Server.ProcessPacket(System.Byte[],System.Net.Sockets.Socket,ServiceStack.Messaging.Rcon.ClientSocketState)">
+            <summary>
+            Processes a received packet.
+            </summary>
+            <param name="packet">The packet.</param>
+        </member>
+        <member name="P:ServiceStack.Messaging.Rcon.Server.MessageFactory">
+            <summary>
+            Factory to create consumers and producers that work with this service
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Net30.ExtendTuple">
+            <summary>
+            Helper extensions for tuples
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.PropertyAccessor`1.TypedGetPropertyFn``1">
+            <summary>
+            Func to get the Strongly-typed field
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.PropertyAccessor`1.ValueTypedGetPropertyFn``1">
+            <summary>
+            Required to cast the return ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.PropertyAccessor`1.TypedSetPropertyFn``1">
+            <summary>
+            Func to set the Strongly-typed field
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.PropertyAccessor`1.ValueTypesSetPropertyFn``1">
+            <summary>
+            Required to cast the ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.PropertyAccessor`1.UnTypedSetPropertyFn``1">
+            <summary>
+            Required to cast the ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.StaticAccessors`1.TypedGetPropertyFn``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Func to get the Strongly-typed field
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.StaticAccessors`1.ValueUnTypedGetPropertyFn``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Required to cast the return ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.StaticAccessors`1.TypedSetPropertyFn``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Func to set the Strongly-typed field
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.StaticAccessors`1.ValueUnTypedSetPropertyFn``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Required to cast the ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Common.Reflection.StaticAccessors`1.UnTypedSetPropertyFn``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Required to cast the ValueType to an object for caching
+            </summary>
+        </member>
+        <member name="T:ServiceStack.ServiceClient.Web.AsyncServiceClient">
+            Need to provide async request options
+            http://msdn.microsoft.com/en-us/library/86wf6409(VS.71).aspx
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.AsyncServiceClient.HttpWebRequestFilter">
+            <summary>
+            The request filter is called before any request.
+            This request filter is executed globally.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.AsyncServiceClient.HttpWebResponseFilter">
+            <summary>
+            The response action is called once the server response is available.
+            It will allow you to access raw response information. 
+            This response action is executed globally.
+            Note that you should NOT consume the response stream as this is handled by ServiceStack
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.AsyncServiceClient.OnAuthenticationRequired">
+            <summary>
+            Called before request resend, when the initial request required authentication
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.AsyncServiceClient.LocalHttpWebRequestFilter">
+            <summary>
+            The request filter is called before any request.
+            This request filter only works with the instance where it was set (not global).
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.AsyncServiceClient.LocalHttpWebResponseFilter">
+            <summary>
+            The response action is called once the server response is available.
+            It will allow you to access raw response information. 
+            Note that you should NOT consume the response stream as this is handled by ServiceStack
+            </summary>
+        </member>
+        <member name="T:ServiceStack.ServiceClient.Web.GenericProxy`1">
+            <summary>
+            Generic Proxy for service calls.
+            </summary>
+            <typeparam name="T">The service Contract</typeparam>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.GenericProxy`1.Proxy">
+            <summary>
+            Returns the transparent proxy for the service call
+            </summary>
+        </member>
+        <member name="T:ServiceStack.ServiceClient.Web.ServiceClientBase">
+            Need to provide async request options
+            http://msdn.microsoft.com/en-us/library/86wf6409(VS.71).aspx
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.httpWebRequestFilter">
+            <summary>
+            The request filter is called before any request.
+            This request filter is executed globally.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.httpWebResponseFilter">
+            <summary>
+            The response action is called once the server response is available.
+            It will allow you to access raw response information. 
+            This response action is executed globally.
+            Note that you should NOT consume the response stream as this is handled by ServiceStack
+            </summary>
+        </member>
+        <member name="M:ServiceStack.ServiceClient.Web.ServiceClientBase.SetBaseUri(System.String)">
+            <summary>
+            Sets all baseUri properties, using the Format property for the SyncReplyBaseUri and AsyncOneWayBaseUri
+            </summary>
+            <param name="baseUri">Base URI of the service</param>
+        </member>
+        <member name="M:ServiceStack.ServiceClient.Web.ServiceClientBase.SetBaseUri(System.String,System.String)">
+            <summary>
+            Sets all baseUri properties allowing for a temporary override of the Format property
+            </summary>
+            <param name="baseUri">Base URI of the service</param>
+            <param name="format">Override of the Format property for the service</param>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.disableAutoCompression">
+            <summary>
+            Whether to Accept Gzip,Deflate Content-Encoding and to auto decompress responses
+            </summary>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.username">
+            <summary>
+            The user name for basic authentication
+            </summary>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.password">
+            <summary>
+            The password for basic authentication
+            </summary>
+        </member>
+        <member name="M:ServiceStack.ServiceClient.Web.ServiceClientBase.SetCredentials(System.String,System.String)">
+            <summary>
+            Sets the username and the password for basic authentication.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.alwaysSendBasicAuthHeader">
+            <summary>
+            Determines if the basic auth header should be sent with every request.
+            By default, the basic auth header is only sent when "401 Unauthorized" is returned.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.ServiceClient.Web.ServiceClientBase.storeCookies">
+            <summary>
+            Specifies if cookies should be stored
+            </summary>
+        </member>
+        <member name="M:ServiceStack.ServiceClient.Web.ServiceClientBase.HandleResponseException``1(System.Exception,System.Object,System.String,System.Func{System.Net.WebRequest},System.Func{System.Net.WebRequest,System.Net.WebResponse},``0@)">
+            <summary>
+            Called by Send method if an exception occurs, for instance a System.Net.WebException because the server
+            returned an HTTP error code. Override if you want to handle specific exceptions or always want to parse the
+            response to a custom ErrorResponse DTO type instead of ServiceStack's ErrorResponse class. In case ex is a
+            <c>System.Net.WebException</c>, do not use
+            <c>createWebRequest</c>/<c>getResponse</c>/<c>HandleResponse&lt;TResponse&gt;</c> to parse the response
+            because that will result in the same exception again. Use
+            <c>ThrowWebServiceException&lt;YourErrorResponseType&gt;</c> to parse the response and to throw a
+            <c>WebServiceException</c> containing the parsed DTO. Then override Send to handle that exception.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.ServiceClientBase.Headers">
+            <summary>
+            Gets the collection of headers to be added to outgoing requests.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.ServiceClientBase.Credentials">
+            <summary>
+            Gets or sets authentication information for the request.
+            Warning: It's recommened to use <see cref="P:ServiceStack.ServiceClient.Web.ServiceClientBase.UserName"/> and <see cref="P:ServiceStack.ServiceClient.Web.ServiceClientBase.Password"/> for basic auth.
+            This property is only used for IIS level authentication.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.ServiceClientBase.onAuthenticationRequired">
+            <summary>
+            Called before request resend, when the initial request required authentication
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.ServiceClientBase.localHttpWebRequestFilter">
+            <summary>
+            The request filter is called before any request.
+            This request filter only works with the instance where it was set (not global).
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.ServiceClientBase.localHttpWebResponseFilter">
+            <summary>
+            The response action is called once the server response is available.
+            It will allow you to access raw response information. 
+            Note that you should NOT consume the response stream as this is handled by ServiceStack
+            </summary>
+        </member>
+        <member name="P:ServiceStack.ServiceClient.Web.WcfServiceClient.StoreCookies">
+            <summary>
+            Specifies if cookies should be stored
+            </summary>
+        </member>
+        <member name="T:ServiceStack.ServiceClient.Web.UrlExtensions">
+            <summary>
+            Donated by Ivan Korneliuk from his post:
+            http://korneliuk.blogspot.com/2012/08/servicestack-reusing-dtos.html
             
-            Qualified Method Name Examples:
-             - Console.WriteLine ['string']
-             - Type.StaticMethod
-             - Type.InstanceMethod
-             - GenericType&lt;string&lt;.Method
-             - GenericType&lt;string&lt;.GenericMethod&lt;System.Int32&lt;
-             - Namespace.Type.Method
+            Modified to only allow using routes matching the supplied HTTP Verb
             </summary>
         </member>
-        <member name="P:ServiceStack.Script.PageResult.Page">
+        <member name="T:ServiceStack.ServiceClient.Web.CookieManagerEndpointBehavior">
             <summary>
-            The Page to Render
+            Adds the singleton instance of <see cref="T:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector"/> to an endpoint on the client.
             </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.CodePage">
-            <summary>
-            The Code Page to Render
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.LayoutPage">
-            <summary>
-            Use specified Layout 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Layout">
-            <summary>
-            Use Layout with specified name
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.NoLayout">
-            <summary>
-            Render without any Layout
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Model">
-            <summary>
-            Extract Model Properties into Scope Args
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Args">
-            <summary>
-            Add additional Args available to all pages 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.ScriptMethods">
-            <summary>
-            Add additional script methods available to all pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.ScriptBlocks">
-            <summary>
-            Add additional script blocks available to all pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Partials">
-            <summary>
-            Add additional partials available to all pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Options">
-            <summary>
-            Return additional HTTP Headers in HTTP Requests
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.ContentType">
-            <summary>
-            Specify the Content-Type of the Response 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.PageTransformers">
-            <summary>
-            Transform the Page output using a chain of stream transformers
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.OutputTransformers">
-            <summary>
-            Transform the entire output using a chain of stream transformers
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.FilterTransformers">
-            <summary>
-            Available transformers that can transform context filter stream outputs
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.ExcludeFiltersNamed">
-            <summary>
-            Don't allow access to specified filters
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.LastFilterError">
-            <summary>
-            The last error thrown by a filter
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.LastFilterStackTrace">
-            <summary>
-            The StackTrace where the Last Error Occured 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.AssignExceptionsTo">
-            <summary>
-            What argument errors should be binded to
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.SkipFilterExecution">
-            <summary>
-            Whether to skip execution of all page filters and just write page string fragments
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.SkipExecutingFiltersIfError">
-            <summary>
-            Overrides Context to specify whether to Ignore or Continue executing filters on error 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.RethrowExceptions">
-            <summary>
-            Whether to always rethrow Exceptions
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.HaltExecution">
-            <summary>
-            Immediately halt execution of the page
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.DisableBuffering">
-            <summary>
-            Whether to disable buffering output and render directly to OutputStream
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.ReturnValue">
-            <summary>
-            The Return value of the page (if any)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.StackDepth">
-            <summary>
-            The Current StackDepth
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.PageResult.Evaluations">
-            <summary>
-            Can be used to track number of Evaluations
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptBlock.Body">
-            <summary>
-            Parse Body using Specified Language. Uses host language if unspecified.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptConfig.FatalExceptions">
-            <summary>
-            Rethrow fatal exceptions thrown on incorrect API usage    
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.CacheFiles">
-            <summary>
-            Where to store cached files, if unspecified falls back to configured VirtualFiles if it implements IVirtualFiles (i.e. writable)  
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScanTypes">
-            <summary>
-            Scan Types and auto-register any Script Methods, Blocks and Code Pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScanAssemblies">
-            <summary>
-            Scan Assemblies and auto-register any Script Methods, Blocks and Code Pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScriptAssemblies">
-            <summary>
-            Allow scripting of Types from specified Assemblies
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScriptTypes">
-            <summary>
-            Allow scripting of the specified Types
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScriptNamespaces">
-            <summary>
-            Lookup Namespaces for resolving Types in Scripts
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.AllowScriptingOfAllTypes">
-            <summary>
-            Allow scripting of all Types in loaded Assemblies 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScriptTypeNameMap">
-            <summary>
-            Register short Type name accessible from scripts. (Advanced, use ScriptAssemblies/ScriptTypes first)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.ScriptTypeQualifiedNameMap">
-            <summary>
-            Register long qualified Type name accessible from scripts. (Advanced, use ScriptAssemblies/ScriptTypes first)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.InsertScriptMethods">
-            <summary>
-            Insert additional Methods at the start so they have priority over default Script Methods   
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.InsertScriptBlocks">
-            <summary>
-            Insert additional Blocks at the start so they have priority over default Script Blocks   
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.InsertPlugins">
-            <summary>
-            Insert plugins at the start of Plugins so they're registered first
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.FilterTransformers">
-            <summary>
-            Available transformers that can transform context filter stream outputs
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.CheckForModifiedPages">
-            <summary>
-            Whether to check for modified pages by default when not in DebugMode
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.CheckForModifiedPagesAfter">
-            <summary>
-            How long in between checking for modified pages
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.InvalidateCachesBefore">
-            <summary>
-            Existing caches and pages created prior to specified date should be invalidated 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.RenderExpressionExceptions">
-            <summary>
-            Render render filter exceptions in-line where filter is located
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.AssignExceptionsTo">
-            <summary>
-            What argument to assign Filter Exceptions to
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.SkipExecutingFiltersIfError">
-            <summary>
-            Whether to skip executing Filters if an Exception was thrown
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.MaxQuota">
-            <summary>
-            Limit Max Iterations for Heavy Operations like rendering a Script Block (default 10K)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.MaxEvaluations">
-            <summary>
-            Limit Max number for micro ops like evaluating an AST instruction (default 1M)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.ScriptContext.MaxStackDepth">
-            <summary>
-            Limit Recursion Max StackDepth (default 25)
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.ScriptCode">
-            <summary>
-            Inverse of the #Script Language Template Syntax where each line is a statement
-            i.e. in contrast to #Script's default where text contains embedded template expressions {{ ... }} 
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.DefnScriptBlock">
-            <summary>
-            Define and export a LISP function to the page
-            Usage: {{#defn calc [a, b] }}
-                      (let ( (c (* a b)) )
-                        (+ a b c)
-                      )
-                   {{/defn}}
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.LispEvalException">
-            <summary>Exception in evaluation</summary>
-        </member>
-        <member name="P:ServiceStack.Script.LispEvalException.Trace">
-            <summary>Stack trace of Lisp evaluation</summary>
-        </member>
-        <member name="M:ServiceStack.Script.LispEvalException.#ctor(System.String,System.Object,System.Boolean)">
-            <summary>Construct with a base message, cause, and
-            a flag whether to quote strings in the cause.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.LispEvalException.ToString">
-            <summary>Return a string representation which contains
-            the message and the stack trace.</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp">
-            <summary>
-             A Lisp interpreter written in C# 7
-            </summary><remarks>
-             This is ported from Nuka Lisp in Dart
-             (https://github.com/nukata/lisp-in-dart) except for bignum.
-             It is named after ex-Nukata Town in Japan.
+            <remarks>
+            Based on http://megakemp.wordpress.com/2009/02/06/managing-shared-cookies-in-wcf/
             </remarks>
         </member>
-        <member name="P:ServiceStack.Script.Lisp.AllowLoadingRemoteScripts">
+        <member name="M:ServiceStack.ServiceClient.Web.CookieManagerEndpointBehavior.ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.ClientRuntime)">
             <summary>
-            Allow loading of remote scripts
-             - https://example.org/lib.l
-             - gist:{gist-id}
-             - gist:{gist-id}/file.l
-             - index:{name}
-             - index:{name}/file.l
+            Adds the singleton of the <see cref="!:ClientIdentityMessageInspector"/> class to the client endpoint's message inspectors.
             </summary>
+            <param name="endpoint">The endpoint that is to be customized.</param>
+            <param name="clientRuntime">The client runtime to be customized.</param>
         </member>
-        <member name="P:ServiceStack.Script.Lisp.IndexGistId">
+        <member name="T:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector">
             <summary>
-            Gist where to resolve `index:{name}` references from
+            Maintains a copy of the cookies contained in the incoming HTTP response received from any service
+            and appends it to all outgoing HTTP requests.
             </summary>
+            <remarks>
+            This class effectively allows to send any received HTTP cookies to different services,
+            reproducing the same functionality available in ASMX Web Services proxies with the <see cref="T:System.Net.CookieContainer"/> class.
+            Based on http://megakemp.wordpress.com/2009/02/06/managing-shared-cookies-in-wcf/
+            </remarks>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Reset">
+        <member name="M:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector.#ctor">
             <summary>
-            Reset Global Symbols back to default
+            Initializes a new instance of the <see cref="!:ClientIdentityMessageInspector"/> class.
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Import(System.String)">
+        <member name="M:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector.AfterReceiveReply(System.ServiceModel.Channels.Message@,System.Object)">
             <summary>
-            Load Lisp into Global Symbols, a new CreateInterpreter() starts with a copy of global symbols
+            Inspects a message after a reply message is received but prior to passing it back to the client application.
             </summary>
+            <param name="reply">The message to be transformed into types and handed back to the client application.</param>
+            <param name="correlationState">Correlation state data.</param>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Import(System.ReadOnlyMemory{System.Char})">
+        <member name="M:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector.BeforeSendRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel)">
             <summary>
-            Load Lisp into Global Symbols, a new CreateInterpreter() starts with a copy of global symbols
+            Inspects a message before a request message is sent to a service.
             </summary>
+            <param name="request">The message to be sent to the service.</param>
+            <param name="channel">The client object channel.</param>
+            <returns>
+            <strong>Null</strong> since no message correlation is used.
+            </returns>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.CreateInterpreter">
-            <summary>Create a Lisp interpreter initialized pre-configured with Global Symbols.</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.Cell">
-            <summary>Cons cell</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.Cell.Car">
-            <summary>Head part of the cons cell</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.Cell.Cdr">
-            <summary>Tail part of the cons cell</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Cell.#ctor(System.Object,System.Object)">
-            <summary>Construct a cons cell with its head and tail.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Cell.ToString">
-            <summary>Make a simple string representation.</summary>
-            <remarks>Do not invoke this for any circular list.</remarks>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.Cell.Length">
-            <summary>Length as a list</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.Sym">
-            <summary>Lisp symbol</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.Sym.Name">
-            <summary>The symbol's name</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Sym.#ctor(System.String)">
-            <summary>Construct a symbol that is not interned.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Sym.ToString">
-            <summary>Return the symbol's name</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Sym.GetHashCode">
-            <summary>Return the hashcode of the symbol's name</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.Sym.Table">
-            <summary>Table of interned symbols</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Sym.New(System.String,System.Func{System.String,ServiceStack.Script.Lisp.Sym})">
-            <summary>Return an interned symbol for the name.</summary>
-            <remarks>If the name is not interned yet, such a symbol
-            will be constructed with <paramref name="make"/>.</remarks>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Sym.New(System.String)">
-            <summary>Construct an interned symbol.</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.Sym.IsInterned">
-            <summary>Is it interned?</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.TRUE">
-            <summary>The symbol of <c>t</c></summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.LispFunc">
-            <summary>Common base class of Lisp functions</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.LispFunc.Carity">
-            <summary>Number of arguments, made negative if the function
-            has &amp;rest</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.LispFunc.#ctor(System.Int32)">
-            <summary>Construct with Carity.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.LispFunc.MakeFrame(ServiceStack.Script.Lisp.Cell)">
-            <summary>Make a frame for local variables from a list of
-            actual arguments.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.LispFunc.EvalFrame(System.Object[],ServiceStack.Script.Lisp.Interpreter,ServiceStack.Script.Lisp.Cell)">
-            <summary>Evaluate each expression in a frame.</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.BuiltInFuncBody">
-            <summary>Function type which represents any built-in function body
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.BuiltInFunc">
-            <summary>Built-in function</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.BuiltInFunc.Name">
-            <summary>Name of this function</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.BuiltInFunc.Body">
-            <summary>C# function as the body of this function</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.BuiltInFunc.#ctor(System.String,System.Int32,ServiceStack.Script.Lisp.BuiltInFuncBody)">
-            <summary>Construct with Name, Carity and Body.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.BuiltInFunc.ToString">
-            <summary>Return a string representation in Lisp.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.BuiltInFunc.EvalWith(ServiceStack.Script.Lisp.Interpreter,ServiceStack.Script.Lisp.Cell,ServiceStack.Script.Lisp.Cell)">
-            <summary>Invoke the built-in function with a list of
-            actual arguments.</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.Interpreter">
-            <summary>Core of the Lisp interpreter</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.Interpreter.Globals">
-            <summary>Table of the global values of symbols</summary>
-        </member>
-        <member name="P:ServiceStack.Script.Lisp.Interpreter.COut">
-            <summary>Standard out</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Interpreter.#ctor">
-            <summary>Set each built-in function/variable as the global value
-            of symbol.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Interpreter.WriteCacheFile(ServiceStack.Script.ScriptScopeContext,ServiceStack.IO.IVirtualPathProvider,System.String,System.ReadOnlyMemory{System.Char})">
+        <member name="P:ServiceStack.ServiceClient.Web.CookieManagerMessageInspector.Instance">
             <summary>
-            Cache final output from load reference 
+            Gets the singleton <see cref="!:ClientIdentityMessageInspector"/> instance.
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Interpreter.lispContents(ServiceStack.Script.ScriptScopeContext,System.String)">
+        <member name="F:ServiceStack.ServiceClient.Web.WebRequestUtils.ResponseDtoSuffix">
             <summary>
-            Load examples:
-              - file.l
-              - virtual/path/file.l
-              - index:lib-calc
-              - index:lib-calc/lib1.l
-              - gist:{gist-id}
-              - gist:{gist-id}/single-file.l
-              - https://mydomain.org/file.l
+            Naming convention for the request's Response DTO
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Interpreter.Def(System.String,System.Int32,ServiceStack.Script.Lisp.BuiltInFuncBody)">
-            <summary>Define a built-in function by a name, an arity,
-            and a body.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Interpreter.Eval(System.Object,ServiceStack.Script.Lisp.Cell)">
-            <summary>Evaluate a Lisp expression in an environment.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.QqExpand(System.Object)">
-            <summary>Expand <c>x</c> of any quqsi-quotation <c>`x</c> into
-            the equivalent S-expression.</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.QqQuote(System.Object)">
-            <summary>Quote <c>x</c> so that the result evaluates to <c>x</c>.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Parse(System.String)">
+        <member name="F:ServiceStack.ServiceModel.Serialization.DataContractDeserializer.quotas">
             <summary>
-            Returns List of SExpression's
+            Default MaxStringContentLength is 8k, and throws an exception when reached
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Parse(System.ReadOnlyMemory{System.Char})">
+        <member name="T:ServiceStack.ServiceModel.Serialization.StringMapTypeDeserializer">
             <summary>
-            Returns List of SExpression's
+            Serializer cache of delegates required to create a type from a string map (e.g. for REST urls)
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.Lisp.Run(ServiceStack.Script.Lisp.Interpreter,ServiceStack.Script.Lisp.Reader)">
-            <summary>Run Read-Eval Loop.</summary>
-        </member>
-        <member name="T:ServiceStack.Script.Lisp.Reader">
-            <summary>Reader of Lisp expressions</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.Reader.EOF">
-            <summary>Token of "End Of File"</summary>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Reader.Read">
-            <summary>Read a Lisp expression and return it.</summary>
-            <remarks>Return EOF if the input runs out.</remarks>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.Str(System.Object,System.Boolean)">
-            <summary>Make a string representation of Lisp expression.</summary>
-            <param name="x">Lisp expression</param>
-            <param name="quoteString">flag whether to quote string</param>
-        </member>
-        <member name="M:ServiceStack.Script.Lisp.RunRepl(ServiceStack.Script.ScriptContext)">
-            <summary>Run Read-Eval-Print Loop.</summary>
-            <remarks>This never ends, use Ctrl+C to Exit. Exceptions are handled here and not thrown.</remarks>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.InitScript">
-            <summary>Lisp initialization script</summary>
-        </member>
-        <member name="F:ServiceStack.Script.Lisp.LispCore">
+        <member name="M:ServiceStack.ServiceModel.Support.XmlSerializerWrapper.GetNamespace(System.Type)">
             <summary>
-            Lisp Common Utils 
+            Gets the namespace from an attribute marked on the type's definition
             </summary>
+            <param name="type"></param>
+            <returns>Namespace of type</returns>
         </member>
-        <member name="F:ServiceStack.Script.Lisp.Extensions">
+        <member name="T:ServiceStack.Validation.ValidationError">
             <summary>
-            Popular Clojure + nicer UX Utils
+            The exception which is thrown when a validation error occurred.
+            This validation is serialized in a extra clean and human-readable way by ServiceStack.
             </summary>
         </member>
-        <member name="T:ServiceStack.Script.SharpScript">
+        <member name="M:ServiceStack.Validation.ValidationError.ToXml">
             <summary>
-            #Script Language which processes ```lang ... ``` blocks
+            Used if we need to serialize this exception to XML
             </summary>
+            <returns></returns>
         </member>
-        <member name="T:ServiceStack.Script.ScriptTemplate">
+        <member name="P:ServiceStack.Validation.ValidationError.ErrorCode">
             <summary>
-            The #Script Default Template Language (does not process ```lang ... ``` blocks)
+            Returns the first error code
             </summary>
+            <value>The error code.</value>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.SharpScriptPage(ServiceStack.Script.ScriptContext,System.String)">
+        <member name="T:ServiceStack.Validation.ValidationErrorResult">
             <summary>
-            Create SharpPage configured to use #Script 
+            Encapsulates a validation result.
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.TemplateSharpPage(ServiceStack.Script.ScriptContext,System.String)">
+        <member name="M:ServiceStack.Validation.ValidationErrorResult.#ctor">
             <summary>
-            Create SharpPage configured to use #Script Templates 
+            Constructs a new ValidationResult
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.RenderScript(ServiceStack.Script.ScriptContext,System.String,ServiceStack.Script.ScriptException@)">
+        <member name="M:ServiceStack.Validation.ValidationErrorResult.#ctor(System.Collections.Generic.IList{ServiceStack.Validation.ValidationErrorField})">
             <summary>
-            Render #Script output to string
+            Constructs a new ValidationResult
             </summary>
+            <param name="errors">A list of validation results</param>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateScript(ServiceStack.Script.ScriptContext,System.String,ServiceStack.Script.ScriptException@)">
+        <member name="M:ServiceStack.Validation.ValidationErrorResult.#ctor(System.Collections.Generic.IList{ServiceStack.Validation.ValidationErrorField},System.String,System.String)">
             <summary>
-            Alias for EvaluateScript 
+            Initializes a new instance of the <see cref="T:ServiceStack.Validation.ValidationErrorResult"/> class.
             </summary>
+            <param name="errors">The errors.</param>
+            <param name="successCode">The success code.</param>
+            <param name="errorCode">The error code.</param>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.RenderScript(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ServiceStack.Script.ScriptException@)">
+        <member name="M:ServiceStack.Validation.ValidationErrorResult.Merge(ServiceStack.Validation.ValidationErrorResult)">
             <summary>
-            Render #Script output to string
+            Merge errors from another <see cref="T:ServiceStack.Validation.ValidationErrorResult"/>
             </summary>
+            <param name="result"></param>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateScript(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ServiceStack.Script.ScriptException@)">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.SuccessCode">
             <summary>
-            Alias for RenderScript 
+            Gets or sets the success code.
             </summary>
+            <value>The success code.</value>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.RenderScript(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.ErrorCode">
             <summary>
-            Render #Script output to string
+            Gets or sets the error code.
             </summary>
+            <value>The error code.</value>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateScript(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.SuccessMessage">
             <summary>
-            Alias for RenderScript 
+            Gets or sets the success message.
             </summary>
+            <value>The success message.</value>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.RenderScriptAsync(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.ErrorMessage">
             <summary>
-            Render #Script output to string asynchronously
+            Gets or sets the error message.
             </summary>
+            <value>The error message.</value>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateScriptAsync(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.Errors">
             <summary>
-            Alias for RenderScriptAsync 
+            The errors generated by the validation.
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.Evaluate``1(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="P:ServiceStack.Validation.ValidationErrorResult.IsValid">
             <summary>
-            Evaluate #Script and convert returned value to T 
+            Returns True if the validation was successful (errors list is empty).
             </summary>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.Evaluate(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:ServiceStack.Common.StreamExtensions.Compress(System.String,System.String)">
             <summary>
-            Evaluate #Script and return value 
+            Compresses the specified text using the default compression method: Deflate
             </summary>
+            <param name="text">The text.</param>
+            <param name="compressionType">Type of the compression.</param>
+            <returns></returns>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateAsync``1(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:ServiceStack.Common.StreamExtensions.Decompress(System.Byte[],System.String)">
             <summary>
-            Evaluate #Script and convert returned value to T asynchronously
+            Decompresses the specified gz buffer using the default compression method: Inflate
             </summary>
+            <param name="gzBuffer">The gz buffer.</param>
+            <param name="compressionType">Type of the compression.</param>
+            <returns></returns>
         </member>
-        <member name="M:ServiceStack.Script.ScriptTemplateUtils.EvaluateAsync(ServiceStack.Script.ScriptContext,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
-            <summary>
-            Evaluate #Script and convert returned value to T asynchronously
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Script.SharpPage.ScriptLanguage">
-            <summary>
-            Whether to evaluate as Template block or code block
-            </summary>
-        </member>
-        <member name="M:ServiceStack.StringUtils.ReplacePairs(System.String,System.String[])">
-            <summary>
-            Multiple string replacements
-            </summary>
-            <param name="replaceStringsPairs">Even number of old and new value pairs</param>
-        </member>
-        <member name="M:ServiceStack.StringUtils.ReplaceOutsideOfQuotes(System.String,System.String[])">
-            <summary>
-            Replace string contents outside of string quotes 
-            </summary>
-        </member>
-        <member name="M:ServiceStack.StringUtils.SafeInput(System.String)">
-            <summary>
-            Protect against XSS by cleaning non-standard User Input
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Support.AdapterBase">
+        <member name="T:ServiceStack.Common.Support.AdapterBase">
             <summary>
             Common functionality when creating adapters
             </summary>
         </member>
-        <member name="M:ServiceStack.Support.AdapterBase.Execute``1(System.Func{``0})">
+        <member name="M:ServiceStack.Common.Support.AdapterBase.Execute``1(System.Func{``0})">
             <summary>
             Executes the specified expression. 
             </summary>
@@ -1274,13 +788,13 @@
             <param name="action">The action.</param>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.Support.AdapterBase.Execute(System.Action)">
+        <member name="M:ServiceStack.Common.Support.AdapterBase.Execute(System.Action)">
             <summary>
             Executes the specified action (for void methods).
             </summary>
             <param name="action">The action.</param>
         </member>
-        <member name="T:ServiceStack.Support.InMemoryLogFactory">
+        <member name="T:ServiceStack.Common.Support.InMemoryLogFactory">
             <summary>
             Note: InMemoryLog keeps all logs in memory, so don't use it long running exceptions
             
@@ -1288,32 +802,45 @@
             to provide a detailed analysis of your logs.
             </summary>
         </member>
-        <member name="M:ServiceStack.TypeExtensions.GetInvokerDelegate(System.Reflection.MethodInfo)">
+        <member name="M:ServiceStack.Common.Support.LogicFacadeBase.Execute``1(ServiceStack.DesignPatterns.Command.ICommand{``0})">
             <summary>
-            Create the correct Invoker Delegate Type based on the type of Method
+            Executes the specified action.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="action">The action.</param>
+            <returns></returns>
+        </member>
+        <member name="P:ServiceStack.Common.Support.LogicFacadeBase.CurrentContext">
+            <summary>
+            Gets the current context (or null if none).
             </summary>
         </member>
-        <member name="M:ServiceStack.TypeExtensions.GetInvoker(System.Reflection.MethodInfo)">
+        <member name="P:ServiceStack.Common.Support.LogicFacadeBase.IsCurrentlyInitializeOnly">
             <summary>
-            Create an Invoker for public instance methods
+            Checks if the current context is set to "initialize only".
             </summary>
         </member>
-        <member name="M:ServiceStack.TypeExtensions.GetStaticInvoker(System.Reflection.MethodInfo)">
+        <member name="F:ServiceStack.Common.Support.LogicFacadeBase.InitialisationContext.initOptions">
             <summary>
-            Create an Invoker for public static methods
+            Determines whether this context is initialise only or not
             </summary>
         </member>
-        <member name="M:ServiceStack.TypeExtensions.GetActionInvoker(System.Reflection.MethodInfo)">
+        <member name="M:ServiceStack.Common.Support.LogicFacadeBase.InitialisationContext.#ctor(ServiceStack.Common.Support.LogicFacadeBase,ServiceStack.LogicFacade.InitOptions)">
             <summary>
-            Create an Invoker for public instance void methods
+            Constructs a new InitialiseOnlyContext
             </summary>
         </member>
-        <member name="M:ServiceStack.TypeExtensions.GetStaticActionInvoker(System.Reflection.MethodInfo)">
+        <member name="M:ServiceStack.Common.Support.LogicFacadeBase.InitialisationContext.Dispose">
             <summary>
-            Create an Invoker for public static void methods
+            Call to remove this current context and reveal the previous context (if any).
             </summary>
         </member>
-        <member name="T:ServiceStack.UrnId">
+        <member name="P:ServiceStack.Common.Support.LogicFacadeBase.InitialisationContext.InitialisedObject">
+            <summary>
+            Gets or sets the object that has been initialized only.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Common.UrnId">
             <summary>
             Creates a Unified Resource Name (URN) with the following formats:
             
@@ -1322,169 +849,143 @@
             
             </summary>
         </member>
-        <member name="T:ServiceStack.InputOptions">
+        <!-- Badly formed XML comment ignored for member "M:ServiceStack.Common.Utils.AssertUtils.AreNotNull(System.Collections.Generic.IDictionary{System.String,System.Object})" -->
+        <member name="M:ServiceStack.Common.Utils.CommandsUtils.ExecuteAsyncCommandExec(System.Collections.Generic.IEnumerable{ServiceStack.DesignPatterns.Command.ICommandExec})">
             <summary>
-            High-level Input options for rendering HTML Input controls
+            Provide the an option for the callee to block until all commands are executed
+            </summary>
+            <param name="commands"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.ResponseStatusUtils.CreateResponseStatus(System.String,System.String,System.Collections.Generic.IEnumerable{ServiceStack.Validation.ValidationErrorField})">
+            <summary>
+            Creates the error response from the values provided.
+            
+            If the errorCode is empty it will use the first validation error code, 
+            if there is none it will throw an error.
+            </summary>
+            <param name="errorCode">The error code.</param>
+            <param name="errorMessage">The error message.</param>
+            <param name="validationErrors">The validation errors.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.FuncUtils.TryExec(System.Action)">
+            <summary>
+            Invokes the action provided and returns true if no excpetion was thrown.
+            Otherwise logs the exception and returns false if an exception was thrown.
+            </summary>
+            <param name="action">The action.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.PathUtils.MapProjectPath(System.String)">
+            <summary>
+            Maps the path of a file in the context of a VS project
+            </summary>
+            <param name="relativePath">the relative path</param>
+            <returns>the absolute path</returns>
+            <remarks>Assumes static content is two directories above the /bin/ directory,
+            eg. in a unit test scenario  the assembly would be in /bin/Debug/.</remarks>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.PathUtils.MapAbsolutePath(System.String)">
+            <summary>
+            Maps the path of a file in a self-hosted scenario
+            </summary>
+            <param name="relativePath">the relative path</param>
+            <returns>the absolute path</returns>
+            <remarks>Assumes static content is copied to /bin/ folder with the assemblies</remarks>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.PathUtils.MapHostAbsolutePath(System.String)">
+            <summary>
+            Maps the path of a file in an Asp.Net hosted scenario
+            </summary>
+            <param name="relativePath">the relative path</param>
+            <returns>the absolute path</returns>
+            <remarks>Assumes static content is in the parent folder of the /bin/ directory</remarks>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.ReflectionUtils.PopulateObject(System.Object)">
+            <summary>
+            Populate an object with Example data.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Utils.ReflectionUtils.PopulateObjectInternal(System.Object,System.Collections.Generic.Dictionary{System.Type,System.Int32})">
+            <summary>
+            Populates the object with example data.
+            </summary>
+            <param name="obj"></param>
+            <param name="recursionInfo">Tracks how deeply nested we are</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ToDto(System.Object)">
+            <summary>
+            Shortcut to get the ResponseDTO whether it's bare or inside a IHttpResult
+            </summary>
+            <param name="response"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ToResponseDto(System.Object)">
+            <summary>
+            Alias of ToDto
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.Inline">
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ToDto``1(System.Object)">
             <summary>
-            Display the Control inline 
+            Shortcut to get the ResponseDTO whether it's bare or inside a IHttpResult
+            </summary>
+            <param name="response"></param>
+            <returns>TResponse if found; otherwise null</returns>
+        </member>
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ToResponseDto``1(System.Object)">
+            <summary>
+            Alias of ToDto
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.Label">
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ToResponseStatus(System.Object)">
             <summary>
-            Label for the control
+            Shortcut to get the ResponseStatus whether it's bare or inside a IHttpResult
+            </summary>
+            <param name="response"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.IsErrorResponse(System.Object)">
+            <summary>
+            Whether the response is an IHttpError or Exception
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.LabelClass">
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.ExtractHttpRanges(System.String,System.Int64,System.Int64@,System.Int64@)">
             <summary>
-            Class for Label
+            rangeHeader should be of the format "bytes=0-" or "bytes=0-12345" or "bytes=123-456"
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.ErrorClass">
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.AddHttpRangeResponseHeaders(ServiceStack.ServiceHost.IHttpResponse,System.Int64,System.Int64,System.Int64)">
             <summary>
-            Override the class on the error message (default: invalid-feedback)
+            Adds 206 PartialContent Status, Content-Range and Content-Length headers
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.Help">
+        <member name="M:ServiceStack.Common.Web.HttpResultExtensions.WritePartialTo(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64)">
             <summary>
-            Small Help Text displayed with the control
+            Writes partial range as specified by start-end, from fromStream to toStream.
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.Size">
+        <member name="M:ServiceStack.Common.RequestContextExtensions.SetItem(ServiceStack.ServiceHost.IRequestContext,System.String,System.Object)">
             <summary>
-            Bootstrap Size of the Control: sm, lg
+            Store an entry in the IHttpRequest.Items Dictionary
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.Values">
+        <member name="M:ServiceStack.Common.RequestContextExtensions.SetItem(ServiceStack.ServiceHost.IHttpRequest,System.String,System.Object)">
             <summary>
-            Multiple Value Data Source for Checkboxes, Radio boxes and Select Controls 
+            Store an entry in the IHttpRequest.Items Dictionary
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.InputValues">
+        <member name="M:ServiceStack.Common.RequestContextExtensions.GetItem(ServiceStack.ServiceHost.IRequestContext,System.String)">
             <summary>
-            Typed setter of Multi Input Values
+            Get an entry from the IHttpRequest.Items Dictionary
             </summary>
         </member>
-        <member name="P:ServiceStack.InputOptions.PreserveValue">
+        <member name="M:ServiceStack.Common.RequestContextExtensions.GetItem(ServiceStack.ServiceHost.IHttpRequest,System.String)">
             <summary>
-            Whether to preserve value state after post back
-            </summary>
-        </member>
-        <member name="P:ServiceStack.InputOptions.ShowErrors">
-            <summary>
-            Whether to show Error Message associated with this control
-            </summary>
-        </member>
-        <member name="T:ServiceStack.BundleOptions">
-            <summary>
-            Customize JS/CSS/HTML bundles
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.Sources">
-            <summary>
-            List of file and directory sources to include in this bundle, directory sources must end in `/`.
-            Sources can include prefixes to specify which Virtual File System Source to use, options:
-            'content:' (ContentRoot HostContext.VirtualFiles), 'filesystem:' (WebRoot FileSystem), 'memory:' (WebRoot Memory)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.OutputTo">
-            <summary>
-            Write bundled file to this Virtual Path
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.OutputWebPath">
-            <summary>
-            If needed, use alternative OutputTo Virtual Path in html tag
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.Minify">
-            <summary>
-            Whether to minify sources in bundle (default true)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.SaveToDisk">
-            <summary>
-            Whether to save to disk or Memory File System (default Memory)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.Cache">
-            <summary>
-            Whether to return cached bundle if exists (default true)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.Bundle">
-            <summary>
-            Whether to bundle and emit single or not bundle and emit multiple html tags
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.RegisterModuleInAmd">
-            <summary>
-            Whether to call AMD define for CommonJS modules
-            </summary>
-        </member>
-        <member name="P:ServiceStack.BundleOptions.IIFE">
-            <summary>
-            Whether to wrap JS scripts in an Immediately-Invoked Function Expression
-            </summary>
-        </member>
-        <member name="T:ServiceStack.NavDefaults">
-            <summary>
-            Generic collection of Nav Links
-            </summary>
-        </member>
-        <member name="T:ServiceStack.NavLinkDefaults">
-            <summary>
-            Single NavLink List Item
-            </summary>
-        </member>
-        <member name="T:ServiceStack.NavbarDefaults">
-            <summary>
-            Navigation Bar Menu Items
-            </summary>
-        </member>
-        <member name="T:ServiceStack.NavButtonGroupDefaults">
-            <summary>
-            Collection of Link Buttons (e.g. used to render /auth buttons)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.NavOptions.Attributes">
-            <summary>
-            User Attributes for conditional rendering, e.g:
-             - auth - User is Authenticated
-             - role:name - User Role
-             - perm:name - User Permission 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.NavOptions.ActivePath">
-            <summary>
-            Path Info that should set as active 
-            </summary>
-        </member>
-        <member name="P:ServiceStack.NavOptions.BaseHref">
-            <summary>
-            Prefix to include before NavItem.Path (if any)
-            </summary>
-        </member>
-        <member name="P:ServiceStack.NavOptions.NavClass">
-            <summary>
-            Custom classes applied to different navigation elements (defaults to Bootstrap classes)
-            </summary>
-        </member>
-        <member name="T:ServiceStack.View">
-            <summary>
-            Public API for ViewUtils
-            </summary>
-        </member>
-        <member name="T:ServiceStack.ViewUtils">
-            <summary>
-            Shared Utils shared between different Template Filters and Razor Views/Helpers
-            </summary>
-        </member>
-        <member name="M:ServiceStack.ViewUtils.ToVarNames(System.String)">
-            <summary>
-            Comma delimited field names
+            Get an entry from the IHttpRequest.Items Dictionary
             </summary>
         </member>
     </members>

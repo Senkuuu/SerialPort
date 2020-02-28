@@ -107,7 +107,7 @@
              <param name="InString">unico </param>  
              <returns>类似“01 0f” </returns>  
         </member>
-        <member name="M:Accenture.SerialPort.RedisHelper.DtToRedis(System.Data.DataTable,System.String)">
+        <member name="M:Accenture.SerialPort.RedisHelper.DtToRedis(System.Data.DataTable,System.String,ServiceStack.Redis.RedisClient)">
             <summary>
             Redis缓存
             </summary>
