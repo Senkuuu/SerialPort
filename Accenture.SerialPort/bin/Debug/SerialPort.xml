@@ -400,6 +400,11 @@
             <param name="deveui">要发送的数据</param>
             <param name="data">是否需要保存到已发送的列表中</param>
         </member>
+        <member name="M:Accenture.SerialPort.LoraForm.Start">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:Accenture.SerialPort.LoraForm.components">
             <summary>
             Required designer variable.

@@ -169,67 +169,91 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>bpSOUYpz7imxV1JrGJLirm8D+XL19vmM2oWI7tQ0yN8=</dsig:DigestValue>
+        <dsig:DigestValue>O7iFys20srvJjFWtmnDDa7DclFM0/LTTNsa0gODYDb0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="105472">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.Base.dll" size="119296">
+      <assemblyIdentity name="NSClient.Base" version="5.3.0.1038" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>PsQ11uN856iHC97Uz7+WCXNROLNTelodaf5j/aEnQd8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RestSharp.dll" size="168960">
+      <assemblyIdentity name="RestSharp" version="105.2.3.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>jLgbxcP3H+8VtFbIyxta5EKR6UbZa2J76aHwH42IfZg=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="107008">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>OahGJ2ENnZupNU2p/qCKdmEJwBqpy1Elpu5DesHblok=</dsig:DigestValue>
+        <dsig:DigestValue>ypdnrXUZFKyoSD+viW4rpI1bz8fYACNXlLxs/b81NjQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Common.dll" size="940032">
-      <assemblyIdentity name="ServiceStack.Common" version="5.0.0.0" publicKeyToken="02C12CBDA47E6587" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Common.dll" size="335872">
+      <assemblyIdentity name="ServiceStack.Common" version="3.9.71.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>51/q6mUFiWqCjJCiad8mBDZAygHD8fYVR/vpL6p22t8=</dsig:DigestValue>
+        <dsig:DigestValue>+kUilLLVIO8Vk9iHxtTrFbkLaa2CfHf98jJl+GY6ZFQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Interfaces.dll" size="173056">
-      <assemblyIdentity name="ServiceStack.Interfaces" version="5.0.0.0" publicKeyToken="02C12CBDA47E6587" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Interfaces.dll" size="105472">
+      <assemblyIdentity name="ServiceStack.Interfaces" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Liz3CNudhrBMYqYnOqMmIlGB+3Ofa5UPvi4b1JBezQs=</dsig:DigestValue>
+        <dsig:DigestValue>JHKdPvtp8/kPCwOkGas+hEnBiAZi5KoWxRr58iCJcnQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Redis.dll" size="349184">
-      <assemblyIdentity name="ServiceStack.Redis" version="5.0.0.0" publicKeyToken="02C12CBDA47E6587" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Redis.dll" size="226816">
+      <assemblyIdentity name="ServiceStack.Redis" version="3.9.71.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1/SQd9iN32HRyTULbaNpS7eVYG7AWovZBFqacpjaTVY=</dsig:DigestValue>
+        <dsig:DigestValue>w3YeTa9o0LrM7i5K6TVXsT7Fgmch/jaiP4f0eYXMqso=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Text.dll" size="552960">
-      <assemblyIdentity name="ServiceStack.Text" version="5.0.0.0" publicKeyToken="02C12CBDA47E6587" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ServiceStack.Text.dll" size="194048">
+      <assemblyIdentity name="ServiceStack.Text" version="3.9.71.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>V/dcB1N2yJd4YMO8uNfWkyiUUKCLVpFZv37R3Bgk4fE=</dsig:DigestValue>
+        <dsig:DigestValue>jLZzeo93hmqgyGfsORbGTpY/43yjP1W0Gkcr2kc0SZU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -410,13 +434,13 @@
       <dsig:DigestValue>l8DzoOkshpcYwbo8UNi+CEhHsaFHa2Ybtj7drmbGxz8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SerialPort.exe.config" size="767">
+  <file name="SerialPort.exe.config" size="1628">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>pb+s7CstcT9H3PGv8IjCw53ER8NW6mcmvd4i8fhYFb0=</dsig:DigestValue>
+      <dsig:DigestValue>cYNMDrwfdFA9jqsJgAvMa6DULHmcB/j7bu2yWHWHx4M=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

@@ -876,11 +876,8 @@ namespace Accenture.SerialPort
             {
                 SoundPlayer player = new SoundPlayer();
 
-
                 MessageBox.Show("请先扫描二维码");
                 ClearSelf();
-
-
             }
             else if (re != null)
             {
@@ -1119,126 +1116,130 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(6500);//等待5秒
+            Thread.Sleep(3000);//等待5秒
             #region 计算出返回协议的位置
             string test1 = serialPort.ReadExisting();
             if (test1.IndexOf("USART3 Rec From ISR:") < 1)
             {
                 return;
             }
-            #endregion 
+            test1 = test1.Replace(" ", "");
+            string sendsql = string.Format("select inputdata from log where macid = '{0}' and docount = '0'", txt_box3.Text);
+            try
+            {
+                string senddata = DBHelper.MyExecuteScalar(sendsql).ToString();
+                if (test1.IndexOf(senddata) < 0)
+                {
+                    MessageBox.Show("发送指令出现异常,或发送数据时未唤醒设备！");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            #endregion
 
             #region 拼接返回值
             try
             {
-                if (test1.IndexOf("FE 0D 0A") > 0)
+                textBox3.Clear();
+                for (int i = 0; i < listBox1.Items.Count; i++)
                 {
-                    test1 = test1.Replace(" ", "");
-                    for (int i = 0; i < listBox1.Items.Count; i++)
+                    string outdata = "";
+                    int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
+                    int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
+                    if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
                     {
-                        string outdata = "";
-                        if (test1.IndexOf(listBox1.Items[i].ToString()) < 0)
-                        {
-                            MessageBox.Show("发送指令出现异常！");
-                            return;
-                        }
-                        int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
-                        int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
-                        if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
-                        {
-                            textBox2.Text += "没有接收到第" + (i + 1) + "条（" + listBox1.Items[i].ToString() + "）的返回数据！";
-                            return;
-                        }
-                        int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
-                        string test2 = test1.Substring(i3, i2);
-                        test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
-                        outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
-                        outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
-                        outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
-                        outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
-                        //仅显示一次
-                        if (!textBox2.Text.Contains("地址"))
-                        {
-                            textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
-                            "外设启用：" + test2.Substring(10, 4) + "\r\n";
-                        }
+                        textBox2.Text += "没有接收到第" + (i + 1) + "条（" + listBox1.Items[i].ToString() + "）的返回数据！";
+                        return;
+                    }
+                    int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
+                    string test2 = test1.Substring(i3, i2);
+                    test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
+                    outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
+                    outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
+                    outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
+                    outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
+                    //仅显示一次
+                    if (!textBox2.Text.Contains("地址"))
+                    {
+                        textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
+                        "外设启用：" + test2.Substring(10, 4) + "\r\n";
+                    }
 
-                        if (test2.Substring(14, 2) == "10")
+                    if (test2.Substring(14, 2) == "10")
+                    {
+                        outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
+                        outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
+                        outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
+                        textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
+                        textBox2.Text += "————————" + "\r\n";
+                    }
+                    else if (test2.Substring(14, 2) == "11")
+                    {
+                        outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+                        outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
+                        outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
+                        outdata += "********************Playload****************\r\n";
+                        outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+                        outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
+                        outdata += "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n";
+                        outdata += "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n";
+                        outdata += "********************End*********************\r\n";
+                        outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
+                        outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
+                        textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                        "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
+                        "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
+                        "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
+                        "错误码：" + test2.Substring(46, 8) + "\r\n";
+                        textBox2.Text += "————————" + "\r\n";
+                    }
+                    else if (test2.Substring(14, 2) == "12")
+                    {
+                        outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+                        outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
+                        outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+                        outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
+                        outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
+                        //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
+                        outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
+                        outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
+                        textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
+                        "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                        "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
+                        "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
+                        "错误码：" + test2.Substring(30, 8) + "\r\n";
+                        textBox2.Text += "————————" + "\r\n";
+                    }
+                    else if (test2.Substring(14, 2) == "13")
+                    {
+                        outdata += "需要接收的下一个程序帧：" + Convert.ToInt32(test2.Substring(16, 4), 16) + "\r\n";
+                        outdata += "程序下载总帧：" + Convert.ToInt32(test2.Substring(20, 4), 16) + "\r\n";
+                        outdata += "错误码：" + test2.Substring(24, 8) + "\r\n";
+                        outdata += "回执指令：" + test2.Substring(32, 4) + "\r\n";
+                    }
+                    if (!string.IsNullOrWhiteSpace(outdata))
+                    {
+                        string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, txt_box3.Text, i);
+                        DBHelper.MyExecuteNonQuery(updatesql);
+                        if (i == 0)
                         {
-                            outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
-                            outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
-                            outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
-                            textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
-                            textBox2.Text += "————————" + "\r\n";
+                            button3.BackColor = System.Drawing.Color.Green;
                         }
-                        else if (test2.Substring(14, 2) == "11")
+                        if (i == 1)
                         {
-                            outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
-                            outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
-                            outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
-                            outdata += "********************Playload****************\r\n";
-                            outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
-                            outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
-                            outdata += "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n";
-                            outdata += "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n";
-                            outdata += "********************End*********************\r\n";
-                            outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
-                            outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
-                            textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
-                            "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
-                            "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
-                            "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
-                            "错误码：" + test2.Substring(46, 8) + "\r\n";
-                            textBox2.Text += "————————" + "\r\n";
+                            button4.BackColor = System.Drawing.Color.Green;
                         }
-                        else if (test2.Substring(14, 2) == "12")
+                        if (i == 2)
                         {
-                            outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
-                            outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
-                            outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
-                            outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
-                            outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
-                            //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
-                            outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
-                            outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
-                            textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
-                            "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
-                            "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
-                            "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
-                            "错误码：" + test2.Substring(30, 8) + "\r\n";
-                            textBox2.Text += "————————" + "\r\n";
+                            button5.BackColor = System.Drawing.Color.Green;
                         }
-                        else if (test2.Substring(14, 2) == "13")
+                        if (i == 3)
                         {
-                            outdata += "需要接收的下一个程序帧：" + Convert.ToInt32(test2.Substring(16, 4), 16) + "\r\n";
-                            outdata += "程序下载总帧：" + Convert.ToInt32(test2.Substring(20, 4), 16) + "\r\n";
-                            outdata += "错误码：" + test2.Substring(24, 8) + "\r\n";
-                            outdata += "回执指令：" + test2.Substring(32, 4) + "\r\n";
-                        }
-                        if (!string.IsNullOrWhiteSpace(outdata))
-                        {
-                            string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, textBox3.Text, i);
-                            DBHelper.MyExecuteNonQuery(updatesql);
-                            if (i == 0)
-                            {
-                                button3.BackColor = System.Drawing.Color.Green;
-                            }
-                            if (i == 1)
-                            {
-                                button4.BackColor = System.Drawing.Color.Green;
-                            }
-                            if (i == 2)
-                            {
-                                button5.BackColor = System.Drawing.Color.Green;
-                            }
-                            if (i == 3)
-                            {
-                                button6.BackColor = System.Drawing.Color.Green;
-                            }
-                        }
-                        if (i == listBox1.Items.Count - 1)
-                        {
-                            textBox3.Clear();
+                            button6.BackColor = System.Drawing.Color.Green;
                         }
                     }
                 }
@@ -1436,6 +1437,10 @@ namespace Accenture.SerialPort
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBox1.SelectedIndex < 0)
+            {
+                return;
+            }
             txtSendData.Text = listBox1.SelectedItem.ToString();
             string seldata = string.Format("select outputdata from log where docount = '{0}' and macid = '{1}'", listBox1.SelectedIndex, txt_box3.Text);
             if (!string.IsNullOrWhiteSpace(textBox3.Text))

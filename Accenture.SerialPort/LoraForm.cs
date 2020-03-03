@@ -14,6 +14,8 @@ using NSClient.Plugins;
 using NPoco;
 using WiYun.Data;
 using System.Data;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Accenture.SerialPort
 {
@@ -108,6 +110,10 @@ namespace Accenture.SerialPort
                     //if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
                     //    return;
                     #endregion
+
+                    //并行库启动
+                    Start();
+
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
                     if (!string.IsNullOrEmpty(strip) && int.TryParse(txt_port.Text.Trim(), out int port) && !string.IsNullOrEmpty(appeui) && appeui.Length == 16 && Utils.IsLegalHexStr(appeui))
@@ -301,11 +307,8 @@ namespace Accenture.SerialPort
 
                                 request.Details.Add(dt);
 
-                                using (var db = new NDatabase())
-                                {
-                                    ApiCall ac = new ApiCall();
-                                    ac.SaveDataMethod(db, request);
-                                }
+                                //加入队列
+                                Push(request);
                             }
                             catch (Exception ex)
                             {
@@ -846,6 +849,55 @@ namespace Accenture.SerialPort
                     else
                     {
                         dataGridView1.Rows[i].Visible = false;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 消息队列
+
+        private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
+        private static bool _running = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Start()
+        {
+            //Start(() => { Running(); });
+            new Thread(() => { Running(); }).Start();
+        }
+
+        internal static void Push(newAsEquipData newAs)
+        {
+            Task.Factory.StartNew((d) => { _queues.Enqueue((newAsEquipData)d); }, newAs);
+        }
+
+        private static void Running()
+        {
+            _running = true;
+            while (true)
+            {
+                if (_queues.IsEmpty)
+                    Thread.Sleep(5000);
+                else
+                {
+                    newAsEquipData request;
+                    if (_queues.TryDequeue(out request))
+                    {
+                        try
+                        {
+                            using (var db = new NDatabase())
+                            {
+                                ApiCall ac = new ApiCall();
+                                ac.SaveDataMethod(db, request);
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
                 }
             }

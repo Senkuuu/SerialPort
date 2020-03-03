@@ -40,7 +40,6 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Common.Logging.Log4Net1
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\log4net.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.LogService.Core.pdb
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.Lora.Model.pdb
-D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojAssemblyReference.cache
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmExport.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.frmMain.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.LoraForm.resources
@@ -108,3 +107,7 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Buffers.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Memory.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Numerics.Vectors.xml
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\NSClient.Base.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\RestSharp.dll
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.exe.config
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojAssemblyReference.cache
