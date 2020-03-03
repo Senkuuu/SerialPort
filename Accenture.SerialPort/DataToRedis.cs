@@ -37,11 +37,11 @@ namespace Accenture.SerialPort
                 {
                     drow.Add(dc.ColumnName, dr[dc.ColumnName]);
                 }
-                WMS_BT_EquipmentBind value = null;
+                //WMS_BT_EquipmentBind value = null;
                 try
                 {
                     Redis.Set(dr[""+key+""].ToString(), drow);
-                    value = Redis.Get<WMS_BT_EquipmentBind>(dr["" + key + ""].ToString());//读取Redis
+                    //value = Redis.Get<WMS_BT_EquipmentBind>(dr["" + key + ""].ToString());//读取Redis
                 }
                 catch (Exception e)
                 {
