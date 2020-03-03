@@ -14,7 +14,9 @@ using NSClient.Plugins;
 using NPoco;
 using WiYun.Data;
 using System.Data;
+using ServiceStack.Redis;
 using System.Threading.Tasks;
+using System.Configuration;
 using System.Threading;
 
 namespace Accenture.SerialPort
@@ -46,7 +48,15 @@ namespace Accenture.SerialPort
         /// </summary>
         private int SendBeatTimeCount = 0;
         private LogMan log => UdpMan.log;
-
+        //获取Redis服务器地址
+        public static string path = ConfigurationManager.AppSettings["RedisPath"];
+        public static string Port = ConfigurationManager.AppSettings["Port"];
+        public static string Password = ConfigurationManager.AppSettings["Password"];
+        //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
+        public RedisClient Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+        //缓存池
+        PooledRedisClientManager prcm = new PooledRedisClientManager();
+        RedisHelper help = new RedisHelper();
         //唤醒周期
         public string cycle { get; set; }
 
@@ -91,24 +101,30 @@ namespace Accenture.SerialPort
                 try
                 {
                     #region Redis缓存设备、报警规则
-                    //RedisHelper redis = new RedisHelper();
-                    //String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
-                    //string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
-                    //                "FROM    WMS_BT_AlarmRule a \n" +
-                    //                        "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
-                    //                        "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
-                    //                "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
-                    //                        "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
-                    //                        "AND ISNULL(a.IsValid,0)= 1 \n" +
-                    //                        "AND ISNULL(c.IsDeleted,0)=0 \n" +
-                    //                        "AND ISNULL(c.IsValid,0)= 1 \n" +S
-                    //                "ORDER BY c.NO desc ";
-                    //DataTable eqlist = DBHelper.GetDataTable(eqsql);
-                    //DataTable rulelist = DBHelper.GetDataTable(rulesql);
-                    //if (!redis.DtToRedis(eqlist, "WMS_PB_Equipment"))
-                    //    return;
-                    //if (!redis.DtToRedis(rulelist, "WMS_BT_AlarmRule"))
-                    //    return;
+                    String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
+                    string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
+                                    "FROM    WMS_BT_AlarmRule a \n" +
+                                            "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
+                                            "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
+                                    "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
+                                            "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
+                                            "AND ISNULL(a.IsValid,0)= 1 \n" +
+                                            "AND ISNULL(c.IsDeleted,0)=0 \n" +
+                                            "AND ISNULL(c.IsValid,0)= 1 \n" + 
+                                    "ORDER BY c.NO desc ";
+                    string bindsql = "SELECT  a.EquipmentSN+'bind' EquipmentSNs, a.* \n" +
+                                    "FROM dbo.WMS_BT_EquipmentBind a\n" +
+                                    "WHERE  ISNULL(MonitorState, 0) = 1 \n" +
+                                    "AND ISNULL(IsDeleted,0)= 0";
+                    DataTable eqlist = DBHelper.GetDataTable(eqsql);
+                    DataTable rulelist = DBHelper.GetDataTable(rulesql);
+                    DataTable bindlist= DBHelper.GetDataTable(bindsql);
+                    if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
+                        return;
+                    if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
+                        return;
+                    if (!help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis))
+                        return;
                     #endregion
 
                     //并行库启动
