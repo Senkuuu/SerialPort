@@ -53,7 +53,7 @@ namespace Accenture.SerialPort
         public static string Port = ConfigurationManager.AppSettings["Port"];
         public static string Password = ConfigurationManager.AppSettings["Password"];
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
-        public RedisClient Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+        public static RedisClient Redis = new RedisClient(path, int.Parse(Port), Password, 0);
         //缓存池
         PooledRedisClientManager prcm = new PooledRedisClientManager();
         RedisHelper help = new RedisHelper();
@@ -110,7 +110,7 @@ namespace Accenture.SerialPort
                                             "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
                                             "AND ISNULL(a.IsValid,0)= 1 \n" +
                                             "AND ISNULL(c.IsDeleted,0)=0 \n" +
-                                            "AND ISNULL(c.IsValid,0)= 1 \n" + 
+                                            "AND ISNULL(c.IsValid,0)= 1 \n" +
                                     "ORDER BY c.NO desc ";
                     string bindsql = "SELECT  a.EquipmentSN+'bind' EquipmentSNs, a.* \n" +
                                     "FROM dbo.WMS_BT_EquipmentBind a\n" +
@@ -118,7 +118,7 @@ namespace Accenture.SerialPort
                                     "AND ISNULL(IsDeleted,0)= 0";
                     DataTable eqlist = DBHelper.GetDataTable(eqsql);
                     DataTable rulelist = DBHelper.GetDataTable(rulesql);
-                    DataTable bindlist= DBHelper.GetDataTable(bindsql);
+                    DataTable bindlist = DBHelper.GetDataTable(bindsql);
                     if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
                         return;
                     if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
@@ -874,7 +874,6 @@ namespace Accenture.SerialPort
         #region 消息队列
 
         private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
-        private static bool _running = false;
 
         /// <summary>
         /// 
@@ -892,7 +891,6 @@ namespace Accenture.SerialPort
 
         private static void Running()
         {
-            _running = true;
             while (true)
             {
                 if (_queues.IsEmpty)
@@ -907,10 +905,10 @@ namespace Accenture.SerialPort
                             using (var db = new NDatabase())
                             {
                                 ApiCall ac = new ApiCall();
-                                ac.SaveDataMethod(db, request);
+                                ac.SaveDataMethod(db, request, Redis);
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
 
                         }

@@ -321,6 +321,21 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
+        <member name="M:Accenture.SerialPort.frmMain.isOutData(System.String,System.Int32)">
+            <summary>
+            是否有返回协议
+            </summary>
+            <param name="data">串口返回的所有数据</param>
+            <param name="index">下发协议对应的listbox的序号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Accenture.SerialPort.frmMain.getInformation(System.String,System.Int32)">
+            <summary>
+            解析返回协议数据
+            </summary>
+            <param name="data"></param>
+            <param name="listboxindex"></param>
+        </member>
         <member name="F:Accenture.SerialPort.frmMain.components">
             <summary>
             必需的设计器变量。

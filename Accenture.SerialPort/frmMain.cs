@@ -14,6 +14,8 @@ using Nancy.Hosting.Self;
 using System.Text.RegularExpressions;
 using NPOI.Util;
 using System.Media;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Accenture.SerialPort
 {
@@ -24,7 +26,7 @@ namespace Accenture.SerialPort
         int bie;
         string Variable = "";//接收和校验的数据
         private string Inscode;
-        private System.IO.Ports.SerialPort serialPort = new System.IO.Ports.SerialPort();
+        private static System.IO.Ports.SerialPort serialPort = new System.IO.Ports.SerialPort();
 
 
 
@@ -207,7 +209,7 @@ namespace Accenture.SerialPort
             #endregion
 
 
-            this.serialPort.DataReceived += new SerialDataReceivedEventHandler(this.Com_DataReceived);//绑定事件
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(this.Com_DataReceived);//绑定事件
         }
         /// <summary>
         /// 打开
@@ -357,7 +359,7 @@ namespace Accenture.SerialPort
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="data"></param>
-        public bool SendData(byte[] data)
+        public static bool SendData(byte[] data)
         {
             if (serialPort.IsOpen)
             {
@@ -740,6 +742,13 @@ namespace Accenture.SerialPort
         /// <returns></returns>
         private void getAgreementCode(int count)
         {
+            Dictionary<int, string> diy = new Dictionary<int, string>();
+            if (count == 4)
+            {
+                diy.Add(count, "");
+                Push(diy);
+                return;
+            }
             string aCode = "";//协议整合
             string aCodeHand = "FD0D0A";//帧头
             string FrameLength = "";//帧长
@@ -821,10 +830,20 @@ namespace Accenture.SerialPort
                 this.txtSendData.Text = aCode;
                 //成功就+1，用于指令回执
                 this.DataCount.Text = (Convert.ToInt32(this.DataCount.Text) + 1).ToString();
-                listBox1.Items.Insert(listBox1.Items.Count, txtSendData.Text);
+
+                diy.Add(count, txtSendData.Text);
+                //避免队列中出现重复数据
+                if (!_queues.Contains(diy))
+                {
+                    Push(diy);
+                }
+
+                listBox1.Items.Insert(count, txtSendData.Text);
+
+                //listBox1.Items.Insert(listBox1.Items.Count, txtSendData.Text);
                 //SendData(txtSendData.Text);//直接下发协议给串口
-                string updatasql = string.Format("update Log set INPUTDATA = '{0}' where DOCOUNT = '{1}' and MACID = '{2}'", txtSendData.Text, count, textBox3.Text);
-                DBHelper.MyExecuteNonQuery(updatasql);
+                //string updatasql = string.Format("update Log set INPUTDATA = '{0}' where DOCOUNT = '{1}' and MACID = '{2}'", txtSendData.Text, count, textBox3.Text);
+                //DBHelper.MyExecuteNonQuery(updatasql);
             }
             catch (Exception ex)
             {
@@ -892,17 +911,17 @@ namespace Accenture.SerialPort
                 MessageBox.Show("请先锁定参数后再操作！");
                 return;
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
-                string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
-                DBHelper.MyExecuteNonQuery(insert);
+                //string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
+                //DBHelper.MyExecuteNonQuery(insert);
 
                 getAgreementCode(i);
 
-                if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
-                {
-                    Thread.Sleep(500);
-                }
+                //if (this.SendData(strToHexByte(txtSendData.Text.Trim())))//发送数据成功计数
+                //{
+                //    Thread.Sleep(500);
+                //}
             }
         }
         #endregion
@@ -966,7 +985,7 @@ namespace Accenture.SerialPort
         /// <param name="hexString"></param>
         /// <returns></returns>
 
-        private byte[] strToHexByte(string hexString)
+        private static byte[] strToHexByte(string hexString)
         {
             hexString = hexString.Replace(" ", "");
             if ((hexString.Length % 2) != 0) hexString += " ";
@@ -1116,141 +1135,142 @@ namespace Accenture.SerialPort
         /// <param name="e"></param>
         private void Com_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread.Sleep(3000);//等待5秒
-            #region 计算出返回协议的位置
-            string test1 = serialPort.ReadExisting();
-            if (test1.IndexOf("USART3 Rec From ISR:") < 1)
-            {
-                return;
-            }
-            test1 = test1.Replace(" ", "");
-            string sendsql = string.Format("select inputdata from log where macid = '{0}' and docount = '0'", txt_box3.Text);
-            try
-            {
-                string senddata = DBHelper.MyExecuteScalar(sendsql).ToString();
-                if (test1.IndexOf(senddata) < 0)
-                {
-                    MessageBox.Show("发送指令出现异常,或发送数据时未唤醒设备！");
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            Running();
+            //Thread.Sleep(3000);//等待5秒
+            //#region 计算出返回协议的位置
+            //string test1 = serialPort.ReadExisting();
+            //if (test1.IndexOf("USART3 Rec From ISR:") < 1)
+            //{
+            //    return;
+            //}
+            //test1 = test1.Replace(" ", "");
+            //string sendsql = string.Format("select inputdata from log where macid = '{0}' and docount = '0'", txt_box3.Text);
+            //try
+            //{
+            //    string senddata = DBHelper.MyExecuteScalar(sendsql).ToString();
+            //    if (test1.IndexOf(senddata) < 0)
+            //    {
+            //        MessageBox.Show("发送指令出现异常,或发送数据时未唤醒设备！");
+            //        return;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
 
-            #endregion
+            //#endregion
 
-            #region 拼接返回值
-            try
-            {
-                textBox3.Clear();
-                for (int i = 0; i < listBox1.Items.Count; i++)
-                {
-                    string outdata = "";
-                    int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
-                    int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
-                    if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
-                    {
-                        textBox2.Text += "没有接收到第" + (i + 1) + "条（" + listBox1.Items[i].ToString() + "）的返回数据！";
-                        return;
-                    }
-                    int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
-                    string test2 = test1.Substring(i3, i2);
-                    test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
-                    outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
-                    outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
-                    outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
-                    outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
-                    //仅显示一次
-                    if (!textBox2.Text.Contains("地址"))
-                    {
-                        textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
-                        "外设启用：" + test2.Substring(10, 4) + "\r\n";
-                    }
+            //#region 拼接返回值
+            //try
+            //{
+            //    textBox3.Clear();
+            //    for (int i = 0; i < listBox1.Items.Count; i++)
+            //    {
+            //        string outdata = "";
+            //        int i1 = test1.IndexOf(listBox1.Items[i].ToString()) + listBox1.Items[i].ToString().Length;
+            //        int i3 = test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
+            //        if (test1.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) < 0)
+            //        {
+            //            textBox2.Text += "没有接收到第" + (i + 1) + "条（" + listBox1.Items[i].ToString() + "）的返回数据！";
+            //            return;
+            //        }
+            //        int i2 = test1.Substring(i3, test1.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
+            //        string test2 = test1.Substring(i3, i2);
+            //        test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
+            //        outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
+            //        outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
+            //        outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
+            //        outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
+            //        //仅显示一次
+            //        if (!textBox2.Text.Contains("地址"))
+            //        {
+            //            textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
+            //            "外设启用：" + test2.Substring(10, 4) + "\r\n";
+            //        }
 
-                    if (test2.Substring(14, 2) == "10")
-                    {
-                        outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
-                        outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
-                        outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
-                        textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
-                        textBox2.Text += "————————" + "\r\n";
-                    }
-                    else if (test2.Substring(14, 2) == "11")
-                    {
-                        outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
-                        outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
-                        outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
-                        outdata += "********************Playload****************\r\n";
-                        outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
-                        outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
-                        outdata += "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n";
-                        outdata += "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n";
-                        outdata += "********************End*********************\r\n";
-                        outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
-                        outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
-                        textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
-                        "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
-                        "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
-                        "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
-                        "错误码：" + test2.Substring(46, 8) + "\r\n";
-                        textBox2.Text += "————————" + "\r\n";
-                    }
-                    else if (test2.Substring(14, 2) == "12")
-                    {
-                        outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
-                        outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
-                        outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
-                        outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
-                        outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
-                        //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
-                        outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
-                        outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
-                        textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
-                        "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
-                        "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
-                        "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
-                        "错误码：" + test2.Substring(30, 8) + "\r\n";
-                        textBox2.Text += "————————" + "\r\n";
-                    }
-                    else if (test2.Substring(14, 2) == "13")
-                    {
-                        outdata += "需要接收的下一个程序帧：" + Convert.ToInt32(test2.Substring(16, 4), 16) + "\r\n";
-                        outdata += "程序下载总帧：" + Convert.ToInt32(test2.Substring(20, 4), 16) + "\r\n";
-                        outdata += "错误码：" + test2.Substring(24, 8) + "\r\n";
-                        outdata += "回执指令：" + test2.Substring(32, 4) + "\r\n";
-                    }
-                    if (!string.IsNullOrWhiteSpace(outdata))
-                    {
-                        string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, txt_box3.Text, i);
-                        DBHelper.MyExecuteNonQuery(updatesql);
-                        if (i == 0)
-                        {
-                            button3.BackColor = System.Drawing.Color.Green;
-                        }
-                        if (i == 1)
-                        {
-                            button4.BackColor = System.Drawing.Color.Green;
-                        }
-                        if (i == 2)
-                        {
-                            button5.BackColor = System.Drawing.Color.Green;
-                        }
-                        if (i == 3)
-                        {
-                            button6.BackColor = System.Drawing.Color.Green;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                throw;
-            }
+            //        if (test2.Substring(14, 2) == "10")
+            //        {
+            //            outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
+            //            outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
+            //            outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
+            //            textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
+            //            textBox2.Text += "————————" + "\r\n";
+            //        }
+            //        else if (test2.Substring(14, 2) == "11")
+            //        {
+            //            outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+            //            outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
+            //            outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
+            //            outdata += "********************Playload****************\r\n";
+            //            outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+            //            outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
+            //            outdata += "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n";
+            //            outdata += "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n";
+            //            outdata += "********************End*********************\r\n";
+            //            outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
+            //            outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
+            //            textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+            //            "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
+            //            "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
+            //            "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
+            //            "错误码：" + test2.Substring(46, 8) + "\r\n";
+            //            textBox2.Text += "————————" + "\r\n";
+            //        }
+            //        else if (test2.Substring(14, 2) == "12")
+            //        {
+            //            outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+            //            outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
+            //            outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+            //            outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
+            //            outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
+            //            //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
+            //            outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
+            //            outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
+            //            textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
+            //            "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+            //            "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
+            //            "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
+            //            "错误码：" + test2.Substring(30, 8) + "\r\n";
+            //            textBox2.Text += "————————" + "\r\n";
+            //        }
+            //        else if (test2.Substring(14, 2) == "13")
+            //        {
+            //            outdata += "需要接收的下一个程序帧：" + Convert.ToInt32(test2.Substring(16, 4), 16) + "\r\n";
+            //            outdata += "程序下载总帧：" + Convert.ToInt32(test2.Substring(20, 4), 16) + "\r\n";
+            //            outdata += "错误码：" + test2.Substring(24, 8) + "\r\n";
+            //            outdata += "回执指令：" + test2.Substring(32, 4) + "\r\n";
+            //        }
+            //        if (!string.IsNullOrWhiteSpace(outdata))
+            //        {
+            //            string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, txt_box3.Text, i);
+            //            DBHelper.MyExecuteNonQuery(updatesql);
+            //            if (i == 0)
+            //            {
+            //                button3.BackColor = System.Drawing.Color.Green;
+            //            }
+            //            if (i == 1)
+            //            {
+            //                button4.BackColor = System.Drawing.Color.Green;
+            //            }
+            //            if (i == 2)
+            //            {
+            //                button5.BackColor = System.Drawing.Color.Green;
+            //            }
+            //            if (i == 3)
+            //            {
+            //                button6.BackColor = System.Drawing.Color.Green;
+            //            }
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
             //this.textBox1.Text += outdata;
 
@@ -1477,5 +1497,261 @@ namespace Accenture.SerialPort
         {
             throw new NotImplementedException();
         }
+
+        #region 逐条下发协议（消息队列
+
+        private static ConcurrentQueue<Dictionary<int, string>> _queues = new ConcurrentQueue<Dictionary<int, string>>();
+
+        private void Start()
+        {
+            //Start(() => { Running(); });
+            new Thread(() => { Running(); }).Start();
+        }
+
+        internal static void Push(Dictionary<int, string> nDiy)
+        {
+            Task.Factory.StartNew((d) => { _queues.Enqueue((Dictionary<int, string>)d); }, nDiy);
+        }
+
+
+        #region 队列发送模式
+        private void Running()
+        {
+            while (true)
+            {
+                #region 队列处理
+                if (_queues.IsEmpty)
+                {
+                    Thread.Sleep(500);
+                    return;
+                }
+                else
+                {
+                    Dictionary<int, string> request = new Dictionary<int, string>();
+                    if (_queues.TryDequeue(out request))
+                    {
+                        try
+                        {
+                            foreach (var item in request)
+                            {
+                                if (item.Key == 0)
+                                {
+                                    //记录进数据库
+                                    string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE,INPUTDATA) values('{0}','{1}','{2}','{3}')", textBox3.Text, item.Key, DateTime.Now, item.Value);
+                                    DBHelper.MyExecuteNonQuery(insert);
+
+                                    //发送数据
+                                    SendData(strToHexByte(item.Value.Trim()));
+                                    return;
+                                }
+                                else
+                                {
+                                    Thread.Sleep(1000);
+                                    if (item.Key == 4) Thread.Sleep(2000);
+                                    string data = serialPort.ReadExisting();
+                                    //textBox2.Text += data;
+                                    data = data.Replace(" ", "");
+
+                                    if (data.IndexOf("USART3RecFromISR:") < 1)
+                                        return;
+
+                                    //判断是否有返回协议
+                                    if (isOutData(data, item.Key))
+                                    {
+                                        #region 发送成功对应标签变色
+                                        if (item.Key - 1 == 0)
+                                        {
+                                            button3.BackColor = System.Drawing.Color.Green;
+                                        }
+                                        if (item.Key - 1 == 1)
+                                        {
+                                            button4.BackColor = System.Drawing.Color.Green;
+                                        }
+                                        if (item.Key - 1 == 2)
+                                        {
+                                            button5.BackColor = System.Drawing.Color.Green;
+                                        }
+                                        if (item.Key - 1 == 3)
+                                        {
+                                            button6.BackColor = System.Drawing.Color.Green;
+                                        }
+                                        #endregion
+
+                                        getInformation(data, item.Key);
+
+                                        if (item.Key != 4)
+                                        {
+                                            //记录进数据库
+                                            string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE,INPUTDATA) values('{0}','{1}','{2}','{3}')", txt_box3.Text, item.Key, DateTime.Now, item.Value);
+                                            DBHelper.MyExecuteNonQuery(insert);
+
+                                            //发送数据
+                                            SendData(strToHexByte(item.Value.Trim()));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        #region 发送失败对应标签变色
+                                        if (item.Key - 1 == 0)
+                                        {
+                                            button3.BackColor = System.Drawing.Color.Red;
+                                        }
+                                        if (item.Key - 1 == 1)
+                                        {
+                                            button4.BackColor = System.Drawing.Color.Red;
+                                        }
+                                        if (item.Key - 1 == 2)
+                                        {
+                                            button5.BackColor = System.Drawing.Color.Red;
+                                        }
+                                        if (item.Key - 1 == 3)
+                                        {
+                                            button6.BackColor = System.Drawing.Color.Red;
+                                        }
+                                        #endregion
+                                        MessageBox.Show("未获取到上一条发送返回的协议数据，请重试！");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+                if (_queues.IsEmpty)
+                {
+                    break;
+                }
+                #endregion
+            }
+        }
+        #endregion
+
+        #region 判断是否有返回数据
+        /// <summary>
+        /// 是否有返回协议
+        /// </summary>
+        /// <param name="data">串口返回的所有数据</param>
+        /// <param name="index">下发协议对应的listbox的序号</param>
+        /// <returns></returns>
+        private bool isOutData(string data, int index)
+        {
+            //找到上条发送协议的位置
+            int d1 = data.IndexOf(listBox1.Items[index - 1].ToString()) + listBox1.Items[index - 1].ToString().Length;
+            int d2 = data.IndexOf("\r\nUSART3RecFromConf:\r\n", d1) + "\r\nUSART3RecFromConf:\r\n".Length;
+            //判断其是否有返回数据
+            if (data.IndexOf("\r\nUSART3RecFromConf:\r\n", d1) < 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region 解析返回协议数据
+        /// <summary>
+        /// 解析返回协议数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="listboxindex"></param>
+        private void getInformation(string data, int listboxindex)
+        {
+            if (data.IndexOf("USART3RecFromISR:") < 1)
+                return;
+            listboxindex = listboxindex - 1;
+            #region 拼接返回值
+            try
+            {
+                textBox3.Clear();
+                string outdata = "";
+                int i1 = data.IndexOf(listBox1.Items[listboxindex].ToString()) + listBox1.Items[listboxindex].ToString().Length;
+                int i3 = data.IndexOf("\r\nUSART3RecFromConf:\r\n", i1) + "\r\nUSART3RecFromConf:\r\n".Length;
+                int i2 = data.Substring(i3, data.Length - i3).IndexOf("0D0AEF") + "0D0AEF".Length;
+                string test2 = data.Substring(i3, i2);
+                test2 = test2.Replace("\r\n", "").Replace("FE0D0A", "");
+                outdata += "帧长：" + Convert.ToInt32(test2.Substring(0, 2), 16) + "\r\n";
+                outdata += "地址：" + test2.Substring(2, 8) + "\r\n";
+                outdata += "外设启用：" + test2.Substring(10, 4) + "\r\n";
+                outdata += "指令码：0X" + test2.Substring(14, 2) + "\r\n";
+                //仅显示一次
+                if (!textBox2.Text.Contains("地址"))
+                {
+                    textBox2.Text += @"地址：" + test2.Substring(2, 8) + "\r\n" +
+                    "外设启用：" + test2.Substring(10, 4) + "\r\n";
+                }
+
+                if (test2.Substring(14, 2) == "10")
+                {
+                    outdata += "频段选择：" + test2.Substring(16, 2) + "\r\n";
+                    outdata += "错误码：" + test2.Substring(18, 8) + "\r\n";
+                    outdata += "回执指令：" + test2.Substring(26, 4) + "\r\n";
+                    textBox2.Text += "错误码：" + test2.Substring(18, 8) + "\r\n";
+                    textBox2.Text += "————————" + "\r\n";
+                }
+                else if (test2.Substring(14, 2) == "11")
+                {
+                    outdata += "版本号：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+                    outdata += "触发方式：" + Convert.ToInt32(test2.Substring(18, 2), 16) + "\r\n";
+                    outdata += "电池电压：" + Convert.ToInt32(test2.Substring(20, 2), 16) + "\r\n";
+                    outdata += "********************Playload****************\r\n";
+                    outdata += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+                    outdata += "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n";
+                    outdata += "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n";
+                    outdata += "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n";
+                    outdata += "********************End*********************\r\n";
+                    outdata += "错误码：" + test2.Substring(46, 8) + "\r\n";
+                    outdata += "回执指令：" + test2.Substring(54, 4) + "\r\n";
+                    textBox2.Text += "空气温度：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                    "空气湿度：" + Convert.ToInt32(test2.Substring(26, 4), 16) + "\r\n" +
+                    "时间戳：" + Convert.ToInt32(test2.Substring(30, 8), 16) + "\r\n" +
+                    "唤醒周期：" + Convert.ToInt32(test2.Substring(38, 8), 16) + "\r\n" +
+                    "错误码：" + test2.Substring(46, 8) + "\r\n";
+                    textBox2.Text += "————————" + "\r\n";
+                }
+                else if (test2.Substring(14, 2) == "12")
+                {
+                    outdata += "标定类型：" + Convert.ToInt32(test2.Substring(16, 2), 16) + "\r\n";
+                    outdata += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n";
+                    outdata += "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n";
+                    outdata += "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n";
+                    outdata += "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n";
+                    //outdata += "包芯温度已经标定数量：" + Convert.ToInt32(test2.Substring(30, 2), 16) + "\r\n";
+                    outdata += "错误码：" + test2.Substring(30, 8) + "\r\n";
+                    outdata += "回执指令：" + test2.Substring(38, 4) + "\r\n";
+                    textBox2.Text += "接收的标定值：" + Convert.ToInt32(test2.Substring(18, 4), 16) + "\r\n" +
+                    "采集的标定值：" + Convert.ToInt32(test2.Substring(22, 4), 16) + "\r\n" +
+                    "温度已经标定数量：" + Convert.ToInt32(test2.Substring(26, 2), 16) + "\r\n" +
+                    "湿度已经标定数量：" + Convert.ToInt32(test2.Substring(28, 2), 16) + "\r\n" +
+                    "错误码：" + test2.Substring(30, 8) + "\r\n";
+                    textBox2.Text += "————————" + "\r\n";
+                }
+                else if (test2.Substring(14, 2) == "13")
+                {
+                    outdata += "需要接收的下一个程序帧：" + Convert.ToInt32(test2.Substring(16, 4), 16) + "\r\n";
+                    outdata += "程序下载总帧：" + Convert.ToInt32(test2.Substring(20, 4), 16) + "\r\n";
+                    outdata += "错误码：" + test2.Substring(24, 8) + "\r\n";
+                    outdata += "回执指令：" + test2.Substring(32, 4) + "\r\n";
+                }
+                if (!string.IsNullOrWhiteSpace(outdata))
+                {
+                    string updatesql = string.Format("update Log set OUTPUTDATA = '{0}' where MACID = '{1}' and DOCOUNT = '{2}'", outdata, txt_box3.Text, listboxindex);
+                    DBHelper.MyExecuteNonQuery(updatesql);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
+
+            #endregion
+        }
+        #endregion
+
+        #endregion
     }
 }

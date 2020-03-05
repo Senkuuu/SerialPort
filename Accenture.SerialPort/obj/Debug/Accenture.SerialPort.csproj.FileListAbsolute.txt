@@ -115,7 +115,6 @@ D:\资料\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.exe.config
 D:\资料\SerialPort\Accenture.SerialPort\bin\Debug\SerialPort.xml
 D:\资料\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.exe
 D:\资料\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.pdb
-D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csprojAssemblyReference.cache
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.exe.config
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.frmExport.resources
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.frmMain.resources
@@ -167,3 +166,4 @@ D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.application
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csproj.CopyComplete
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.exe
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\SerialPort.pdb
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Debug\Accenture.SerialPort.csprojAssemblyReference.cache

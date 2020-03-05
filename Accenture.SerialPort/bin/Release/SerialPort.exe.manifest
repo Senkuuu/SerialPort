@@ -162,14 +162,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.ApiCall.dll" size="249856">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NSClient.ApiCall.dll" size="247808">
       <assemblyIdentity name="NSClient.ApiCall" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>O7iFys20srvJjFWtmnDDa7DclFM0/LTTNsa0gODYDb0=</dsig:DigestValue>
+        <dsig:DigestValue>re6gp4sB4Wd17MMwpaAPf13ECD+KjRT86jCIewmq06I=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -198,14 +198,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="107008">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="110080">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ypdnrXUZFKyoSD+viW4rpI1bz8fYACNXlLxs/b81NjQ=</dsig:DigestValue>
+        <dsig:DigestValue>J8An2Z1q3k9eJy504n/KkzP9X1gvbpejQ8JIym6+XmA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
