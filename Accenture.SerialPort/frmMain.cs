@@ -37,7 +37,66 @@ namespace Accenture.SerialPort
             InitializeComponent();
 
             //this.btnSend.Enabled = false;
-            this.cbbComList.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                    try
+                    {
+                        if (cbbComList.Items.Count < System.IO.Ports.SerialPort.GetPortNames().Count())
+                        {
+                            if (serialPort.IsOpen)
+                            {
+                                Off();
+                            }
+                            foreach (var item in System.IO.Ports.SerialPort.GetPortNames())
+                            {
+                                if (!cbbComList.Items.Contains(item))
+                                {
+                                    if (System.IO.Ports.SerialPort.GetPortNames().Count() - cbbComList.Items.Count == 1)
+                                    {
+                                        this.cbbComList.Items.Add(item);
+                                        cbbComList.SelectedItem = item;
+                                        Open(item);
+                                    }
+                                    else
+                                    {
+                                        this.cbbComList.Items.Add(item);
+                                    }
+                                }
+                            }
+                        }
+                        else if (cbbComList.Items.Count > System.IO.Ports.SerialPort.GetPortNames().Count())
+                        {
+                            string[] plist = System.IO.Ports.SerialPort.GetPortNames();
+                            Off();
+                            for (int i = 0; i < cbbComList.Items.Count; i++)
+                            {
+                                if (!plist.Contains(cbbComList.Items[i]))
+                                {
+                                    this.cbbComList.Items.Remove(cbbComList.Items[i]);
+                                }
+                            }
+                            //foreach (var item in cbbComList.Items)
+                            //{
+                            //    if (!plist.Contains(item))
+                            //    {
+                            //        this.cbbComList.Items.Remove(item);
+                            //    }
+                            //}
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        throw;
+                    }
+
+                    //this.cbbComList.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
+                }
+            });
+
             if (this.cbbComList.Items.Count > 0)
             {
                 this.cbbComList.SelectedIndex = 0;
@@ -226,6 +285,49 @@ namespace Accenture.SerialPort
             if (serialPort.IsOpen == false)
             {
                 serialPort.PortName = cbbComList.SelectedItem.ToString();
+                serialPort.BaudRate = Convert.ToInt32(cbbBaudRate.SelectedItem.ToString());
+                serialPort.Parity = (Parity)Convert.ToInt32(cbbParity.SelectedIndex.ToString());
+                serialPort.DataBits = Convert.ToInt32(cbbDataBits.SelectedItem.ToString());
+                serialPort.StopBits = (StopBits)Convert.ToInt32(cbbStopBits.SelectedItem.ToString());
+                try
+                {
+                    serialPort.Open();
+                    btnSend.Enabled = true;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                btnOpen.Text = "关闭串口";
+                pictureBox1.BackgroundImage = Properties.Resources.green;
+                btnCheck.Enabled = false;
+            }
+            cbbComList.Enabled = !serialPort.IsOpen;
+            cbbBaudRate.Enabled = !serialPort.IsOpen;
+            cbbParity.Enabled = !serialPort.IsOpen;
+            cbbDataBits.Enabled = !serialPort.IsOpen;
+            cbbStopBits.Enabled = !serialPort.IsOpen;
+
+        }
+
+        /// <summary>
+        /// 打开指定串口
+        /// </summary>
+        /// <param name="prot">串口名称</param>
+        public void Open(string prot)
+        {
+            if (cbbComList.Items.Count <= 0)
+            {
+                textBox4.Enabled = false;
+                MessageBox.Show("没有发现串口,请检查线路！");
+                return;
+
+            }
+            if (serialPort.IsOpen == false)
+            {
+                serialPort.PortName = prot;
                 serialPort.BaudRate = Convert.ToInt32(cbbBaudRate.SelectedItem.ToString());
                 serialPort.Parity = (Parity)Convert.ToInt32(cbbParity.SelectedIndex.ToString());
                 serialPort.DataBits = Convert.ToInt32(cbbDataBits.SelectedItem.ToString());

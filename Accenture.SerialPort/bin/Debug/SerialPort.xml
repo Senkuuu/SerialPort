@@ -172,6 +172,12 @@
             打开
             </summary>
         </member>
+        <member name="M:Accenture.SerialPort.frmMain.Open(System.String)">
+            <summary>
+            打开指定串口
+            </summary>
+            <param name="prot">串口名称</param>
+        </member>
         <member name="M:Accenture.SerialPort.frmMain.Off">
             <summary>
             关闭
