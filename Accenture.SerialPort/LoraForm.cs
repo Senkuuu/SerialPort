@@ -57,6 +57,7 @@ namespace Accenture.SerialPort
         //缓存池
         PooledRedisClientManager prcm = new PooledRedisClientManager();
         RedisHelper help = new RedisHelper();
+        private static bool redisError = false;
         //唤醒周期
         public string cycle { get; set; }
 
@@ -119,16 +120,21 @@ namespace Accenture.SerialPort
                     DataTable eqlist = DBHelper.GetDataTable(eqsql);
                     DataTable rulelist = DBHelper.GetDataTable(rulesql);
                     DataTable bindlist = DBHelper.GetDataTable(bindsql);
-                    if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
-                        return;
-                    if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
-                        return;
-                    if (!help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis))
-                        return;
+
+                    redisError = redisError ? true : !help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis);
+                    //if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
+                    //    return;
+                    //if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
+                    //    return;
+                    //if (!help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis))
+                    //    return;
                     #endregion
 
                     //并行库启动
-                    Start();
+                    if (!redisError)
+                    {
+                        Start();
+                    }
 
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
@@ -323,8 +329,11 @@ namespace Accenture.SerialPort
 
                                 request.Details.Add(dt);
 
-                                //加入队列
-                                Push(request);
+                                if (!redisError)
+                                {
+                                    //加入队列
+                                    Push(request);
+                                }
                             }
                             catch (Exception ex)
                             {
