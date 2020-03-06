@@ -122,6 +122,10 @@ namespace Accenture.SerialPort
                     DataTable bindlist = DBHelper.GetDataTable(bindsql);
 
                     redisError = redisError ? true : !help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis);
+
+                    redisError = redisError ? true : !help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis);
+
+                    redisError = redisError ? true : !help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis);
                     //if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
                     //    return;
                     //if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
