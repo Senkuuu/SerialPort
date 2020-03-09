@@ -571,7 +571,7 @@
             // 
             this.senderror.AutoSize = true;
             this.senderror.ForeColor = System.Drawing.Color.Red;
-            this.senderror.Location = new System.Drawing.Point(76, 108);
+            this.senderror.Location = new System.Drawing.Point(74, 112);
             this.senderror.MinimumSize = new System.Drawing.Size(119, 14);
             this.senderror.Name = "senderror";
             this.senderror.Size = new System.Drawing.Size(119, 14);

@@ -974,45 +974,57 @@ namespace Accenture.SerialPort
             button3.BackColor = button4.BackColor = button6.BackColor = button5.BackColor = System.Drawing.Color.Transparent;
             textBox4.Clear();
             textBox2.Clear();
+
             txt_box3.Text = textBox3.Text;
+            #region 下发前的一系列判断
+            string txt = this.textBox3.Text.Trim();
             if (serialPort.IsOpen == false)
             {
                 MessageBox.Show("请先打开串口！");
                 return;
             }
-            if (textBox3.Text.Length != 8 && (Convert.ToInt32(textBox3.Text, 16) >= 0 && Convert.ToInt32(textBox3.Text, 16) <= 650))
-            {
-                string sel = "select count(MACID) from Log where MACID = '" + textBox3.Text + "'";
-                int count = (int)DBHelper.MyExecuteScalar(sel);
-                if (count < 1)
-                {
-                    MessageBox.Show("请确认序列号是否正确！");
-                    return;
-                }
-            }
-            String txt = this.textBox3.Text.Trim();
-            string sql = "select outputdata from Log where MACID = '" + textBox3.Text + "' and docount = '0'";
-            object re = DBHelper.MyExecuteScalar(sql);
-            if (txt == "")
-            {
-                SoundPlayer player = new SoundPlayer();
-
-                MessageBox.Show("请先扫描二维码");
-                ClearSelf();
-            }
-            else if (re != null)
-            {
-                if (!string.IsNullOrWhiteSpace(re.ToString()))
-                {
-                    MessageBox.Show("每个设备只能操作一次");
-                    return;
-                }
-            }
-            else if (WakeupTxt.Enabled)
+            if (WakeupTxt.Enabled)
             {
                 MessageBox.Show("请先锁定参数后再操作！");
                 return;
             }
+            if (txt == "")
+            {
+                SoundPlayer player = new SoundPlayer();
+
+                MessageBox.Show("请先扫描二维码,或输入设备序列号");
+                ClearSelf();
+                return;
+            }
+            if (textBox3.Text.Length != 8)
+            {
+                senderror.Text = "请检查序列号是否正确！";
+                return;
+            }
+            else if (!(Convert.ToInt32(textBox3.Text, 16) > 0 && Convert.ToInt32(textBox3.Text, 16) <= 650))
+            {
+                //string sel = "select count(MACID) from Log where MACID = '" + textBox3.Text + "'";
+                //int count = (int)DBHelper.MyExecuteScalar(sel);
+                //if (count < 1)
+                //{
+                senderror.Text = "该序列号不在指定范围内请确认！";
+                //MessageBox.Show("请检查序列号是否正确！");
+                return;
+                //}
+            }
+            //string sql = "select outputdata from Log where MACID = '" + txt_box3.Text + "' and docount = '0'";
+            //object re = DBHelper.MyExecuteScalar(sql);
+            //if (re != null)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(re.ToString()))
+            //    {
+            //        MessageBox.Show("每个设备只能操作一次");
+            //        return;
+            //    }
+            //}
+            #endregion
+
+            //循环发送4条，第5条为空数据 （以便取值时更好的获取数据
             for (int i = 0; i < 5; i++)
             {
                 //string insert = string.Format("insert into Log(MACID,DOCOUNT,CREATEDATE) values('{0}','{1}','{2}')", textBox3.Text, i, DateTime.Now);
