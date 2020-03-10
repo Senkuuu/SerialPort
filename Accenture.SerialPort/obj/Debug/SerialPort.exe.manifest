@@ -198,14 +198,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="116224">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="116736">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>IOaepMiNR/7I2wkBXWcutDjXBKNfun3DKW4yCHu4hFs=</dsig:DigestValue>
+        <dsig:DigestValue>+hYdX3osiDoev+lXF7AzB6RJRRAWMANW32qFdoRTHTM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -306,6 +306,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.LogService.dll" size="10240">
+      <assemblyIdentity name="Wima.LogService" version="1.2.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>kth47PubO+ZYPaaFy+7LJ93GXxv50JaWSHjGeRfoBuY=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.LogService.Core.dll" size="11264">
       <assemblyIdentity name="Wima.LogService.Core" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -318,14 +330,62 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Crypto.dll" size="7168">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Control.dll" size="28672">
+      <assemblyIdentity name="Wima.Lora.Control" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>UxRjNSIBahbJsP+h9ZMFip0RjdcrWXf+ZEg7gc51kJM=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Crypto.dll" size="6656">
       <assemblyIdentity name="Wima.Lora.Crypto" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>IZ5nYd1Om2eA6Mibx0MCp6//E2RXt4W6ghspjW5nQJY=</dsig:DigestValue>
+        <dsig:DigestValue>vdVhQ6qsfLEFV65a0AS+lNhR6FcsP0oEYFODGMsPxys=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Dataset.dll" size="18944">
+      <assemblyIdentity name="Wima.Lora.Dataset" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>R+CRKD9U5JIqh9ExqyZULO6wNvWKgJ24cURbxZBOBtw=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Entity.dll" size="19456">
+      <assemblyIdentity name="Wima.Lora.Entity" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>EdvxwQPtfNuKTWE31lIJY3Q0TGVOGKWdgFkfDlE+Y6I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.Man.dll" size="35328">
+      <assemblyIdentity name="Wima.Lora.Man" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>DwVSKXGDzk4XLGp2wCehvLLfSYo7HP6jFqNavrqwnIM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -338,6 +398,18 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>2iioUGZKvmdudXzPshPh2XUyXG1seB+6z2Pgk726tBo=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Wima.Lora.ServerBase.dll" size="116736">
+      <assemblyIdentity name="Wima.Lora.ServerBase" version="1.2.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>wtcjWPhf6kguwWWSv+vplOabFCGk8NM9Efijsm7PkDw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

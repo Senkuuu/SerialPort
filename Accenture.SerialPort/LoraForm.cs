@@ -930,5 +930,17 @@ namespace Accenture.SerialPort
             }
         }
         #endregion
+
+        #region 压力测试udp下发
+        /// <summary>
+        /// 压力测试udp下发
+        /// </summary>
+        private void UdpSend()
+        {
+            UDPMan udp = new UDPMan(null, "", new DnsEndPoint("0.0.0.0", 1701));
+
+            udp.UDPSend(new byte[] { 0 }, new DnsEndPoint("0.0.0.0", 1701));
+        }
+        #endregion
     }
 }

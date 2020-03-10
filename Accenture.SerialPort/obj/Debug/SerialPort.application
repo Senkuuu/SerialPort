@@ -7,14 +7,14 @@
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="SerialPort.exe.manifest" size="23753">
+    <dependentAssembly dependencyType="install" codebase="SerialPort.exe.manifest" size="27658">
       <assemblyIdentity name="SerialPort.exe" version="1.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>wjKiqDIcnSyQ+6bCR25m41VrUopUMl0twoUmq32oABs=</dsig:DigestValue>
+        <dsig:DigestValue>Tm0Qa6CKYGzK/cdNEoSnwrfgqIqyA8gDQNC0PoVxXcM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
