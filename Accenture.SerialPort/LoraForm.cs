@@ -53,9 +53,7 @@ namespace Accenture.SerialPort
         public static string Port = ConfigurationManager.AppSettings["Port"];
         public static string Password = ConfigurationManager.AppSettings["Password"];
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
-        public static RedisClient Redis = new RedisClient(path, int.Parse(Port), Password, 0);
-        //缓存池
-        PooledRedisClientManager prcm = new PooledRedisClientManager();
+        public static RedisClient Redis ;
         RedisHelper help = new RedisHelper();
         private static bool redisError = false;
         //唤醒周期
@@ -102,6 +100,13 @@ namespace Accenture.SerialPort
                 try
                 {
                     #region Redis缓存设备、报警规则
+                    try
+                    {
+                        Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+                    }
+                    catch (Exception)
+                    {
+                    }
                     String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
                     string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
                                     "FROM    WMS_BT_AlarmRule a \n" +
