@@ -975,6 +975,14 @@ namespace Accenture.SerialPort
             textBox4.Clear();
             textBox2.Clear();
 
+            #region 清空内存里的数据
+            Dictionary<int, string> dd = new Dictionary<int, string>();
+            for (int i = 0; i < _queues.Count; i++)
+            {
+                _queues.TryDequeue(out dd);
+            }
+            #endregion
+
             txt_box3.Text = textBox3.Text;
             #region 下发前的一系列判断
             string txt = this.textBox3.Text.Trim();
@@ -1724,5 +1732,10 @@ namespace Accenture.SerialPort
         #endregion
 
         #endregion
+
+        private void FrmMain_FormClosing_1(object sender, FormClosingEventArgs e)
+        {
+            Application.ExitThread();
+        }
     }
 }

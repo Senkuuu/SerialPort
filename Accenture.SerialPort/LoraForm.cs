@@ -18,6 +18,9 @@ using ServiceStack.Redis;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Threading;
+using Wima.Lora.NPLinkCompatibility;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Accenture.SerialPort
 {
@@ -67,6 +70,22 @@ namespace Accenture.SerialPort
         public LoraForm()
         {
             InitializeComponent();
+
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    if (startTime != null)
+                    {
+                        if (!_queues.IsEmpty)
+                        {
+                            DateTime d2 = (DateTime)startTime;
+                            TimeSpan ts = DateTime.Now.Subtract(d2);
+                            timeTest.Text = ts.TotalSeconds.ToString();
+                        }
+                    }
+                }
+            });
         }
         private void LoraForm_Load(object sender, EventArgs e)
         {
@@ -97,6 +116,7 @@ namespace Accenture.SerialPort
         #region 网关代理启动
         private void Btn_kq_Click(object sender, EventArgs e)
         {
+            redisError = false;
             if (btn_kq.Text == "开启")
             {
                 try
@@ -203,6 +223,7 @@ namespace Accenture.SerialPort
         private void Udpserver_ShowEvent(ASCSPackage package)
         {
             string deveui = package.app?.moteeui;
+
             string errorcode = "";
             int timestamp = 0;
             try
@@ -902,6 +923,7 @@ namespace Accenture.SerialPort
             Task.Factory.StartNew((d) => { _queues.Enqueue((newAsEquipData)d); }, newAs);
         }
 
+        private static DateTime? startTime;
         private static void Running()
         {
             while (true)
@@ -910,6 +932,8 @@ namespace Accenture.SerialPort
                     Thread.Sleep(5000);
                 else
                 {
+                    if (startTime == null)
+                        startTime = DateTime.Now;
                     newAsEquipData request;
                     if (_queues.TryDequeue(out request))
                     {
@@ -929,18 +953,7 @@ namespace Accenture.SerialPort
                 }
             }
         }
-        #endregion
 
-        #region 压力测试udp下发
-        /// <summary>
-        /// 压力测试udp下发
-        /// </summary>
-        private void UdpSend()
-        {
-            UDPMan udp = new UDPMan(null, "", new DnsEndPoint("0.0.0.0", 1701));
-
-            udp.UDPSend(new byte[] { 0 }, new DnsEndPoint("0.0.0.0", 1701));
-        }
         #endregion
     }
 }

@@ -70,13 +70,14 @@
             this.strdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ercode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.cbox_manual = new System.Windows.Forms.CheckBox();
             this.cbox_auto = new System.Windows.Forms.CheckBox();
+            this.cbox_manual = new System.Windows.Forms.CheckBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timeTest = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -432,32 +433,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "设备列表";
             // 
-            // checkedListBox2
-            // 
-            this.checkedListBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.checkedListBox2.FormattingEnabled = true;
-            this.checkedListBox2.Location = new System.Drawing.Point(3, 510);
-            this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(250, 84);
-            this.checkedListBox2.TabIndex = 13;
-            this.checkedListBox2.Visible = false;
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.CheckOnClick = true;
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(3, 72);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(250, 516);
-            this.checkedListBox1.TabIndex = 12;
-            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.cbox_auto);
@@ -468,28 +443,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(250, 50);
             this.panel2.TabIndex = 8;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.textBox3.Font = new System.Drawing.Font("宋体", 10F);
-            this.textBox3.Location = new System.Drawing.Point(0, 27);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(250, 23);
-            this.textBox3.TabIndex = 12;
-            this.textBox3.WordWrap = false;
-            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
-            // 
-            // cbox_manual
-            // 
-            this.cbox_manual.AutoSize = true;
-            this.cbox_manual.Location = new System.Drawing.Point(29, 5);
-            this.cbox_manual.Name = "cbox_manual";
-            this.cbox_manual.Size = new System.Drawing.Size(72, 16);
-            this.cbox_manual.TabIndex = 13;
-            this.cbox_manual.Text = "手动唤醒";
-            this.cbox_manual.UseVisualStyleBackColor = true;
-            this.cbox_manual.CheckedChanged += new System.EventHandler(this.Cbox_manual_CheckedChanged);
             // 
             // cbox_auto
             // 
@@ -502,11 +455,70 @@
             this.cbox_auto.UseVisualStyleBackColor = true;
             this.cbox_auto.CheckedChanged += new System.EventHandler(this.Cbox_auto_CheckedChanged);
             // 
+            // cbox_manual
+            // 
+            this.cbox_manual.AutoSize = true;
+            this.cbox_manual.Location = new System.Drawing.Point(29, 5);
+            this.cbox_manual.Name = "cbox_manual";
+            this.cbox_manual.Size = new System.Drawing.Size(72, 16);
+            this.cbox_manual.TabIndex = 13;
+            this.cbox_manual.Text = "手动唤醒";
+            this.cbox_manual.UseVisualStyleBackColor = true;
+            this.cbox_manual.CheckedChanged += new System.EventHandler(this.Cbox_manual_CheckedChanged);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBox3.Font = new System.Drawing.Font("宋体", 10F);
+            this.textBox3.Location = new System.Drawing.Point(0, 27);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(250, 23);
+            this.textBox3.TabIndex = 12;
+            this.textBox3.WordWrap = false;
+            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
+            // 
+            // checkedListBox2
+            // 
+            this.checkedListBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.checkedListBox2.FormattingEnabled = true;
+            this.checkedListBox2.Location = new System.Drawing.Point(3, 510);
+            this.checkedListBox2.Name = "checkedListBox2";
+            this.checkedListBox2.Size = new System.Drawing.Size(250, 84);
+            this.checkedListBox2.TabIndex = 13;
+            this.checkedListBox2.Visible = false;
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(3, 72);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(250, 516);
+            this.checkedListBox1.TabIndex = 12;
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
+            // timeTest
+            // 
+            this.timeTest.AutoSize = true;
+            this.timeTest.Font = new System.Drawing.Font("宋体", 12F);
+            this.timeTest.Location = new System.Drawing.Point(1116, 2);
+            this.timeTest.MinimumSize = new System.Drawing.Size(80, 20);
+            this.timeTest.Name = "timeTest";
+            this.timeTest.Size = new System.Drawing.Size(80, 20);
+            this.timeTest.TabIndex = 7;
+            // 
             // LoraForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1230, 644);
+            this.Controls.Add(this.timeTest);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -581,5 +593,6 @@
         private System.Windows.Forms.CheckBox cbox_manual;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Label timeTest;
     }
 }
