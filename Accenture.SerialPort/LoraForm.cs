@@ -58,7 +58,8 @@ namespace Accenture.SerialPort
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
         public static RedisClient Redis;
         RedisHelper help = new RedisHelper();
-        private static bool redisError = false;
+        private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
+        private static ConcurrentQueue<ASCSPackage> _queues2 = new ConcurrentQueue<ASCSPackage>();
         //唤醒周期
         public string cycle { get; set; }
 
@@ -75,7 +76,7 @@ namespace Accenture.SerialPort
                 {
                     if (startTime != null)
                     {
-                        if (!_queues.IsEmpty)
+                        if (!_queues2.IsEmpty)
                         {
                             DateTime d2 = (DateTime)startTime;
                             TimeSpan ts = DateTime.Now.Subtract(d2);
@@ -114,7 +115,6 @@ namespace Accenture.SerialPort
         #region 网关代理启动
         private void Btn_kq_Click(object sender, EventArgs e)
         {
-            redisError = false;
             if (btn_kq.Text == "开启")
             {
                 try
@@ -130,7 +130,12 @@ namespace Accenture.SerialPort
                     #endregion
 
                     //并行库启动
-                    Start();
+                    //Start();
+
+                    if (startTime == null)
+                        startTime = DateTime.Now;
+                    //测试——并行库
+                    goAnalysis();
 
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
@@ -139,7 +144,7 @@ namespace Accenture.SerialPort
                         if (UdpServer?.UdpServer != null) UdpServer.Stop();
                         UdpServer = new UdpMan(new DnsEndPoint(txt_ip.Text.Trim(), port), appeui);
                         UdpServer.Start();
-                        UdpServer.ShowEvent += Udpserver_ShowEvent;
+                        UdpServer.ShowEvent += Udpserver_ShowEvent2;
                         btn_kq.Text = "关闭";
                         txt_ip.Enabled = false;
                         txt_port.Enabled = false;
@@ -168,7 +173,7 @@ namespace Accenture.SerialPort
                     if (UdpServer != null)
                     {
                         UdpServer.Stop();
-                        UdpServer.ShowEvent -= Udpserver_ShowEvent;
+                        UdpServer.ShowEvent -= Udpserver_ShowEvent2;
                     }
                     btn_kq.Text = "开启";
                     txt_ip.Enabled = true;
@@ -187,7 +192,7 @@ namespace Accenture.SerialPort
         }
         #endregion
 
-        #region 返回数据显示
+        #region 返回数据显示_1
         /// <summary>
         /// 接收到数据由udpserver推送
         /// </summary>
@@ -329,11 +334,8 @@ namespace Accenture.SerialPort
 
                                 request.Details.Add(dt);
 
-                                if (!redisError)
-                                {
-                                    //加入队列
-                                    Push(request);
-                                }
+                                //加入队列
+                                Push(request);
                             }
                             catch (Exception ex)
                             {
@@ -597,6 +599,313 @@ namespace Accenture.SerialPort
                 listBox1.Items.RemoveAt(listBox1.Items.Count - 1);
             listBox1.EndUpdate();
         }
+        #endregion
+
+        #region 返回数据显示_2
+
+        #region 队列处理
+        private void Udpserver_ShowEvent2(ASCSPackage package)
+        {
+            Task.Factory.StartNew((d) => { _queues2.Enqueue((ASCSPackage)d); }, package);
+        }
+
+        private void goAnalysis()
+        {
+            new Thread(() => { Going(); }).Start();
+        }
+
+        private void Going()
+        {
+            while (true)
+            {
+                if (_queues2.IsEmpty)
+                    Thread.Sleep(5000);
+                else
+                {
+                    ASCSPackage request;
+                    if (_queues2.TryDequeue(out request))
+                    {
+                        DataHelp(request);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 数据处理
+        private void DataHelp(ASCSPackage package)
+        {
+            string deveui = package.app?.moteeui;
+
+            string errorcode = "";
+            int timestamp = 0;
+            try
+            {
+                string ShowJson = package.app.gwrx[0].time + "  " + package.app.moteeui + "  " + package.app.gwrx[0].chan + "  " + package.app.motetx.freq + "  " +
+                    package.app.motetx.datr + "  " + package.app.motetx.adr + "  " + package.app.gwrx[0].rssi + "  " + package.app.gwrx[0].lsnr;
+                if (deveui != null)
+                {
+                    byte[] data = Utils.FromLoraBase64Str(package?.app?.userdata?.payload);
+                    string outdata = "";
+                    // byte[] data = new byte[34] { 0x24, 0x13, 0x62, 0x57, 0xE6, 0x01, 0x1E, 0x00, 0x1E, 0x00, 0x44, 0x34, 0x0F, 0x5C, 0x0B, 0x09, 0x0B, 0x09, 0x0B, 0x09, 0x28, 0x9D, 0x0B, 0x5C, 0x34, 0x09, 0x34, 0x09, 0x34, 0x09, 0x02, 0x70, 0x0D, 0x0A };
+                    if (data.Length > 6)
+                    {
+                        #region 解析收到得数据
+                        string moteid = data.SubArray(4, 4).ToHexString().ToUpper(); //短地址
+                        string cmd = "0x" + new byte[] { data[10] }.ToHexString(); //指令
+                        outdata += "地址：" + data.SubArray(4, 4).ToHexString().ToUpper() + "\r\n";
+                        outdata += "外设启用：" + data.SubArray(8, 2).ToHexString().ToUpper() + "\r\n";
+                        outdata += "指令码：" + cmd + "\r\n";
+                        switch (cmd)
+                        {
+                            case "0x10":
+                                outdata += "频段选择：" + data.SubArray(11, 1).ToHexString().ToUpper() + "\r\n";
+                                outdata += "错误信息：" + errorCode(data.SubArray(12, 4).ToHexString()) + "\r\n";
+                                errorcode = data.SubArray(12, 4).ToHexString();
+                                outdata += "回执指令：" + data.SubArray(16, 2).ToHexString().ToUpper() + "\r\n";
+                                break;
+                            case "0x11":
+                                outdata += "版本号：" + data.SubArray(11, 1).ToHexString().ToUpper() + "\r\n";
+                                outdata += "触发方式：" + (data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒") + "\r\n";
+                                outdata += "电池电压：" + Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16) + "\r\n";
+                                outdata += "********************Playload****************" + "\r\n";
+                                outdata += "空气温度：" + Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16) + "\r\n";
+                                outdata += "空气湿度：" + Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16) + "\r\n";
+                                outdata += "时间戳：" + data.SubArray(18, 4).ToHexString().ToUpper() + "\r\n";
+                                timestamp = Convert.ToInt32(data.SubArray(18, 4).ToHexString().ToUpper(), 16);
+                                outdata += "唤醒周期：" + Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒\r\n";
+                                outdata += "********************End*********************" + "\r\n";
+                                outdata += "错误信息：" + errorCode(data.SubArray(26, 4).ToHexString()) + "\r\n";
+                                errorcode = data.SubArray(26, 4).ToHexString();
+                                outdata += "回执指令：" + data.SubArray(30, 2).ToHexString().ToUpper() + "\r\n";
+                                break;
+                            case "0x12":
+                                outdata += "标定类型：" + data.SubArray(11, 1).ToHexString().ToUpper() + "\r\n";
+                                outdata += "接收的标定值：" + data.SubArray(12, 2).ToHexString().ToUpper() + "\r\n";
+                                outdata += "采集的标定值：" + data.SubArray(14, 2).ToHexString().ToUpper() + "\r\n";
+                                outdata += "温度已经标定数量：" + data.SubArray(16, 1).ToHexString().ToUpper() + "\r\n";
+                                outdata += "湿度已经标定数量：" + data.SubArray(17, 1).ToHexString().ToUpper() + "\r\n";
+                                outdata += "错误信息：" + errorCode(data.SubArray(18, 4).ToHexString()) + "\r\n";
+                                outdata += "回执指令：" + data.SubArray(22, 2).ToHexString().ToUpper() + "\r\n";
+                                break;
+                            case "0x13":
+                                outdata += "需要接收的下一个程序帧：" + data.SubArray(11, 2).ToHexString().ToUpper() + "\r\n";
+                                outdata += "程序下载总帧：" + data.SubArray(13, 2).ToHexString().ToUpper() + "\r\n";
+                                outdata += "错误信息：" + errorCode(data.SubArray(15, 4).ToHexString()) + "\r\n";
+                                errorcode = data.SubArray(15, 4).ToHexString();
+                                outdata += "回执指令：" + data.SubArray(14, 2).ToHexString().ToUpper() + "\r\n";
+                                break;
+                        }
+                        #endregion
+
+                        //是否存在
+                        bool isexist = false;
+                        DataGridView dgv = dataGridView1;
+                        this.Invoke((Action)delegate
+                        {
+                            #region 不采取唯一显示
+                            int index = dgv.Rows.Add();
+                            DataGridViewRow dgvr = dataGridView1.Rows[index];
+                            //序号
+                            dgvr.Cells["index"].Value = index.ToString();
+                            //唤醒方式
+                            dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
+                            //系统时间
+                            dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            //终端ID
+                            dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            //接收频率
+                            dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            //电量
+                            dgvr.Cells["power"].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+                            //信号强度
+                            dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            //速率
+                            dgvr.Cells["datr"].Value = package.app.motetx.datr;
+                            //信噪比
+                            dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            //唤醒周期
+                            dgvr.Cells["wakeup"].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
+                            //温度
+                            dgvr.Cells["temp"].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                            //湿度
+                            dgvr.Cells["hum"].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+                            //错误码
+                            dgvr.Cells["ercode"].Value = errorCode(data.SubArray(26, 4).ToHexString());
+                            //16进制数据
+                            dgvr.Cells["hexdata"].Value = data.ToHexString();
+                            //字符串数据
+                            dgvr.Cells["strdata"].Value = outdata;
+
+                            #region 采集程序数据传输
+                            try
+                            {
+                                newAsEquipData request = new newAsEquipData();
+
+                                request.id = Guid.NewGuid().ToString();
+
+                                request.moteid = package.app.moteeui.ToString();
+
+                                request.power = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+
+                                request.wakeupmode = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) / 60;
+
+                                request.testType = Convert.ToInt32(data.SubArray(12, 1).ToHexString());
+
+                                request.version = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+
+                                request.Details = new List<NSClient.AsEquipDataDT>();
+
+                                NSClient.AsEquipDataDT dt = new NSClient.AsEquipDataDT(request.id, request.moteid, new NSClient.NsDataDT());
+
+                                dt.Temperature = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+
+                                dt.Humidity = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+
+                                dt.DataTime = DateTime.Now;
+
+                                request.Details.Add(dt);
+
+                                using (var db = new NDatabase())
+                                {
+                                    ApiCall ac = new ApiCall();
+                                    ac.SaveDataMethod(db, request, Redis);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                //MessageBox.Show(ex.Message);
+                                //throw;
+                            }
+                            #endregion
+
+                            //错误码不为00000000 整行醒目提示
+                            if (errorcode != "" && errorcode != "00000000")
+                            {
+                                dgvr.DefaultCellStyle.BackColor = Color.Red;
+                            }
+
+                            //向终端列表添加新的终端
+                            if (!checkedListBox2.Items.Contains(package.app.moteeui.ToString()))
+                            {
+                                checkedListBox1.Items.Add(package.app.moteeui.ToString());
+                                checkedListBox1.SetItemChecked(checkedListBox1.Items.Count - 1, true);
+                                checkedListBox2.Items.Add(package.app.moteeui.ToString());
+                            }
+
+                            //勾选显示，没勾选隐藏
+                            if (checkedListBox1.CheckedItems.Contains(package.app.moteeui.ToString()))
+                            {
+                                dgv.Rows[index].Visible = true;
+                            }
+                            else
+                            {
+                                dgv.Rows[index].Visible = false;
+                            }
+
+                            dgv.Refresh();
+                            #endregion
+
+                            #region 数据库操作
+                            string selsql = "select count(moteeui) from collectionTest where moteeui = '" + package.app.moteeui.ToString() + "'";
+                            int count = (int)DBHelper.MyExecuteScalar(selsql);
+                            //插入数据库     ————————————     2020/2/18 新增手动唤醒不需要存数据库
+                            if (data.SubArray(12, 1).ToHexString().ToUpper() == "01")
+                            {
+                                if (count > 0)
+                                {
+                                    //更新数据
+                                    string updsql = string.Format(@"update collectionTest set systime='{0}',freq='{1}',rssi='{2}',datr='{3}',lsnr='{4}',hexdata='{5}',strdata='{6}' where moteeui='{7}'", package.app.gwrx[0].time.ToString(),
+                                                    package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                                    data.ToHexString(), outdata, package.app.moteeui.ToString());
+                                    DBHelper.MyExecuteNonQuery(updsql);
+                                }
+                                else
+                                {
+                                    //插入数据
+                                    string inssql = string.Format(@"insert into collectionTest(systime,moteeui,freq,rssi,datr,lsnr,hexdata,strdata) 
+                                            values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", package.app.gwrx[0].time.ToString(), package.app.moteeui.ToString(),
+                                                package.app.motetx.freq.ToString(), package.app.gwrx[0].rssi.ToString(), package.app.motetx.datr, package.app.gwrx[0].lsnr.ToString(),
+                                                data.ToHexString(), outdata);
+                                    DBHelper.MyExecuteNonQuery(inssql);
+
+                                    #region 下发时间效准数据协议
+                                    string wd = "";
+                                    string res = "";
+
+                                    int sumData = 0;
+                                    string Validation = "";
+                                    #region 时间戳换算
+                                    string st = "";
+                                    int t1 = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp : (Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp) * -1;
+                                    string stamp = Convert.ToString(t1, 16);
+                                    stamp = stamp.Length % 2 == 0 ? stamp : "0" + stamp;
+                                    if (stamp.Length < 8)
+                                    {
+                                        for (int i = 0; i < 7 - stamp.Length; i++)
+                                        {
+                                            st = "0" + st;
+                                        }
+                                    }
+
+                                    st = Convert.ToInt32(ToTimeStamp(DateTime.Now)) - timestamp > 0 ? "0" + st + stamp : "8" + st + stamp;
+                                    #endregion
+
+                                    #region 下发数据拼接
+                                    string WakeupData = Convert.ToString(Convert.ToInt32(cycle), 16).Length % 2 == 0 ? Convert.ToString(Convert.ToInt32(cycle), 16) : "0" + Convert.ToString(Convert.ToInt32(cycle), 16);
+                                    if (WakeupData.Length < 8)
+                                    {
+                                        for (int i = 0; i < 8 - WakeupData.Length; i++)
+                                        {
+                                            wd += "0";
+                                        }
+                                    }
+                                    wd += WakeupData;
+                                    Random rd = new Random();
+                                    string re = Convert.ToString(rd.Next(1, Convert.ToInt32("FFFF", 16)), 16);
+                                    if (re.Length < 4)
+                                    {
+                                        for (int i = 0; i < 4 - re.Length; i++)
+                                        {
+                                            res += "0";
+                                        }
+                                    }
+                                    res += re;
+                                    string Data = Convert.ToString(30, 16).ToUpper() + data.SubArray(4, 4).ToHexString().ToUpper() + "51" + st +
+                                                     wd.ToUpper() + "00000000" + "0000" + res.ToUpper();
+                                    for (int i = 0; i < Data.Length / 2; i++)
+                                    {
+                                        sumData += Convert.ToInt32(Data.Substring(i * 2, 2), 16);
+                                    }
+                                    Validation = Convert.ToString(sumData, 16);
+                                    string vd = Validation.Length % 2 == 0 ? Validation : "0" + Validation;
+                                    if (vd.Length < 4)
+                                    {
+                                        for (int i = 0; i <= 4 - vd.Length; i++)
+                                        {
+                                            vd = "0" + Validation;
+                                        }
+                                    }
+                                    #endregion
+
+                                    Send(package.app.moteeui, strToHexByte("FD0D0A" + Data + vd.ToUpper() + "0D0ADF"));
+                                    SendShow(@"FD0D0A" + Data + Validation.ToUpper() + "0D0ADF");
+                                    #endregion
+                                }
+                            }
+                            #endregion
+                        });
+                    }
+                    else log.Info("数据长度错误！数据=" + data.ToHexString());
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+        }
+        #endregion
+
         #endregion
 
         #region 发送数据
@@ -883,7 +1192,7 @@ namespace Accenture.SerialPort
 
         #region 消息队列
 
-        private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
+
 
         /// <summary>
         /// 

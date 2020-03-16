@@ -54,6 +54,15 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.cbox_auto = new System.Windows.Forms.CheckBox();
+            this.cbox_manual = new System.Windows.Forms.CheckBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timeTest = new System.Windows.Forms.Label();
             this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.wakeuptype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,15 +78,6 @@
             this.hexdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.strdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ercode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.cbox_auto = new System.Windows.Forms.CheckBox();
-            this.cbox_manual = new System.Windows.Forms.CheckBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timeTest = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -327,98 +327,6 @@
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
             this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentDoubleClick);
             // 
-            // index
-            // 
-            this.index.HeaderText = "序号";
-            this.index.Name = "index";
-            this.index.ReadOnly = true;
-            this.index.Visible = false;
-            // 
-            // wakeuptype
-            // 
-            this.wakeuptype.HeaderText = "唤醒方式";
-            this.wakeuptype.Name = "wakeuptype";
-            // 
-            // systime
-            // 
-            this.systime.HeaderText = "时间";
-            this.systime.Name = "systime";
-            this.systime.ReadOnly = true;
-            // 
-            // moteeui
-            // 
-            this.moteeui.HeaderText = "终端ID";
-            this.moteeui.Name = "moteeui";
-            this.moteeui.ReadOnly = true;
-            // 
-            // freq
-            // 
-            this.freq.HeaderText = "接收频率";
-            this.freq.Name = "freq";
-            this.freq.ReadOnly = true;
-            // 
-            // datr
-            // 
-            this.datr.HeaderText = "速率";
-            this.datr.Name = "datr";
-            this.datr.ReadOnly = true;
-            this.datr.Visible = false;
-            this.datr.Width = 70;
-            // 
-            // rssi
-            // 
-            this.rssi.HeaderText = "信号强度";
-            this.rssi.Name = "rssi";
-            this.rssi.ReadOnly = true;
-            // 
-            // lsnr
-            // 
-            this.lsnr.HeaderText = "信噪比";
-            this.lsnr.Name = "lsnr";
-            this.lsnr.ReadOnly = true;
-            this.lsnr.Width = 70;
-            // 
-            // power
-            // 
-            this.power.HeaderText = "电量";
-            this.power.Name = "power";
-            // 
-            // wakeup
-            // 
-            this.wakeup.HeaderText = "唤醒周期";
-            this.wakeup.Name = "wakeup";
-            // 
-            // temp
-            // 
-            this.temp.HeaderText = "温度";
-            this.temp.Name = "temp";
-            // 
-            // hum
-            // 
-            this.hum.HeaderText = "湿度";
-            this.hum.Name = "hum";
-            // 
-            // hexdata
-            // 
-            this.hexdata.HeaderText = "16进制数据";
-            this.hexdata.Name = "hexdata";
-            this.hexdata.ReadOnly = true;
-            this.hexdata.Visible = false;
-            // 
-            // strdata
-            // 
-            this.strdata.HeaderText = "字符串数据";
-            this.strdata.Name = "strdata";
-            this.strdata.ReadOnly = true;
-            this.strdata.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.strdata.Visible = false;
-            this.strdata.Width = 200;
-            // 
-            // ercode
-            // 
-            this.ercode.HeaderText = "错误码";
-            this.ercode.Name = "ercode";
-            // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.White;
@@ -513,6 +421,99 @@
             this.timeTest.Size = new System.Drawing.Size(80, 20);
             this.timeTest.TabIndex = 7;
             // 
+            // index
+            // 
+            this.index.HeaderText = "序号";
+            this.index.Name = "index";
+            this.index.ReadOnly = true;
+            this.index.Width = 70;
+            // 
+            // wakeuptype
+            // 
+            this.wakeuptype.HeaderText = "唤醒方式";
+            this.wakeuptype.Name = "wakeuptype";
+            // 
+            // systime
+            // 
+            this.systime.HeaderText = "时间";
+            this.systime.Name = "systime";
+            this.systime.ReadOnly = true;
+            this.systime.Width = 150;
+            // 
+            // moteeui
+            // 
+            this.moteeui.HeaderText = "终端ID";
+            this.moteeui.Name = "moteeui";
+            this.moteeui.ReadOnly = true;
+            // 
+            // freq
+            // 
+            this.freq.HeaderText = "接收频率";
+            this.freq.Name = "freq";
+            this.freq.ReadOnly = true;
+            // 
+            // datr
+            // 
+            this.datr.HeaderText = "速率";
+            this.datr.Name = "datr";
+            this.datr.ReadOnly = true;
+            this.datr.Visible = false;
+            this.datr.Width = 70;
+            // 
+            // rssi
+            // 
+            this.rssi.HeaderText = "信号强度";
+            this.rssi.Name = "rssi";
+            this.rssi.ReadOnly = true;
+            // 
+            // lsnr
+            // 
+            this.lsnr.HeaderText = "信噪比";
+            this.lsnr.Name = "lsnr";
+            this.lsnr.ReadOnly = true;
+            this.lsnr.Width = 70;
+            // 
+            // power
+            // 
+            this.power.HeaderText = "电量";
+            this.power.Name = "power";
+            // 
+            // wakeup
+            // 
+            this.wakeup.HeaderText = "唤醒周期";
+            this.wakeup.Name = "wakeup";
+            // 
+            // temp
+            // 
+            this.temp.HeaderText = "温度";
+            this.temp.Name = "temp";
+            // 
+            // hum
+            // 
+            this.hum.HeaderText = "湿度";
+            this.hum.Name = "hum";
+            // 
+            // hexdata
+            // 
+            this.hexdata.HeaderText = "16进制数据";
+            this.hexdata.Name = "hexdata";
+            this.hexdata.ReadOnly = true;
+            this.hexdata.Visible = false;
+            // 
+            // strdata
+            // 
+            this.strdata.HeaderText = "字符串数据";
+            this.strdata.Name = "strdata";
+            this.strdata.ReadOnly = true;
+            this.strdata.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.strdata.Visible = false;
+            this.strdata.Width = 200;
+            // 
+            // ercode
+            // 
+            this.ercode.HeaderText = "错误码";
+            this.ercode.Name = "ercode";
+            // 
             // LoraForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -573,6 +574,12 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckedListBox checkedListBox2;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.CheckBox cbox_auto;
+        private System.Windows.Forms.CheckBox cbox_manual;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Label timeTest;
         private System.Windows.Forms.DataGridViewTextBoxColumn index;
         private System.Windows.Forms.DataGridViewTextBoxColumn wakeuptype;
         private System.Windows.Forms.DataGridViewTextBoxColumn systime;
@@ -588,11 +595,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn hexdata;
         private System.Windows.Forms.DataGridViewTextBoxColumn strdata;
         private System.Windows.Forms.DataGridViewTextBoxColumn ercode;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox cbox_auto;
-        private System.Windows.Forms.CheckBox cbox_manual;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.Label timeTest;
     }
 }
