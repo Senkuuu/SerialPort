@@ -132,8 +132,6 @@ namespace Accenture.SerialPort
                     //并行库启动
                     //Start();
 
-                    if (startTime == null)
-                        startTime = DateTime.Now;
                     //测试——并行库
                     goAnalysis();
 
@@ -625,6 +623,8 @@ namespace Accenture.SerialPort
                     ASCSPackage request;
                     if (_queues2.TryDequeue(out request))
                     {
+                        if (startTime == null)
+                            startTime = DateTime.Now;
                         DataHelp(request);
                     }
                 }
