@@ -9,12 +9,17 @@ using System.Threading.Tasks;
 using Wima.Lora.NPLinkCompatibility;
 using Newtonsoft.Json;
 using System.Text;
+using System.Threading;
 
 namespace PressureTest
 {
     public class PressureTest
     {
         private static DateTime goTime;
+
+        private static bool fristSend = false;
+
+        private static NpcUdpMan udp = new NpcUdpMan(new Server(), "", new DnsEndPoint("0.0.0.0", 1701));
         public static void Main(string[] args)
         {
             goTime = DateTime.Now;
@@ -45,35 +50,46 @@ namespace PressureTest
         /// <summary>
         /// 
         /// </summary>
-        private static DnsEndPoint dep = null;
         private static void TestStart()
         {
             //压力测试
-            try
-            {
-                string information = Utils.ToLoraBase64Str(strToHexByte("fe0d0a2500000150c00011200121ffffffff5e0b78b50000001e20000000000007590d0aef"));
-                string d1 = "{\"app\":{\"moteeui\":\"00000000352211ad\",\"MoteEuiReversed\":\"ad11223500000000\",\"dir\":\"up\",\"seqno\":22" +
-                ",\"userdata\":{\"port\":2,\"payload\":" + information + "}" +
-                ",\"motetx\":{\"freq\":472.9,\"datr\":\"SF9BW125\",\"codr\":\"4 / 5\u0013\",\"adr\":false},\"gwrx\":[{\"eui\":\"0000000000bc61ad\"" +
-                ",\"time\":\"2020 - 03 - 10T18: 15:27.805\",\"timefromgateway\":true,\"rssi\":-55,\"chan\":5,\"lsnr\":11.0}]}," +
-                "\"ID\":2347,\"header\":{\"pv\":2,\"token\":422,\"actid\":18,\"gweui\":\"as01020304050607\"},\"SId\":338}";
-                byte[] data = Encoding.Default.GetBytes(d1);
-                NpcUdpMan udp = new NpcUdpMan(new Server(), "", new DnsEndPoint("192.168.1.88", 1701));
-                udp.Start();
-                if (dep == null) return;
-                for (int i = 0; i < 5000; i++)
-                {
-                    udp.UDPSend(data, dep);
-                    Console.Write("···已发送" + i + "条···用时 " + DateTime.Now.Subtract(goTime) + " 秒···");
-                    goTime = DateTime.Now;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Write("处理异常！");
-                throw;
-            }
+
+            //NpcUdpMan udp = new NpcUdpMan(new Server(), "", new DnsEndPoint("0.0.0.0", 1701));
+            udp.Start();
+
+            while (true) { Thread.Sleep(5000); };
+
         }
+
+        private static void sendGo(DnsEndPoint dep)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    string information = Utils.ToLoraBase64Str(strToHexByte("fe0d0a2500000150c00011200121ffffffff5e0b78b50000001e20000000000007590d0aef"));
+                    for (int i = 1; i <= 5000; i++)
+                    {
+                        string d1 = "{\"app\":{\"moteeui\":\"00000000352211ad\",\"MoteEuiReversed\":\"ad11223500000000\",\"dir\":\"up\",\"seqno\":22" +
+                                    ",\"userdata\":{\"port\":2,\"payload\":\"" + information + "\"}" +
+                                    ",\"motetx\":{\"freq\":472.9,\"datr\":\"SF9BW125\",\"codr\":\"4 / 5\u0013\",\"adr\":false},\"gwrx\":[{\"eui\":\"0000000000bc61ad\"" +
+                                    ",\"time\":\"" + DateTime.Now.ToString() + "\",\"timefromgateway\":true,\"rssi\":-55,\"chan\":5,\"lsnr\":11.0}]}," +
+                                    "\"ID\":2347,\"header\":{\"pv\":2,\"token\":422,\"actid\":18,\"gweui\":\"as01020304050607\"},\"SId\":338}";
+                        byte[] data = Encoding.Default.GetBytes(d1);
+                        Thread.Sleep(5000);
+                        udp.UDPSend(data, dep);
+                        Console.WriteLine("···已发送" + i + "条···用时 " + DateTime.Now.Subtract(goTime).Seconds + " 秒···");
+                        goTime = DateTime.Now;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Write("处理异常！");
+                    throw;
+                }
+            });
+        }
+
         #endregion
 
 
@@ -138,17 +154,19 @@ namespace PressureTest
 
             protected override void ProcessPacket(byte[] dataRecv, DnsEndPoint remoteEndPoint)
             {
+                if (fristSend) return;
                 //合法包长下限
                 if (dataRecv.Length >= 12)
                 {
                     if (dataRecv[2] == 'a' && dataRecv[3] == 's') //我们的dtu软件也在用这个登陆需要 不开nplink兼容也能登陆
                     {
+                        fristSend = true;
                         //NPLink NCTT 登录处理
                         LoginBeatSend las = JsonConvert.DeserializeObject<LoginBeatSend>(dataRecv.ToASCIIString().Insert(2, "l"));
                         LoginAsRec lar = new LoginAsRec() { app_id = las?.las?.app_id, login_name = las?.las?.login_name, login_success = true, token = las.las.token };
                         UDPSend(Encoding.ASCII.GetBytes(new LoginBeatRec() { las = lar }.ToCompactJsonString().Remove(2, 1)), remoteEndPoint);
 
-                        dep = remoteEndPoint;
+                        sendGo(remoteEndPoint);
                         //((LoraServer)RefServer).AddOrUpdateNPLinkCompatibleCsUdpEp(GenerateCompatibleCsEui(remoteEndPoint), remoteEndPoint, las.las.app_id);
                         //LogMan.Info("【NPLink兼容CS】登录信息已更新！");
                     }

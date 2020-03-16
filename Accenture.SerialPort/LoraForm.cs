@@ -56,7 +56,7 @@ namespace Accenture.SerialPort
         public static string Port = ConfigurationManager.AppSettings["Port"];
         public static string Password = ConfigurationManager.AppSettings["Password"];
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
-        public static RedisClient Redis ;
+        public static RedisClient Redis;
         RedisHelper help = new RedisHelper();
         private static bool redisError = false;
         //唤醒周期
@@ -127,43 +127,10 @@ namespace Accenture.SerialPort
                     catch (Exception)
                     {
                     }
-                    String eqsql = "select * from WMS_PB_Equipment WHERE ISNULL(IsDeleted,0)=0 AND ISNULL(IsValid,0)= 1";
-                    string rulesql = "SELECT  c.NO+a.AlarmSource No ,a.* \n" +
-                                    "FROM    WMS_BT_AlarmRule a \n" +
-                                            "LEFT JOIN WMS_BT_AlarmRulePosition b ON a.WMS_BT_AlarmRuleId = b.WMS_BT_AlarmRuleId \n" +
-                                            "INNER JOIN WMS_PB_Position c ON c.NO LIKE '' + b.PositionNO + '%' \n" +
-                                    "WHERE ISNULL(a.IsDeleted, 0) = 0 \n" +
-                                            "AND ISNULL(b.IsDeleted, 0) = 0 \n" +
-                                            "AND ISNULL(a.IsValid,0)= 1 \n" +
-                                            "AND ISNULL(c.IsDeleted,0)=0 \n" +
-                                            "AND ISNULL(c.IsValid,0)= 1 \n" +
-                                    "ORDER BY c.NO desc ";
-                    string bindsql = "SELECT  a.EquipmentSN+'bind' EquipmentSNs, a.* \n" +
-                                    "FROM dbo.WMS_BT_EquipmentBind a\n" +
-                                    "WHERE  ISNULL(MonitorState, 0) = 1 \n" +
-                                    "AND ISNULL(IsDeleted,0)= 0";
-                    DataTable eqlist = DBHelper.GetDataTable(eqsql);
-                    DataTable rulelist = DBHelper.GetDataTable(rulesql);
-                    DataTable bindlist = DBHelper.GetDataTable(bindsql);
-
-                    redisError = redisError ? true : !help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis);
-
-                    redisError = redisError ? true : !help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis);
-
-                    redisError = redisError ? true : !help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis);
-                    //if (!help.DtToRedis(eqlist, "WMS_PB_Equipment", Redis))
-                    //    return;
-                    //if (!help.DtToRedis(rulelist, "WMS_BT_AlarmRule", Redis))
-                    //    return;
-                    //if (!help.DtToRedis(bindlist, "WMS_BT_EquipmentBind", Redis))
-                    //    return;
                     #endregion
 
                     //并行库启动
-                    if (!redisError)
-                    {
-                        Start();
-                    }
+                    Start();
 
                     string strip = txt_ip.Text.Trim();
                     string appeui = tb_appeui.Text.Trim().ToLower();
@@ -299,7 +266,7 @@ namespace Accenture.SerialPort
                             int index = dgv.Rows.Add();
                             DataGridViewRow dgvr = dataGridView1.Rows[index];
                             //序号
-                            dgvr.Cells["index"].Value = "#0";
+                            dgvr.Cells["index"].Value = index.ToString();
                             //唤醒方式
                             dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
                             //系统时间
@@ -329,6 +296,9 @@ namespace Accenture.SerialPort
                             //字符串数据
                             dgvr.Cells["strdata"].Value = outdata;
 
+                            DataGridViewColumn col = dataGridView1.Columns["index"];
+                            ListSortDirection direction = ListSortDirection.Descending;
+                            dataGridView1.Sort(col, direction);
 
                             #region 采集程序数据传输
                             try
@@ -839,6 +809,7 @@ namespace Accenture.SerialPort
         {
             //关闭窗口时关闭网关通讯
             if (UdpServer?.UdpServer != null) UdpServer.Stop();
+            this.Dispose();
         }
         #endregion
 
