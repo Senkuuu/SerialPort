@@ -698,44 +698,48 @@ namespace Accenture.SerialPort
                         }
                         #endregion
 
-                        //是否存在
-                        bool isexist = false;
                         DataGridView dgv = dataGridView1;
                         this.Invoke((Action)delegate
                         {
                             #region 不采取唯一显示
-                            int index = dgv.Rows.Add();
-                            DataGridViewRow dgvr = dataGridView1.Rows[index];
+                            int index = dgv.Rows.Count;
+                            //DataGridViewRow dgvr = dataGridView1.Rows[0];
+                            DataGridViewRow dgvr = new DataGridViewRow();
+
+                            dgvr.CreateCells(dataGridView1);
+
                             //序号
-                            dgvr.Cells["index"].Value = index.ToString();
+                            dgvr.Cells[0].Value = index.ToString();
                             //唤醒方式
-                            dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
+                            dgvr.Cells[1].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
                             //系统时间
-                            dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            dgvr.Cells[2].Value = package.app.gwrx[0].time.ToString();
                             //终端ID
-                            dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            dgvr.Cells[3].Value = package.app.moteeui.ToString();
                             //接收频率
-                            dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
-                            //电量
-                            dgvr.Cells["power"].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
-                            //信号强度
-                            dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            dgvr.Cells[4].Value = package.app.motetx.freq.ToString();
                             //速率
-                            dgvr.Cells["datr"].Value = package.app.motetx.datr;
+                            dgvr.Cells[5].Value = package.app.motetx.datr;
+                            //信号强度
+                            dgvr.Cells[6].Value = package.app.gwrx[0].rssi.ToString();
                             //信噪比
-                            dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            dgvr.Cells[7].Value = package.app.gwrx[0].lsnr.ToString();
+                            //电量
+                            dgvr.Cells[8].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
                             //唤醒周期
-                            dgvr.Cells["wakeup"].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
+                            dgvr.Cells[9].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
                             //温度
-                            dgvr.Cells["temp"].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                            dgvr.Cells[10].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
                             //湿度
-                            dgvr.Cells["hum"].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
-                            //错误码
-                            dgvr.Cells["ercode"].Value = errorCode(data.SubArray(26, 4).ToHexString());
+                            dgvr.Cells[11].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
                             //16进制数据
-                            dgvr.Cells["hexdata"].Value = data.ToHexString();
+                            dgvr.Cells[12].Value = data.ToHexString();
                             //字符串数据
-                            dgvr.Cells["strdata"].Value = outdata;
+                            dgvr.Cells[13].Value = outdata;
+                            //错误码
+                            dgvr.Cells[14].Value = errorCode(data.SubArray(26, 4).ToHexString());
+
+                            dgv.Rows.Insert(0, dgvr);
 
                             #region 采集程序数据传输
                             try
