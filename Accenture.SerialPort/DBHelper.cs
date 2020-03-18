@@ -4,9 +4,13 @@ using System.Web;
 using System.Data.SqlClient;
 using System.Data;
 using System.Text;
+using System.Configuration;
 
 namespace Accenture.SerialPort
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DBHelper
     {
         private static string conStr = "server=192.168.1.126;database=WSD.CS;uid=sa;pwd=sa";

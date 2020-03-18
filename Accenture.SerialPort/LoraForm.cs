@@ -55,6 +55,7 @@ namespace Accenture.SerialPort
         public static string path = ConfigurationManager.AppSettings["RedisPath"];
         public static string Port = ConfigurationManager.AppSettings["Port"];
         public static string Password = ConfigurationManager.AppSettings["Password"];
+        public static string OpenColl = ConfigurationManager.AppSettings["OpenColl"];
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
         public static RedisClient Redis;
         RedisHelper help = new RedisHelper();
@@ -70,6 +71,8 @@ namespace Accenture.SerialPort
         {
             InitializeComponent();
 
+            #region 压测计时——不需要可注释
+            //压测计时——不需要可注释
             Task.Factory.StartNew(() =>
             {
                 while (true)
@@ -85,6 +88,7 @@ namespace Accenture.SerialPort
                     }
                 }
             });
+            #endregion
         }
         private void LoraForm_Load(object sender, EventArgs e)
         {
@@ -119,15 +123,18 @@ namespace Accenture.SerialPort
             {
                 try
                 {
-                    #region Redis缓存设备、报警规则
-                    try
+                    if (OpenColl == "true")
                     {
-                        Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+                        #region Redis缓存设备、报警规则
+                        try
+                        {
+                            Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        #endregion
                     }
-                    catch (Exception)
-                    {
-                    }
-                    #endregion
 
                     //并行库启动
                     //Start();
@@ -607,11 +614,13 @@ namespace Accenture.SerialPort
             Task.Factory.StartNew((d) => { _queues2.Enqueue((ASCSPackage)d); }, package);
         }
 
+        //启动队列处理
         private void goAnalysis()
         {
             new Thread(() => { Going(); }).Start();
         }
 
+        //队列处理逻辑
         private void Going()
         {
             while (true)
@@ -770,11 +779,16 @@ namespace Accenture.SerialPort
 
                                 request.Details.Add(dt);
 
-                                using (var db = new NDatabase())
+                                #region 开启采集程序
+                                if (OpenColl == "true")
                                 {
-                                    ApiCall ac = new ApiCall();
-                                    ac.SaveDataMethod(db, request, Redis);
+                                    using (var db = new NDatabase())
+                                    {
+                                        ApiCall ac = new ApiCall();
+                                        ac.SaveDataMethod(db, request, Redis);
+                                    }
                                 }
+                                #endregion
                             }
                             catch (Exception ex)
                             {

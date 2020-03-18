@@ -198,14 +198,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="117760">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SerialPort.exe" size="117248">
       <assemblyIdentity name="SerialPort" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>o+oqupDHJOOY8CT06AzBI4x/FnPACXsbsyCVTZNRULY=</dsig:DigestValue>
+        <dsig:DigestValue>Bqky8WSb+wAgRwQ2WmaYNts6wZtyOJ07eMxmZ1RbKno=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

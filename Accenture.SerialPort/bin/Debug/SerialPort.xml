@@ -114,6 +114,11 @@
             <param name="dtb"></param>
             <returns></returns>
         </member>
+        <member name="T:Accenture.SerialPort.DBHelper">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Accenture.SerialPort.DBHelper.MyExecuteNonQuery(System.String)">
             <summary>
             增删改 返回int类型
