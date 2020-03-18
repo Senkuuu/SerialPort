@@ -55,9 +55,15 @@ namespace Accenture.SerialPort
         public static string path = ConfigurationManager.AppSettings["RedisPath"];
         public static string Port = ConfigurationManager.AppSettings["Port"];
         public static string Password = ConfigurationManager.AppSettings["Password"];
-        public static string OpenColl = ConfigurationManager.AppSettings["OpenColl"];
         //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
         public static RedisClient Redis;
+        ////获取Redis服务器地址
+        //public static string path = ConfigurationManager.AppSettings["RedisPath"];
+        //public static string Port = ConfigurationManager.AppSettings["Port"];
+        //public static string Password = ConfigurationManager.AppSettings["Password"];
+        public static string OpenColl = ConfigurationManager.AppSettings["OpenColl"];
+        ////连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
+        //public static RedisClient Redis;
         RedisHelper help = new RedisHelper();
         private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
         private static ConcurrentQueue<ASCSPackage> _queues2 = new ConcurrentQueue<ASCSPackage>();
@@ -782,11 +788,8 @@ namespace Accenture.SerialPort
                                 #region 开启采集程序
                                 if (OpenColl == "true")
                                 {
-                                    using (var db = new NDatabase())
-                                    {
-                                        ApiCall ac = new ApiCall();
-                                        ac.SaveDataMethod(db, request, Redis);
-                                    }
+                                    ApiCall ac = new ApiCall();
+                                    ac.SaveDataMethod(db, request);
                                 }
                                 #endregion
                             }
@@ -1245,7 +1248,7 @@ namespace Accenture.SerialPort
                             using (var db = new NDatabase())
                             {
                                 ApiCall ac = new ApiCall();
-                                ac.SaveDataMethod(db, request, Redis);
+                                ac.SaveDataMethod(db, request);
                             }
                         }
                         catch (Exception ex)
