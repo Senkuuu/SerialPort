@@ -51,12 +51,12 @@ namespace Accenture.SerialPort
         /// </summary>
         private int SendBeatTimeCount = 0;
         private LogMan log => UdpMan.log;
-        //获取Redis服务器地址
-        public static string path = ConfigurationManager.AppSettings["RedisPath"];
-        public static string Port = ConfigurationManager.AppSettings["Port"];
-        public static string Password = ConfigurationManager.AppSettings["Password"];
-        //连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
-        public static RedisClient Redis;
+        ////获取Redis服务器地址
+        //public static string path = ConfigurationManager.AppSettings["RedisPath"];
+        //public static string Port = ConfigurationManager.AppSettings["Port"];
+        //public static string Password = ConfigurationManager.AppSettings["Password"];
+        ////连接Redis服务器,path:服务器地址，Port:端口，Password：密码，访问的数据库
+        //public static RedisClient Redis;
         RedisHelper help = new RedisHelper();
         private static ConcurrentQueue<newAsEquipData> _queues = new ConcurrentQueue<newAsEquipData>();
         private static ConcurrentQueue<ASCSPackage> _queues2 = new ConcurrentQueue<ASCSPackage>();
@@ -120,13 +120,13 @@ namespace Accenture.SerialPort
                 try
                 {
                     #region Redis缓存设备、报警规则
-                    try
-                    {
-                        Redis = new RedisClient(path, int.Parse(Port), Password, 0);
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    //try
+                    //{
+                    //    Redis = new RedisClient(path, int.Parse(Port), Password, 0);
+                    //}
+                    //catch (Exception)
+                    //{
+                    //}
                     #endregion
 
                     //并行库启动
@@ -769,7 +769,7 @@ namespace Accenture.SerialPort
                                 using (var db = new NDatabase())
                                 {
                                     ApiCall ac = new ApiCall();
-                                    ac.SaveDataMethod(db, request, Redis);
+                                    ac.SaveDataMethod(db, request);
                                 }
                             }
                             catch (Exception ex)
@@ -1227,7 +1227,7 @@ namespace Accenture.SerialPort
                             using (var db = new NDatabase())
                             {
                                 ApiCall ac = new ApiCall();
-                                ac.SaveDataMethod(db, request, Redis);
+                                ac.SaveDataMethod(db, request);
                             }
                         }
                         catch (Exception ex)
