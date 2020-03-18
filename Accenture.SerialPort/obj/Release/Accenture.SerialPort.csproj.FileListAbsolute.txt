@@ -96,3 +96,4 @@ D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.Lora.Entity.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.Lora.Man.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\Wima.Lora.ServerBase.dll
 D:\温湿度\SerialPort\Accenture.SerialPort\bin\Release\ServiceStack.Redis.xml
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojAssemblyReference.cache

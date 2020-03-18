@@ -68,7 +68,7 @@ namespace PressureTest
                 try
                 {
                     string information = Utils.ToLoraBase64Str(strToHexByte("fe0d0a2500000150c00011200121ffffffff5e0b78b50000001e20000000000007590d0aef"));
-                    for (int i = 1; i <= 500; i++)
+                    for (int i = 1; i <= 1000000; i++)
                     {
                         string d1 = "{\"app\":{\"moteeui\":\"00000000352211ad\",\"MoteEuiReversed\":\"ad11223500000000\",\"dir\":\"up\",\"seqno\":22" +
                                     ",\"userdata\":{\"port\":2,\"payload\":\"" + information + "\"}" +
@@ -78,7 +78,7 @@ namespace PressureTest
                         byte[] data = Encoding.Default.GetBytes(d1);
                         Thread.Sleep(100);
                         udp.UDPSend(data, dep);
-                        Console.WriteLine("···已发送" + i + "条···总用时 " + DateTime.Now.Subtract(goTime).Seconds + " 秒···");
+                        Console.WriteLine("···已发送" + i + "条···总用时 " + DateTime.Now.Subtract(goTime) + " 秒···");
                     }
                 }
                 catch (Exception ex)
