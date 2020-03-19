@@ -203,7 +203,7 @@
       <HintPath>..\package\NPOI.dll</HintPath>
     </Reference>
     <Reference Include="NSClient.ApiCall">
-      <HintPath>..\..\..\NSClient.ApiCall\NSClient.ApiCall\bin\Debug\NSClient.ApiCall.dll</HintPath>
+      <HintPath>..\package\NSClient.ApiCall.dll</HintPath>
     </Reference>
     <Reference Include="NSClient.Base, Version=5.3.0.1038, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

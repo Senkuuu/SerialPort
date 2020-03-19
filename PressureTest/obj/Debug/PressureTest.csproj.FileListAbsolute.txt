@@ -30,5 +30,5 @@ D:\温湿度\SerialPort\PressureTest\bin\Debug\WiYun.Core.dll
 D:\温湿度\SerialPort\PressureTest\obj\Debug\PressureTest.csproj.CopyComplete
 D:\温湿度\SerialPort\PressureTest\obj\Debug\PressureTest.exe
 D:\温湿度\SerialPort\PressureTest\obj\Debug\PressureTest.pdb
-D:\温湿度\SerialPort\PressureTest\obj\Debug\PressureTest.csprojAssemblyReference.cache
 D:\温湿度\SerialPort\PressureTest\bin\Debug\Wima.LogService.dll
+D:\温湿度\SerialPort\PressureTest\obj\Debug\PressureTest.csprojAssemblyReference.cache

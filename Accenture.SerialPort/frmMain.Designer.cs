@@ -365,7 +365,7 @@
             this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox4.Size = new System.Drawing.Size(396, 235);
             this.textBox4.TabIndex = 30;
-            this.textBox4.WordWrap = false;
+            this.textBox4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBox4_MouseClick);
             // 
             // button6
             // 
@@ -435,7 +435,7 @@
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox2.Size = new System.Drawing.Size(261, 240);
             this.textBox2.TabIndex = 29;
-            this.textBox2.WordWrap = false;
+            this.textBox2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBox2_MouseClick);
             // 
             // groupBox5
             // 
@@ -461,6 +461,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(251, 241);
             this.listBox1.TabIndex = 29;
+            this.listBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListBox1_MouseClick);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // button1
@@ -624,6 +625,7 @@
             this.txtSendData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSendData.Size = new System.Drawing.Size(811, 23);
             this.txtSendData.TabIndex = 0;
+            this.txtSendData.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TxtSendData_MouseClick);
             // 
             // DataCount
             // 
@@ -779,6 +781,7 @@
             // 
             this.textBox3.Font = new System.Drawing.Font("宋体", 10F);
             this.textBox3.Location = new System.Drawing.Point(71, 82);
+            this.textBox3.MaxLength = 8;
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(208, 23);
             this.textBox3.TabIndex = 10;
@@ -875,6 +878,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "温湿度检测仪";
+            this.Activated += new System.EventHandler(this.FrmMain_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing_1);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.panel1.ResumeLayout(false);

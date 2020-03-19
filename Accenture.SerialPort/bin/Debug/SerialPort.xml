@@ -209,24 +209,6 @@
             <param name="str"></param>
             <returns></returns>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.num(System.String)">
-            <summary>
-            数组循环
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Accenture.SerialPort.frmMain.num1(System.String)">
-            <summary>
-            macid累加
-            </summary>
-            <param name="value1"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Accenture.SerialPort.frmMain.btn">
-            <summary>
-            查询二维码是否存在于数据库中做判断
-            </summary>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.getData(System.Int32)">
             <summary>
             得到下发指令的数据
