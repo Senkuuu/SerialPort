@@ -426,6 +426,7 @@
             this.index.HeaderText = "序号";
             this.index.Name = "index";
             this.index.ReadOnly = true;
+            this.index.Visible = false;
             this.index.Width = 70;
             // 
             // wakeuptype
@@ -445,12 +446,14 @@
             this.moteeui.HeaderText = "终端ID";
             this.moteeui.Name = "moteeui";
             this.moteeui.ReadOnly = true;
+            this.moteeui.Width = 150;
             // 
             // freq
             // 
             this.freq.HeaderText = "接收频率";
             this.freq.Name = "freq";
             this.freq.ReadOnly = true;
+            this.freq.Width = 60;
             // 
             // datr
             // 
@@ -458,13 +461,14 @@
             this.datr.Name = "datr";
             this.datr.ReadOnly = true;
             this.datr.Visible = false;
-            this.datr.Width = 70;
+            this.datr.Width = 50;
             // 
             // rssi
             // 
             this.rssi.HeaderText = "信号强度";
             this.rssi.Name = "rssi";
             this.rssi.ReadOnly = true;
+            this.rssi.Width = 60;
             // 
             // lsnr
             // 
@@ -477,21 +481,25 @@
             // 
             this.power.HeaderText = "电量";
             this.power.Name = "power";
+            this.power.Width = 50;
             // 
             // wakeup
             // 
             this.wakeup.HeaderText = "唤醒周期";
             this.wakeup.Name = "wakeup";
+            this.wakeup.Width = 60;
             // 
             // temp
             // 
             this.temp.HeaderText = "温度";
             this.temp.Name = "temp";
+            this.temp.Width = 50;
             // 
             // hum
             // 
             this.hum.HeaderText = "湿度";
             this.hum.Name = "hum";
+            this.hum.Width = 50;
             // 
             // hexdata
             // 

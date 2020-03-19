@@ -69,21 +69,21 @@ namespace Accenture.SerialPort
 
             #region 压测计时——不需要可注释
             //压测计时——不需要可注释
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    if (startTime != null)
-                    {
-                        if (!_queues2.IsEmpty)
-                        {
-                            DateTime d2 = (DateTime)startTime;
-                            TimeSpan ts = DateTime.Now.Subtract(d2);
-                            timeTest.Text = ts.TotalSeconds.ToString();
-                        }
-                    }
-                }
-            });
+            //Task.Factory.StartNew(() =>
+            //{
+            //    while (true)
+            //    {
+            //        if (startTime != null)
+            //        {
+            //            if (!_queues2.IsEmpty)
+            //            {
+            //                DateTime d2 = (DateTime)startTime;
+            //                TimeSpan ts = DateTime.Now.Subtract(d2);
+            //                timeTest.Text = ts.TotalSeconds.ToString();
+            //            }
+            //        }
+            //    }
+            //});
             #endregion
         }
         private void LoraForm_Load(object sender, EventArgs e)
@@ -132,7 +132,7 @@ namespace Accenture.SerialPort
                         if (UdpServer?.UdpServer != null) UdpServer.Stop();
                         UdpServer = new UdpMan(new DnsEndPoint(txt_ip.Text.Trim(), port), appeui);
                         UdpServer.Start();
-                        UdpServer.ShowEvent += Udpserver_ShowEvent2;
+                        UdpServer.ShowEvent += Udpserver_ShowEvent;
                         btn_kq.Text = "关闭";
                         txt_ip.Enabled = false;
                         txt_port.Enabled = false;
@@ -161,7 +161,7 @@ namespace Accenture.SerialPort
                     if (UdpServer != null)
                     {
                         UdpServer.Stop();
-                        UdpServer.ShowEvent -= Udpserver_ShowEvent2;
+                        UdpServer.ShowEvent -= Udpserver_ShowEvent;
                     }
                     btn_kq.Text = "开启";
                     txt_ip.Enabled = true;
@@ -250,48 +250,79 @@ namespace Accenture.SerialPort
                         }
                         #endregion
 
-                        //是否存在
-                        bool isexist = false;
                         DataGridView dgv = dataGridView1;
                         this.Invoke((Action)delegate
                         {
                             #region 不采取唯一显示
-                            int index = dgv.Rows.Add();
-                            DataGridViewRow dgvr = dataGridView1.Rows[index];
-                            //序号
-                            dgvr.Cells["index"].Value = index.ToString();
-                            //唤醒方式
-                            dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
-                            //系统时间
-                            dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
-                            //终端ID
-                            dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
-                            //接收频率
-                            dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
-                            //电量
-                            dgvr.Cells["power"].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
-                            //信号强度
-                            dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
-                            //速率
-                            dgvr.Cells["datr"].Value = package.app.motetx.datr;
-                            //信噪比
-                            dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
-                            //唤醒周期
-                            dgvr.Cells["wakeup"].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
-                            //温度
-                            dgvr.Cells["temp"].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
-                            //湿度
-                            dgvr.Cells["hum"].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
-                            //错误码
-                            dgvr.Cells["ercode"].Value = errorCode(data.SubArray(26, 4).ToHexString());
-                            //16进制数据
-                            dgvr.Cells["hexdata"].Value = data.ToHexString();
-                            //字符串数据
-                            dgvr.Cells["strdata"].Value = outdata;
+                            int index = dgv.Rows.Count;
+                            //DataGridViewRow dgvr = dataGridView1.Rows[0];
+                            DataGridViewRow dgvr = new DataGridViewRow();
 
-                            DataGridViewColumn col = dataGridView1.Columns["index"];
-                            ListSortDirection direction = ListSortDirection.Descending;
-                            dataGridView1.Sort(col, direction);
+                            dgvr.CreateCells(dataGridView1);
+
+                            //序号
+                            dgvr.Cells[0].Value = index.ToString();
+                            //唤醒方式
+                            dgvr.Cells[1].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
+                            //系统时间
+                            dgvr.Cells[2].Value = package.app.gwrx[0].time.ToString();
+                            //终端ID
+                            dgvr.Cells[3].Value = package.app.moteeui.ToString();
+                            //接收频率
+                            dgvr.Cells[4].Value = package.app.motetx.freq.ToString();
+                            //速率
+                            dgvr.Cells[5].Value = package.app.motetx.datr;
+                            //信号强度
+                            dgvr.Cells[6].Value = package.app.gwrx[0].rssi.ToString();
+                            //信噪比
+                            dgvr.Cells[7].Value = package.app.gwrx[0].lsnr.ToString();
+                            //电量
+                            dgvr.Cells[8].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+                            //唤醒周期
+                            dgvr.Cells[9].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
+                            //温度
+                            dgvr.Cells[10].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                            //湿度
+                            dgvr.Cells[11].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+                            //16进制数据
+                            dgvr.Cells[12].Value = data.ToHexString();
+                            //字符串数据
+                            dgvr.Cells[13].Value = outdata;
+                            //错误码
+                            dgvr.Cells[14].Value = errorCode(data.SubArray(26, 4).ToHexString());
+
+                            ////序号
+                            //dgvr.Cells["index"].Value = index.ToString();
+                            ////唤醒方式
+                            //dgvr.Cells["wakeuptype"].Value = data.SubArray(12, 1).ToHexString().ToUpper() == "01" ? "自动唤醒" : "手动唤醒";
+                            ////系统时间
+                            //dgvr.Cells["systime"].Value = package.app.gwrx[0].time.ToString();
+                            ////终端ID
+                            //dgvr.Cells["moteeui"].Value = package.app.moteeui.ToString();
+                            ////接收频率
+                            //dgvr.Cells["freq"].Value = package.app.motetx.freq.ToString();
+                            ////电量
+                            //dgvr.Cells["power"].Value = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
+                            ////信号强度
+                            //dgvr.Cells["rssi"].Value = package.app.gwrx[0].rssi.ToString();
+                            ////速率
+                            //dgvr.Cells["datr"].Value = package.app.motetx.datr;
+                            ////信噪比
+                            //dgvr.Cells["lsnr"].Value = package.app.gwrx[0].lsnr.ToString();
+                            ////唤醒周期
+                            //dgvr.Cells["wakeup"].Value = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) + "秒";
+                            ////温度
+                            //dgvr.Cells["temp"].Value = Convert.ToInt32(data.SubArray(14, 2).ToHexString().ToUpper(), 16);
+                            ////湿度
+                            //dgvr.Cells["hum"].Value = Convert.ToInt32(data.SubArray(16, 2).ToHexString().ToUpper(), 16);
+                            ////错误码
+                            //dgvr.Cells["ercode"].Value = errorCode(data.SubArray(26, 4).ToHexString());
+                            ////16进制数据
+                            //dgvr.Cells["hexdata"].Value = data.ToHexString();
+                            ////字符串数据
+                            //dgvr.Cells["strdata"].Value = outdata;
+
+                            dgv.Rows.Insert(0, dgvr);
 
                             #region 采集程序数据传输
                             try
@@ -306,7 +337,7 @@ namespace Accenture.SerialPort
 
                                 request.wakeupmode = Convert.ToInt32(data.SubArray(22, 4).ToHexString().ToUpper(), 16) / 60;
 
-                                request.testType = Convert.ToInt32(data.SubArray(12, 1).ToHexString());
+                                request.testType = Convert.ToInt32(data.SubArray(12, 1).ToHexString(), 16);
 
                                 request.version = Convert.ToInt32(data.SubArray(13, 1).ToHexString().ToUpper(), 16);
 
@@ -930,54 +961,65 @@ namespace Accenture.SerialPort
         private string errorCode(string errorcode)
         {
             string result = "";
-            switch (errorcode)
+            if (errorcode == "00000000")
             {
-                case "00000000":
-                    result = "无错误";
+                return "无错误";
+            }
+
+            #region 错误信息拼接
+            switch (errorcode.Substring(4))
+            {
+                case "0001":
+                    result += "内置EEPROM操作故障|";
                     break;
-                case "00000001":
-                    result = "内置EEPROM操作故障";
+                case "0002":
+                    result += "外置EEPROM操作故障|";
                     break;
-                case "00000002":
-                    result = "外置EEPROM操作故障";
+                case "0004":
+                    result += "采集电池电压故障|";
                     break;
-                case "00000004":
-                    result = "采集电池电压故障";
+                case "0008":
+                    result += "电池电量拉低报警|";
                     break;
-                case "00000008":
-                    result = "电池电量拉低报警";
+                case "0010":
+                    result += "时间设置故障|";
                     break;
-                case "00000010":
-                    result = "时间设置故障";
+                case "0020":
+                    result += "唤醒周期配置故障|";
                     break;
-                case "00000020":
-                    result = "唤醒周期配置故障";
-                    break;
-                case "00000040":
-                    result = "标定配置错误";
-                    break;
-                case "02000000":
-                    result = "接收数据ID错误";
-                    break;
-                case "04000000":
-                    result = "接收的数据校验错误 ";
-                    break;
-                case "08000000":
-                    result = "数据解析错误（不在解析范围内）";
-                    break;
-                case "10000000":
-                    result = "程序更新错误";
-                    break;
-                case "20000000":
-                    result = "至少一个传感器故障";
-                    break;
-                case "40000000":
-                    result = "其他错误";
+                case "0040":
+                    result += "标定配置错误|";
                     break;
                 default:
-                    result = "";
+                    result += "";
                     break;
             }
+            switch (errorcode.Substring(0, 4))
+            {
+                case "0200":
+                    result += "接收数据ID错误";
+                    break;
+                case "0400":
+                    result += "接收的数据校验错误 ";
+                    break;
+                case "0800":
+                    result += "数据解析错误（不在解析范围内）";
+                    break;
+                case "1000":
+                    result += "程序更新错误";
+                    break;
+                case "2000":
+                    result += "至少一个传感器故障";
+                    break;
+                case "4000":
+                    result += "其他错误";
+                    break;
+                default:
+                    result += "";
+                    break;
+            }
+            #endregion
+
             return result;
         }
         #endregion

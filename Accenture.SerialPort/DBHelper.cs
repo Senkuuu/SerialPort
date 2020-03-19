@@ -13,8 +13,8 @@ namespace Accenture.SerialPort
     /// </summary>
     public class DBHelper
     {
-        //private static string conStr = "server=.;database=WSD.CS;uid=sa;pwd=123";
-        private static string conStr = "server=192.168.1.126;database=WSD.CS;uid=sa;pwd=sa";
+        private static string conStr = "server=.;database=WSD.CS;uid=sa;pwd=cstr.1997";
+        //private static string conStr = "server=192.168.1.126;database=WSD.CS;uid=sa;pwd=sa";
 
         /// <summary>
         /// 增删改 返回int类型

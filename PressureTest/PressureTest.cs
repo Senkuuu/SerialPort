@@ -3,8 +3,6 @@ using System.Net;
 using Wima.Lora.Model;
 using Wima.Lora;
 using System.Collections.Concurrent;
-using WiYun.Data;
-using System.Data;
 using System.Threading.Tasks;
 using Wima.Lora.NPLinkCompatibility;
 using Newtonsoft.Json;
