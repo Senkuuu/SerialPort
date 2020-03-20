@@ -96,3 +96,4 @@ D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.application
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csproj.CopyComplete
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.exe
 D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\SerialPort.pdb
+D:\温湿度\SerialPort\Accenture.SerialPort\obj\Release\Accenture.SerialPort.csprojAssemblyReference.cache

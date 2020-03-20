@@ -290,6 +290,8 @@ namespace Accenture.SerialPort
                             dgvr.Cells[13].Value = outdata;
                             //错误码
                             dgvr.Cells[14].Value = errorCode(data.SubArray(26, 4).ToHexString());
+                            //json数据监视
+                            dgvr.Cells[15].Value = package.app?.ToJson();
 
                             ////序号
                             //dgvr.Cells["index"].Value = index.ToString();
@@ -1064,23 +1066,16 @@ namespace Accenture.SerialPort
         #region 数据网格点击事件
         private void DataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 8)
-            {
-                MessageBox.Show(dataGridView1.CurrentRow.Cells["strdata"].Value.ToString());
-            }
-            else if (e.ColumnIndex == 7)
-            {
-                MessageBox.Show(dataGridView1.CurrentRow.Cells["hexdata"].Value.ToString());
-            }
+            MessageBox.Show(dataGridView1.CurrentRow.Cells["JsonDataDemo"].Value.ToString());
         }
 
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             //显示详细信息
-            if (dataGridView1.CurrentRow.Cells["strdata"].Value != null)
-            {
-                textBox1.Text = dataGridView1.CurrentRow.Cells["strdata"].Value.ToString();
-            }
+            //if (dataGridView1.CurrentRow.Cells["strdata"].Value != null)
+            //{
+            textBox1.Text = dataGridView1.CurrentRow.Cells["strdata"].Value.ToString();
+            //}
         }
         #endregion
 

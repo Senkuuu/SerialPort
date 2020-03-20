@@ -78,6 +78,7 @@
             this.hexdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.strdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ercode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.JsonDataDemo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -317,7 +318,8 @@
             this.hum,
             this.hexdata,
             this.strdata,
-            this.ercode});
+            this.ercode,
+            this.JsonDataDemo});
             this.dataGridView1.Location = new System.Drawing.Point(256, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
@@ -433,6 +435,7 @@
             // 
             this.wakeuptype.HeaderText = "唤醒方式";
             this.wakeuptype.Name = "wakeuptype";
+            this.wakeuptype.ReadOnly = true;
             // 
             // systime
             // 
@@ -481,24 +484,28 @@
             // 
             this.power.HeaderText = "电量";
             this.power.Name = "power";
+            this.power.ReadOnly = true;
             this.power.Width = 50;
             // 
             // wakeup
             // 
             this.wakeup.HeaderText = "唤醒周期";
             this.wakeup.Name = "wakeup";
+            this.wakeup.ReadOnly = true;
             this.wakeup.Width = 60;
             // 
             // temp
             // 
             this.temp.HeaderText = "温度";
             this.temp.Name = "temp";
+            this.temp.ReadOnly = true;
             this.temp.Width = 50;
             // 
             // hum
             // 
             this.hum.HeaderText = "湿度";
             this.hum.Name = "hum";
+            this.hum.ReadOnly = true;
             this.hum.Width = 50;
             // 
             // hexdata
@@ -521,6 +528,14 @@
             // 
             this.ercode.HeaderText = "错误码";
             this.ercode.Name = "ercode";
+            this.ercode.ReadOnly = true;
+            // 
+            // JsonDataDemo
+            // 
+            this.JsonDataDemo.HeaderText = "json数据";
+            this.JsonDataDemo.Name = "JsonDataDemo";
+            this.JsonDataDemo.ReadOnly = true;
+            this.JsonDataDemo.Visible = false;
             // 
             // LoraForm
             // 
@@ -603,5 +618,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn hexdata;
         private System.Windows.Forms.DataGridViewTextBoxColumn strdata;
         private System.Windows.Forms.DataGridViewTextBoxColumn ercode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn JsonDataDemo;
     }
 }

@@ -481,93 +481,6 @@ namespace Accenture.SerialPort
             return false;
         }
 
-        /// <summary>
-        /// 发送数据
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public bool SendData(string str)
-        {
-            #region 旧
-            //string[] array = str.Split(new char[]
-            //{
-            //    ' '
-            //});
-            //StringBuilder stringBuilder = new StringBuilder();
-            //for (int i = 0; i < array.Length; i++)
-            //{
-            //    stringBuilder.Append(array[i]);
-            //}
-            //str = stringBuilder.ToString();
-            //if (str.Length % 2 != 0)
-            //{
-            //    str = str.Insert(str.Length - 5, "0");
-            //}
-            //byte[] array2 = new byte[str.Length / 2];
-            //for (int j = 0; j < str.Length / 2; j++)
-            //{
-            //    try
-            //    {
-            //        array2[j] = Convert.ToByte(str.Substring(j * 2, 2), 16);
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show("包含非16进制字符，发送失败！", "提示");
-            //        return false;
-            //    }
-            //}
-            //if (this.serialPort.IsOpen)
-            //{
-            //    try
-            //    {
-            //        this.serialPort.Write(array2, 0, array2.Length);
-            //        return true;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        MessageBox.Show("发送数据时发生错误, 串口将被关闭！", "错误提示");
-            //        return false;
-            //    }
-            //}
-            //if (this.serialPort.IsOpen)
-            //{
-            //    try
-            //    {
-            //        this.serialPort.Write(array2, 0, array2.Length);
-            //        return true;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        MessageBox.Show("发送数据时发生错误, 串口将被关闭！", "错误提示");
-            //        return false;
-            //    }
-            //}
-            //MessageBox.Show("串口未打开，请先打开串口！", "错误提示");
-            #endregion
-
-            if (serialPort.IsOpen)
-            {
-                try
-                {
-                    Encoding encoding = Encoding.GetEncoding("GB2312");
-                    byte[] bytes = encoding.GetBytes(str);
-                    int num = bytes.Length;
-                    serialPort.Write(bytes, 0, num);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                MessageBox.Show("串口未打开", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            return false;
-        }
-
-
         #region 2019年12月 协议更变 新增拼接新协议方案
         /// <summary>
         /// 得到下发指令的数据
@@ -1062,34 +975,6 @@ namespace Accenture.SerialPort
         #endregion
 
         #region 数据接收区
-
-
-
-        /// <summary>
-        /// 接收的数据进行累加
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public byte[] Bie(string value)
-        {
-            {
-                byte[] array2 = new byte[21];
-                for (int i = 0; i < value.Length / 2; i++)
-                {
-                    string hexString = value.Substring(i * 2, 2);
-                    //hexString += hexString;
-                    byte b;
-                    byte.TryParse(hexString, NumberStyles.HexNumber, null, out b);
-                    array2[i] = b;
-                }
-                for (int i = 0; i < array2.Length; i++)
-                {
-                    bie += array2[i];
-                }
-                return array2;
-            }
-        }
-
         /// <summary>
         /// 清空接收区
         /// </summary>
@@ -1127,22 +1012,6 @@ namespace Accenture.SerialPort
             Running();
         }
 
-        private string getInformation(string data, string d1, int index)
-        {
-            data = data.Replace(" ", "");
-            string result = "";
-            try
-            {
-                int a = data.LastIndexOf(d1) + d1.Length;
-                result = data.Substring(a, index);
-            }
-            catch (Exception)
-            {
-                result = "";
-            }
-            return result;
-        }
-
         /// <summary>
         /// 当接收到艺宝盒子发包数据时触发的事件
         /// </summary>
@@ -1157,39 +1026,6 @@ namespace Accenture.SerialPort
             }), this.txtShowData, macId, mcuId);//接收显示解析的macid和mcuid的值
         }
         private IisHost host;
-
-        /// <summary>
-        /// 成品校验
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCheck_Click(object sender, EventArgs e)
-        {
-            if (null == host)
-            {
-                // netsh http add urlacl url="http://+:11080/" user="Everyone"
-                host = new IisHost(new Uri("http://localhost:11080/"));
-                host.OnPayloaded += this.OnPayload;
-                host.Start();
-
-                txtShowData.Enabled = true;
-                btnOpen.Enabled = false;
-                btnCheck.Text = "停止";
-            }
-            else
-            {
-                host.Stop();
-                host.Dispose();
-                host = null;
-
-                txtShowData.Enabled = false;
-
-                btnOpen.Enabled = true;
-                btnCheck.Text = "成品检验";
-            }
-        }
-
-
 
         #endregion
 

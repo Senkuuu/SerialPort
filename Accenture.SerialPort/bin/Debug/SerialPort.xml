@@ -202,13 +202,6 @@
             <param name="sender"></param>
             <param name="data"></param>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.SendData(System.String)">
-            <summary>
-            发送数据
-            </summary>
-            <param name="str"></param>
-            <returns></returns>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.getData(System.Int32)">
             <summary>
             得到下发指令的数据
@@ -267,13 +260,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Accenture.SerialPort.frmMain.Bie(System.String)">
-            <summary>
-            接收的数据进行累加
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
         <member name="M:Accenture.SerialPort.frmMain.btnClearRev_Click(System.Object,System.EventArgs)">
             <summary>
             清空接收区
@@ -299,13 +285,6 @@
             <summary>
             当接收到艺宝盒子发包数据时触发的事件
             </summary>
-        </member>
-        <member name="M:Accenture.SerialPort.frmMain.btnCheck_Click(System.Object,System.EventArgs)">
-            <summary>
-            成品校验
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:Accenture.SerialPort.frmMain.btnExport_Click(System.Object,System.EventArgs)">
             <summary>
